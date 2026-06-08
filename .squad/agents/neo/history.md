@@ -82,3 +82,17 @@ Reviewed restructure converting loose `.github/prompts/` files into proper skill
 - Auth model for public repo issue filing: Host OAuth via GitHub MCP is preferred; PAT is fallback. Documentation now correct across all touchpoints.
 - Testing strategy is phase-gated by scenario: green-field locks specs first, brown-field establishes safety net first, modernization maintains parity tests during dual-operation. Playwright MCP enables all UI testing paths.
 - Template feedback loop is cross-cutting: routing rule #10 enforces both Approach A (custom-agent) and Approach B (Squad) filing to upstream.
+
+## 2026-06-08: Spec Templates Review
+
+### Learnings
+
+1. **Template wiring pattern:** Each phase's "Scaffold from X → Y" instruction references `../skills/meta-agentic-method/templates/<template>.template.md`. This relative path convention ensures portability across environments.
+
+2. **Dynamic content markers:** Two conventions work together: `[PLACEHOLDER]` tokens for fill-in values (scenario name, date) and `<!-- GENERATED: ... -->` markers for rows/sections generated from scenario input (team roster, capability matrix). Fixed skeleton + dynamic rows = structured but adaptable.
+
+3. **Numbering collision avoidance:** The `01` slot intentionally unused in modernization keeps `02-discovery` aligned across brown-field and modernization, preventing file collision when `03-assessment` is introduced.
+
+4. **Scenario gating enforcement:** Template README and SKILL.md "Key Rules" section both state the rule: green-field SKIPS discovery/assessment, brown-field ADDS discovery only, modernization ADDS both. Prompts honor this via which templates they reference.
+
+5. **Exit criteria in templates:** Each template ends with exit criteria checklist, enabling quality gates and verification automation.

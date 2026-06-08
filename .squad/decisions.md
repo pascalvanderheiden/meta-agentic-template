@@ -430,3 +430,91 @@
 - All meaningful changes require team consensus
 - Document architectural decisions here
 - Keep history focused on work, decisions focused on direction
+
+### 2026-06-08: SDD Spec Templates for Meta-Agentic Method
+
+**Date**: 2026-06-08  
+**Decider**: Trinity (Template Engineer)  
+**Status**: Decided  
+**Context**: Requested by Pascal van der Heiden
+
+**Problem**: Meta-agentic-method skill needs structured templates for Spec-Driven Development artifacts that are scenario-fit (green-field, brown-field, modernization), produce consistent fill-in-the-blank outputs, and support dynamic generation from scenario inputs.
+
+**Decision**: Created 13 role-named templates in `.github/skills/meta-agentic-method/templates/` (constitution, 00-intake, discovery, assessment, analysis, capability-map, team, plan, tasks, verification, summary, checklist, README index).
+
+**Dynamic content convention**: `[PLACEHOLDER]` tokens for fixed fill-ins; `<!-- GENERATED: ... -->` markers for scenario-custom sections (team roster rows, capability rows). Each template header documents which parts fixed vs. generated.
+
+**Scenario ordered sets**: Green-field (no discovery/assessment), brown-field (+discovery), modernization (+discovery+assessment) documented in index README; aligned with SKILL.md artifact numbering.
+
+**Rationale**: Structured, repeatable artifact generation per scenario; dynamic team roster + capability map adapt to scenario analysis; all templates reference correct numbering per scenario path.
+
+**Next Steps**: Oracle wires templates into green-field.prompt.md, brown-field.prompt.md, modernization.prompt.md; verify template cross-references resolve.
+
+**References**: `.github/skills/meta-agentic-method/templates/`, SKILL.md § Artifact Numbering Convention, § Confidence Scoring Rubric, § Testing Strategy
+
+---
+
+### 2026-06-08: Spec Template Wiring into Methodology and Prompts
+
+**By**: Oracle (Knowledge Architect)
+
+**Context**: Trinity created 13 SDD spec templates as bundled resources. Wire templates into the methodology and 3 scenario prompts so each phase's output artifact scaffolds FROM its template.
+
+**Decision**: 
+
+1. **SKILL.md** — Added "Spec Templates" section explaining that each phase's Output Artifact is produced by copying matching template, filling placeholders, and generating dynamic rows per scenario. Includes per-scenario template-set table and Dynamic Rules documentation.
+
+2. **Scenario Prompts** — Updated green-field, brown-field, modernization with per-phase instructions: "Scaffold from `../skills/meta-agentic-method/templates/<file>` → `docs/<scenario-<slug>/<output>.md`, fill placeholders, generate dynamic rows". Only included templates each scenario uses.
+
+3. **copilot-instructions.md** — Added concise note: SDD artifacts scaffolded from `.github/skills/meta-agentic-method/templates/` with scenario-specific sets.
+
+**Authoritative Template Sets**:
+- Green-field: NO discovery, NO assessment
+- Brown-field: +discovery, NO assessment
+- Modernization: +discovery, +assessment
+
+**Verification**: All 12 templates fully wired with correct scenario gating. Every common template referenced exactly once per prompt; discovery/assessment gated correctly.
+
+**Status**: Complete. Ready for review.
+
+---
+
+### 2026-06-08: Neo Review — SDD Spec Templates System APPROVED
+
+**By**: Neo (Lead / Reviewer-Gate)
+
+**Requested**: Verify scenario fit, numbering, wiring completeness, dynamic+structured design
+
+**Verdict**: ✅ **APPROVED FOR PRODUCTION**
+
+| Criterion | Status | Notes |
+|-----------|--------|-------|
+| Scenario fit correctness | ✅ PASS | Green-field: no discovery/assessment; Brown-field: discovery only; Modernization: both. Matches user's explicit rule. |
+| Numbering alignment | ✅ PASS | No collisions. `01` slot unused in modernization to keep `02-discovery` aligned. |
+| Dynamic-but-structured | ✅ PASS | Fixed headings + `[PLACEHOLDER]` tokens + `<!-- GENERATED: ... -->` markers. Dynamic Rules documented. |
+| Spec-kit inspiration | ✅ PASS | Clean fill-in style, gates/checklists present, adapted to SDD phases. |
+| Wiring completeness | ✅ PASS | All 12 templates referenced; 10 common in all 3 prompts; relative paths resolve. |
+| No regression | ✅ PASS | Dual-path preserved; SKILL.md enhanced; prompts enhanced. |
+
+**Files Reviewed**: 13 templates, SKILL.md, 3 scenario prompts, instructions, copilot-instructions.md
+
+**Recommendation**: APPROVE for merge. No changes required.
+
+---
+
+### 2026-06-08: User Directive — SDD Spec Templates per Scenario (Spec-Kit-Inspired)
+
+**By**: Pascal van der Heiden (via Copilot)
+
+**What**: Add Spec-Driven Development spec templates inspired by github/spec-kit templates (constitution/spec/plan/tasks/checklist). Templates must be scenario-fit (green-field does NOT need discovery; brown-field does; modernization needs discovery + assessment) and DYNAMIC (team + approach custom per scenario input) while still producing STRUCTURED output.
+
+**Design (Decided)**:
+- Home: `.github/skills/meta-agentic-method/templates/` (bundled resources of method skill)
+- Role-named template files; each documents its per-scenario target output filename
+- Per-scenario template sets aligned with Artifact Numbering Convention
+- Dynamic + structured: fixed section skeletons + `[PLACEHOLDER]` tokens + `<!-- GENERATED: ... -->` markers
+- Team roster rows, capability rows, included phases generated from scenario input; structure stays fixed
+- Inherits into BOTH custom-agent and Squad paths via method skill
+
+**Rationale**: User request — captured for team memory and template behavior.
+

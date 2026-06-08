@@ -96,7 +96,10 @@ Three comprehensive workflows in `.github/prompts/` orchestrate complete develop
 **Shared resources**:
 - `.github/skills/meta-agentic-method/SKILL.md` — Phase model and methodology
 - `.github/skills/meta-agentic-method/references.md` — Authoritative sources for MCP servers, skills, and Copilot customizations
+- `.github/skills/meta-agentic-method/templates/` — SDD artifact templates scaffolded per scenario (green-field, brown-field, modernization)
 - `.github/skills/progress-report/` — Progress report templates and scaffolds
+
+**Artifact Scaffolding:** SDD artifacts (intake, analysis, discovery, assessment, capability-map, team, verification, summary, checklist) are scaffolded from templates in `.github/skills/meta-agentic-method/templates/`. Each scenario uses a specific template set: green-field skips discovery/assessment, brown-field adds discovery, modernization adds both discovery and assessment. Templates provide fixed structure with dynamic placeholders for scenario-specific content (team roster rows, capability rows, included phases).
 
 ### Testing Strategy (by Scenario)
 

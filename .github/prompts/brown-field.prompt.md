@@ -55,11 +55,9 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 **Objective:** Capture change request and resolve ambiguities.
 
 **Actions:**
-1. Create `docs/<scenario>-<slug>/00-intake.md`:
-   - Record user's scenario verbatim
-   - Document scenario classification (brown-field)
-   - Record codebase location
-2. Ask clarifying questions from this bank (adapt to scenario):
+1. Scaffold `docs/<scenario>-<slug>/00-intake.md` from `../skills/meta-agentic-method/templates/00-intake.template.md`, fill placeholders, record user's scenario verbatim, document scenario classification (brown-field), and record codebase location.
+2. (Optional) Scaffold `docs/<scenario>-<slug>/constitution.md` from `../skills/meta-agentic-method/templates/constitution.template.md` if user provides explicit principles/non-negotiables for the project.
+3. Ask clarifying questions from this bank (adapt to scenario):
    - **Existing system location:** Where is the codebase? Branch/commit to work from?
    - **Access level:** Full codebase access, or API/documentation only?
    - **Change scope:** Which parts to modify vs. preserve? Backward compatibility required?
@@ -68,9 +66,9 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - **Testing:** Existing test suite? Coverage requirements for new code?
    - **Deployment:** Existing CI/CD pipeline? Deployment constraints (downtime tolerance)?
    - **Execution approach:** Would you prefer **(A) Custom Agents** (standalone `.agent.md` files invoked individually) or **(B) Squad Team** (coordinator-orchestrated team with parallel execution, handoff enforcement, reviewer gates)? **Default to Squad Team** for multi-agent scenarios with complex orchestration needs; choose Custom Agents for simpler, linear workflows.
-3. Capture answers in `00-intake.md` under `## Clarifications`
-4. Document the chosen execution approach in `00-intake.md` under `## Execution Approach`
-5. Document assumptions for any unanswered questions under `## Assumptions`
+4. Capture answers in `00-intake.md` under `## Clarifications`
+5. Document the chosen execution approach in `00-intake.md` under `## Execution Approach`
+6. Document assumptions for any unanswered questions under `## Assumptions`
 
 **Exit Gate:** Codebase location confirmed, change scope understood. No blocking unknowns.
 
@@ -90,10 +88,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - **Dependency Graph:** Internal dependencies (module imports) + external (third-party services, libraries)
    - **Integration Points:** API contracts, message formats, database schemas
 3. Generate architecture diagram (Mermaid or ASCII art)
-4. Create `docs/<scenario>-<slug>/02-discovery.md`:
-   - Include all findings above
-   - Highlight areas affected by proposed changes
-   - Document unknowns or areas needing human confirmation
+4. Scaffold `docs/<scenario>-<slug>/02-discovery.md` from `../skills/meta-agentic-method/templates/discovery.template.md`, fill placeholders, generate discovery findings including all components, data flows, dependencies, integration points; highlight areas affected by proposed changes, and document unknowns or areas needing human confirmation.
 5. Use tools to inventory:
    - `grep` for import/require statements (dependency mapping)
    - `glob` for file structure analysis
@@ -148,7 +143,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 **Actions:**
 1. Read `../skills/meta-agentic-method/SKILL.md` § Analysis phase requirements
-2. Create `docs/<scenario>-<slug>/01-analysis.md`:
+2. Scaffold `docs/<scenario>-<slug>/01-analysis.md` from `../skills/meta-agentic-method/templates/analysis.template.md`, fill placeholders, generate:
    - **Functional Domains:** Break change request into domains (e.g., "Authentication Extension", "API Integration", "Data Migration")
    - **Success Criteria:** Measurable outcomes per domain (e.g., "OAuth flow completes in <2s", "Zero breaking changes to existing /api/v1 endpoints")
    - **Non-Functional Requirements:** Performance (no degradation), security (maintain existing posture), observability
@@ -179,7 +174,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
      - **C2:** New skill → author following `.github/instructions/agent-skills.instructions.md`
      - **C3:** New instruction → author following `.github/instructions/instructions.instructions.md`
      - **C4:** Custom agent role → defer to Team Formation
-3. Create `docs/<scenario>-<slug>/03-capability-map.md`:
+3. Scaffold `docs/<scenario>-<slug>/03-capability-map.md` from `../skills/meta-agentic-method/templates/capability-map.template.md`, fill placeholders, generate capability rows:
 
    | Capability Needed | Type | Source | Status | Evidence |
    |-------------------|------|--------|--------|----------|
@@ -230,7 +225,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - **Key brown-field role:** Assign a `LegacyGuardian` or `CompatibilityValidator` agent to enforce preservation requirements
    - Define handoff protocol (what each agent produces, who consumes it)
    - Designate reviewer agent (typically validator responsible for existing functionality preservation)
-3. Create `docs/<scenario>-<slug>/04-team.md` with the **shared role roster**:
+3. Scaffold `docs/<scenario>-<slug>/04-team.md` from `../skills/meta-agentic-method/templates/team.template.md`, fill placeholders, generate team roster rows with the role roster:
 
    | Agent Name | Role | Assigned Skills | Assigned Instructions | MCP Servers | Handoff To |
    |------------|------|-----------------|----------------------|-------------|------------|
@@ -296,17 +291,16 @@ The role roster defined above materializes differently based on the approach cho
 
 ---
 
-### Phase 8: Execution (Iterative)
+### Phase 8: Execution (Iterative with Safety Net)
 
-**Objective:** Execute changes using agent team while preserving existing functionality.
+**Objective:** Execute changes using agent team, preserving existing functionality.
 
 **Actions:**
-1. Create `docs/<scenario>-<slug>/execution-log.md` (append-only timestamped log)
-2. **Pre-execution baseline:**
-   - Run existing tests: `bash` to execute test suite (document baseline pass/fail)
-   - Capture existing metrics (if applicable): API response times, error rates
-   - Log baseline: `## [timestamp] Baseline: <test count> tests, <pass count> passing`
-3. For each functional domain (in dependency order):
+1. **Pre-execution check:** Verify safety net is green (all baseline tests pass, snapshots captured)
+2. Scaffold `docs/<scenario>-<slug>/plan.md` from `../skills/meta-agentic-method/templates/plan.template.md`, fill placeholders, generate execution plan with phases and milestones.
+3. Scaffold `docs/<scenario>-<slug>/tasks.md` from `../skills/meta-agentic-method/templates/tasks.template.md`, fill placeholders, generate task breakdown per functional domain.
+4. Create `docs/<scenario>-<slug>/execution-log.md` (append-only timestamped log)
+5. For each functional domain (in dependency order):
    - Instantiate responsible agent(s) with their assigned capabilities
    - Agent produces spec/code artifacts
    - **After each agent's work:** Run compatibility checks (existing tests must still pass)
@@ -326,19 +320,20 @@ The role roster defined above materializes differently based on the approach cho
 **Objective:** Validate changes against requirements AND preservation of existing functionality.
 
 **Actions:**
-1. Create `docs/<scenario>-<slug>/verification.md`:
+1. Scaffold `docs/<scenario>-<slug>/verification.md` from `../skills/meta-agentic-method/templates/verification.template.md`, fill placeholders, generate:
    - **Requirements Traceability Matrix:** Map each success criterion → artifact(s) that satisfy it
    - **Backward Compatibility Report:** Document existing functionality preserved (test pass rates, API contract verification)
    - **Test Results:** Pass/fail per criterion (run automated tests)
    - **Regression Analysis:** Compare baseline metrics (from execution pre-check) to post-change metrics
    - **Known Limitations:** Document gaps with workarounds
-2. Calculate **Confidence Score** using rubric from `../skills/meta-agentic-method/SKILL.md`:
+2. Scaffold `docs/<scenario>-<slug>/checklist.md` from `../skills/meta-agentic-method/templates/checklist.template.md`, fill placeholders, generate quality gate checklist.
+3. Calculate **Confidence Score** using rubric from `../skills/meta-agentic-method/SKILL.md`:
    - Score 6 dimensions (0-100 each): Capability Coverage, MCP Availability, Skill/Instruction Coverage, Data/Domain Knowledge, Spec Completeness, Verification Status
    - Weights: 25%, 20%, 15%, 15%, 15%, 10%
    - Formula: `sum(dimension_score × weight)`
    - Band: High (≥80, green), Medium (50-79, amber), Low (<50, red)
    - **Brown-field adjustment:** Penalize Verification Status if existing test pass rate decreased
-3. Document score breakdown in `verification.md`
+4. Document score breakdown in `verification.md`
 
 **Exit Gate:** ≥80% success criteria met (or documented exceptions), no regression in existing functionality, confidence score calculated.
 
@@ -349,7 +344,7 @@ The role roster defined above materializes differently based on the approach cho
 **Objective:** Package deliverables for user handoff.
 
 **Actions:**
-1. Create `docs/<scenario>-<slug>/README.md`:
+1. Scaffold `docs/<scenario>-<slug>/README.md` from `../skills/meta-agentic-method/templates/summary.template.md`, fill placeholders, generate:
    - **Executive Summary:** 2-3 paragraph overview of changes made
    - **Artifacts Inventory:** Links to all docs, code, configs
    - **Confidence Score:** Overall score with dimension breakdown

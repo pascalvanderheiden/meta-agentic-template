@@ -272,6 +272,33 @@ When generating any skill, agent, instruction, or prompt, apply the matching `.g
 
 All artifacts are written to `docs/<scenario>-<slug>/` with consistent naming and structure.
 
+### Spec Templates
+
+Each phase's **Output Artifact** is produced by copying the matching template from `templates/` into `docs/<scenario>-<slug>/` and filling it in. Templates provide fixed section structure with `[PLACEHOLDER]` tokens and `<!-- GENERATED: ... -->` markers for scenario-specific content. Team roster rows, capability rows, and included phases are generated dynamically from scenario input while the document skeleton stays standardized.
+
+**Per-Scenario Template Sets:**
+
+| Scenario | Template Files Used (→ output artifact) |
+|----------|----------------------------------------|
+| **Green-field** | `constitution.template.md`(opt), `00-intake.template.md`→00-intake.md, `analysis.template.md`→01-analysis.md, `capability-map.template.md`→03-capability-map.md, `team.template.md`→04-team.md, `plan.template.md`, `tasks.template.md`, `verification.template.md`, `summary.template.md`, `checklist.template.md` |
+| **Brown-field** | `constitution.template.md`(opt), `00-intake.template.md`→00-intake.md, `discovery.template.md`→02-discovery.md, `analysis.template.md`→01-analysis.md, `capability-map.template.md`→03-capability-map.md, `team.template.md`→04-team.md, `plan.template.md`, `tasks.template.md`, `verification.template.md`, `summary.template.md`, `checklist.template.md` |
+| **Modernization** | `constitution.template.md`(opt), `00-intake.template.md`→00-intake.md, `discovery.template.md`→02-discovery.md, `assessment.template.md`→03-assessment.md, `analysis.template.md`→04-analysis.md, `capability-map.template.md`→05-capability-map.md, `team.template.md`→06-team.md, `plan.template.md`, `tasks.template.md`, `verification.template.md`, `summary.template.md`, `checklist.template.md` |
+
+**Key Rules:**
+- **Green-field SKIPS** `discovery.template` and `assessment.template` (no existing system to inventory or assess)
+- **Brown-field ADDS** `discovery.template` (existing system inventory) but SKIPS `assessment.template`
+- **Modernization ADDS** both `discovery.template` and `assessment.template` (legacy→target gap analysis)
+
+**Dynamic Content:**
+- Team roster rows: generated from team-formation algorithm per scenario
+- Capability rows: generated from capability-map decisions per scenario
+- Included phases: subset templates based on scenario type (see table above)
+- Section structure: fixed per template (headings, skeleton text)
+
+**Template Index:** See `templates/README.md` for a complete catalog of available templates and their usage guidance.
+
+**Integration with Artifact Numbering Convention:** Each template documents its target output filename per the numbering convention below. For example, `analysis.template.md` produces `01-analysis.md` in green-field/brown-field scenarios, but `04-analysis.md` in modernization scenarios (because discovery→02 and assessment→03 shift the sequence).
+
 ### Artifact Numbering Convention
 
 Base scenarios (green-field, brown-field) use: `00-intake`, `01-analysis`, `02-discovery` (brown-field only), `03-capability-map`, `04-team`.

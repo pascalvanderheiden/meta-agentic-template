@@ -130,7 +130,6 @@ All squad agents MUST leverage authoring instruction files when creating/editing
 - Maps template gaps to 6-dimension rubric (Capability Coverage, MCP Availability, Skill/Instruction Coverage, Data/Domain Knowledge, Spec Completeness, Verification Status)
 - Only significant gaps (>5 point impact) warrant filing
 - Helps template maintainers prioritize improvements by quantified confidence delta
-## Learnings
 
 ### 2026-06-08: Testing as First-Class Methodology Component
 
@@ -158,3 +157,25 @@ All squad agents MUST leverage authoring instruction files when creating/editing
 **Verification:** Grep confirmed "Testing Strategy" in SKILL.md, copilot-instructions.md; "Testing Strategy Definition" in green-field.prompt.md; "Safety Net Establishment" in brown-field.prompt.md; "Parity Testing Strategy Definition" in modernization.prompt.md.
 
 **Key Insight:** Testing drives spec-locking (green-field), regression prevention (brown-field), and migration validation (modernization). Weak testing lowers Verification Status AND cascades into Capability Coverage + Spec Completeness degradation — a 10% direct hit can trigger 20-30 point confidence drops via secondary rubric impacts.
+
+### 2026-06-08: Spec Template Wiring (Complete)
+
+**Context:** Trinity creating SDD spec templates (spec-kit-inspired) as bundled resources at `.github/skills/meta-agentic-method/templates/`. Templates provide fixed structure with dynamic content (team/capability rows, included phases) via `[PLACEHOLDER]` and `<!-- GENERATED -->` markers.
+
+**Work Delivered:**
+1. **SKILL.md** — Added "Spec Templates" section: explains artifact scaffolding from templates/, per-scenario template-set table, dynamic rules, explicit skip behavior (green-field skips discovery/assessment, brown-field adds discovery, modernization adds both), artifact numbering integration, links to templates/README.md.
+2. **Scenario Prompts (Complete)** — Updated green-field, brown-field, modernization with one-line "Scaffold from..." instructions for all 12 templates at their correct phases. All common templates (00-intake, constitution, analysis, capability-map, team, plan, tasks, verification, summary, checklist) applied to all 3 prompts; scenario-specific templates (discovery, assessment) gated correctly.
+3. **copilot-instructions.md** — Added concise note under "Shared resources" about SDD artifact scaffolding from templates/ with scenario-specific sets.
+
+**Authoritative Template Sets (12 templates):**
+- Green-field: constitution(opt), 00-intake, analysis→01, capability-map→03, team→04, plan, tasks, verification, summary, checklist (NO discovery, NO assessment)
+- Brown-field: constitution(opt), 00-intake, discovery→02, analysis→01, capability-map→03, team→04, plan, tasks, verification, summary, checklist (discovery yes; assessment no)
+- Modernization: constitution(opt), 00-intake, discovery→02, assessment→03, analysis→04, capability-map→05, team→06, plan, tasks, verification, summary, checklist (discovery + assessment)
+
+**Verification (All Templates Wired):**
+Common templates (all ≥1 in ALL three prompts): 00-intake(1,1,1), analysis(1,1,1), capability-map(1,1,1), team(1,1,1), constitution(1,1,1), plan(1,1,1), tasks(1,1,1), verification(1,1,1), summary(1,1,1), checklist(1,1,1) ✓
+
+Scenario-specific (gated): discovery green(0)/brown(1)/modern(2) ✓; assessment green(0)/brown(0)/modern(1) ✓
+
+**Status:** Complete. All 12 templates fully wired into all 3 prompts with correct scenario gating. Trinity's template creation can proceed in parallel; prompts ready to consume them.
+

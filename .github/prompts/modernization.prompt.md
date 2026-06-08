@@ -57,11 +57,9 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 **Objective:** Capture migration request and resolve ambiguities.
 
 **Actions:**
-1. Create `docs/<scenario>-<slug>/00-intake.md`:
-   - Record user's scenario verbatim
-   - Document scenario classification (modernization)
-   - Record source platform + target platform
-2. Ask clarifying questions from this bank (adapt to scenario):
+1. Scaffold `docs/<scenario>-<slug>/00-intake.md` from `../skills/meta-agentic-method/templates/00-intake.template.md`, fill placeholders, record user's scenario verbatim, document scenario classification (modernization), record source platform + target platform.
+2. (Optional) Scaffold `docs/<scenario>-<slug>/constitution.md` from `../skills/meta-agentic-method/templates/constitution.template.md` if user provides explicit principles/non-negotiables for the project.
+3. Ask clarifying questions from this bank (adapt to scenario):
    - **Source platform:** Current technology stack, versions, scale (data volume, throughput, users)?
    - **Target platform:** Desired technology/platform, or should we recommend based on requirements?
    - **Migration scope:** Full replacement, or phased migration (strangler fig pattern)?
@@ -72,9 +70,9 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - **Timeline:** Deadline, phasing milestones?
    - **Rollback:** Rollback strategy if migration fails?
    - **Execution approach:** Would you prefer **(A) Custom Agents** (standalone `.agent.md` files invoked individually) or **(B) Squad Team** (coordinator-orchestrated team with parallel execution, handoff enforcement, reviewer gates)? **Default to Squad Team** for multi-agent scenarios with complex orchestration needs; choose Custom Agents for simpler, linear workflows.
-3. Capture answers in `00-intake.md` under `## Clarifications`
-4. Document the chosen execution approach in `00-intake.md` under `## Execution Approach`
-5. Document assumptions for any unanswered questions under `## Assumptions`
+4. Capture answers in `00-intake.md` under `## Clarifications`
+5. Document the chosen execution approach in `00-intake.md` under `## Execution Approach`
+6. Document assumptions for any unanswered questions under `## Assumptions`
 
 **Exit Gate:** Source + target platforms confirmed, migration scope understood. No blocking unknowns.
 
@@ -89,13 +87,13 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - Follow brown-field Discovery phase (see `brown-field.prompt.md`)
    - Analyze existing codebase, generate architecture diagram
    - Inventory components, dependencies, integration points
-   - Create `docs/<scenario>-<slug>/02-discovery.md`
+   - Scaffold `docs/<scenario>-<slug>/02-discovery.md` from `../skills/meta-agentic-method/templates/discovery.template.md`, fill placeholders, generate complete system inventory.
 2. **If legacy system is external/undocumented:**
    - Gather available documentation (API specs, data schemas, architecture diagrams)
    - Interview stakeholders (if available) or infer from public documentation
    - Document known components and data flows
    - Flag unknowns for validation during migration
-   - Create `docs/<scenario>-<slug>/02-discovery.md` with "best-effort" label
+   - Scaffold `docs/<scenario>-<slug>/02-discovery.md` from `../skills/meta-agentic-method/templates/discovery.template.md` with "best-effort" label, fill placeholders, generate best-effort discovery.
 3. Use tools:
    - `web_fetch` to retrieve vendor documentation (Oracle docs, Fabric docs)
    - `grep`/`glob` if codebase accessible
@@ -111,7 +109,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 **Actions:**
 1. Read `../skills/meta-agentic-method/SKILL.md` § Assessment phase requirements
-2. Create `docs/<scenario>-<slug>/03-assessment.md`:
+2. Scaffold `docs/<scenario>-<slug>/03-assessment.md` from `../skills/meta-agentic-method/templates/assessment.template.md`, fill placeholders, generate:
    - **Legacy Capability Matrix:** List every capability the legacy system provides (e.g., "Scheduled ETL jobs", "Data validation rules", "Error retry logic")
    - **Technical Debt Inventory:** Version EOL dates, security vulnerabilities, performance bottlenecks, maintainability issues
    - **Target-State Requirements:** What each capability must do post-migration (may differ from legacy)
@@ -142,7 +140,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 **Actions:**
 1. Read `../skills/meta-agentic-method/SKILL.md` § Analysis phase requirements
-2. Create `docs/<scenario>-<slug>/04-analysis.md` (numbering adjusted for modernization path):
+2. Scaffold `docs/<scenario>-<slug>/04-analysis.md` from `../skills/meta-agentic-method/templates/analysis.template.md`, fill placeholders, generate (numbering adjusted for modernization path):
    - **Functional Domains:** Break migration into domains based on Assessment (e.g., "Data Extraction", "Schema Transformation", "Target Provisioning", "Data Validation", "Cutover Orchestration")
    - **Success Criteria:** Measurable outcomes per domain:
      - "100% of Oracle tables migrated with <0.01% data loss"
@@ -180,7 +178,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
      - **C2:** New skill → author following `.github/instructions/agent-skills.instructions.md`
      - **C3:** New instruction → author following `.github/instructions/instructions.instructions.md` (domain knowledge: Oracle-specific patterns, Fabric best practices)
      - **C4:** Custom agent role → defer to Team Formation
-3. Create `docs/<scenario>-<slug>/05-capability-map.md`:
+3. Scaffold `docs/<scenario>-<slug>/05-capability-map.md` from `../skills/meta-agentic-method/templates/capability-map.template.md`, fill placeholders, generate capability rows:
 
    | Capability Needed | Type | Source | Status | Evidence |
    |-------------------|------|--------|--------|----------|
@@ -291,7 +289,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
      - `Validator` gets data validation skills
    - Define handoff protocol (e.g., `Extractor` → produces `schema.json` + `data-sample.csv` → consumed by `Transformer`)
    - Designate reviewer agent (typically `Validator`)
-3. Create `docs/<scenario>-<slug>/06-team.md` with the **shared role roster**:
+3. Scaffold `docs/<scenario>-<slug>/06-team.md` from `../skills/meta-agentic-method/templates/team.template.md`, fill placeholders, generate team roster rows with the role roster:
 
    | Agent Name | Role | Assigned Skills | Assigned Instructions | MCP Servers | Handoff To |
    |------------|------|-----------------|----------------------|-------------|------------|
@@ -358,27 +356,29 @@ The role roster defined above materializes differently based on the approach cho
 
 ---
 
-### Phase 9: Execution (Iterative)
+### Phase 9: Execution (Iterative Migration)
 
-**Objective:** Execute migration using agent team.
+**Objective:** Execute migration using agent team, maintaining parity with legacy system.
 
 **Actions:**
-1. Create `docs/<scenario>-<slug>/execution-log.md` (append-only timestamped log)
-2. **Pre-execution baseline:**
+1. Scaffold `docs/<scenario>-<slug>/plan.md` from `../skills/meta-agentic-method/templates/plan.template.md`, fill placeholders, generate execution plan with migration phases and cutover milestones.
+2. Scaffold `docs/<scenario>-<slug>/tasks.md` from `../skills/meta-agentic-method/templates/tasks.template.md`, fill placeholders, generate task breakdown per functional domain.
+3. Create `docs/<scenario>-<slug>/execution-log.md` (append-only timestamped log)
+4. **Pre-execution baseline:**
    - Capture source system metrics: data row counts, query performance, schema definitions
    - Document cutover plan: sequence, rollback triggers, success checkpoints
    - Log baseline: `## [timestamp] Baseline: <table count> tables, <row count> rows, <metric> performance`
-3. For each functional domain (in migration sequence order):
+5. For each functional domain (in migration sequence order):
    - Instantiate responsible agent(s) with their assigned capabilities
    - Agent produces migration artifacts (schema mappings, ETL pipelines, validation reports)
    - **After each agent's work:** Run data validation (row counts match, schema parity)
    - Log agent actions: `## [ISO8601 timestamp] <AgentName>: <Action> | Status: <success/partial/blocked>`
    - Handoff to next agent in chain
-4. Record architecture decisions in `docs/<scenario>-<slug>/adr/*.md`:
+6. Record architecture decisions in `docs/<scenario>-<slug>/adr/*.md`:
    - Use standard ADR format: Status, Context, Decision, Consequences
    - **Migration-specific ADRs:** Data type mappings (Oracle NUMBER → Fabric DECIMAL), CDC strategy, cutover sequence
-5. Iterate until all success criteria from Analysis met
-6. **Cutover execution:**
+7. Iterate until all success criteria from Analysis met
+8. **Cutover execution:**
    - Document cutover steps (freeze source, migrate final delta, validate, switch traffic)
    - Log cutover timeline with checkpoints
    - Monitor for rollback triggers
@@ -392,7 +392,7 @@ The role roster defined above materializes differently based on the approach cho
 **Objective:** Validate migration against requirements and data parity.
 
 **Actions:**
-1. Create `docs/<scenario>-<slug>/verification.md`:
+1. Scaffold `docs/<scenario>-<slug>/verification.md` from `../skills/meta-agentic-method/templates/verification.template.md`, fill placeholders, generate:
    - **Requirements Traceability Matrix:** Map each success criterion → artifact(s) that satisfy it
    - **Data Parity Report:**
      - Row count comparison (source vs. target per table)
@@ -403,7 +403,8 @@ The role roster defined above materializes differently based on the approach cho
      - Document performance delta (% faster/slower)
    - **Test Results:** Pass/fail per criterion (run automated tests)
    - **Known Limitations:** Document acceptable gaps (deprecated features not migrated, performance trade-offs)
-2. Calculate **Confidence Score** using rubric from `../skills/meta-agentic-method/SKILL.md`:
+2. Scaffold `docs/<scenario>-<slug>/checklist.md` from `../skills/meta-agentic-method/templates/checklist.template.md`, fill placeholders, generate migration quality gate checklist.
+3. Calculate **Confidence Score** using rubric from `../skills/meta-agentic-method/SKILL.md`:
    - Score 6 dimensions (0-100 each): Capability Coverage, MCP Availability, Skill/Instruction Coverage, Data/Domain Knowledge, Spec Completeness, Verification Status
    - Weights: 25%, 20%, 15%, 15%, 15%, 10%
    - Formula: `sum(dimension_score × weight)`
@@ -422,7 +423,7 @@ The role roster defined above materializes differently based on the approach cho
 **Objective:** Package migration deliverables for user handoff.
 
 **Actions:**
-1. Create `docs/<scenario>-<slug>/README.md`:
+1. Scaffold `docs/<scenario>-<slug>/README.md` from `../skills/meta-agentic-method/templates/summary.template.md`, fill placeholders, generate:
    - **Executive Summary:** 2-3 paragraph overview of migration completed
    - **Artifacts Inventory:** Links to all docs, code, configs, migration scripts
    - **Confidence Score:** Overall score with dimension breakdown

@@ -94,3 +94,24 @@ Restructured progress-report capability from loose files in `.github/prompts/tem
 - Portable across VS Code, Copilot CLI, GitHub Copilot coding agent
 - References Oracle's confidence rubric at `../meta-agentic-method/SKILL.md` (created by Oracle in parallel)
 - Removed old `.github/prompts/templates/` directory (empty after migration)
+
+## Learnings
+
+**2025-01-XX — SDD Spec Templates**
+
+Created 13 structured templates for Spec-Driven Development methodology artifacts in `.github/skills/meta-agentic-method/templates/`:
+
+- **Location**: `.github/skills/meta-agentic-method/templates/` (bundled resources of method skill)
+- **Scenario ordered sets**:
+  - Green-field: constitution(opt), 00-intake, 01-analysis, 03-capability-map, 04-team, plan, tasks, verification, summary, checklist
+  - Brown-field: +02-discovery (after intake, before analysis)
+  - Modernization: +02-discovery, 03-assessment (analysis → 04, capability-map → 05, team → 06)
+- **Dynamic marker convention**:
+  - `[PLACEHOLDER]` tokens for fill-in values
+  - `<!-- GENERATED: ... -->` markers for scenario-generated sections (team roster rows, capability rows, domain sections)
+  - Each template header specifies which parts fixed vs. generated
+- **Cross-referencing**: All templates link sibling artifacts by output filename
+- **Numbering**: Aligned with SKILL.md artifact numbering convention (no collision, discovery stays 02 across brown/modernization)
+
+Templates mirror spec-kit's clean fill-in style (headings, placeholders, gate/checklist sections) but adapted to our SDD phases, artifact numbering, and 6-dimension confidence rubric.
+
