@@ -518,3 +518,52 @@
 
 **Rationale**: User request — captured for team memory and template behavior.
 
+
+---
+
+### 2026-01-27: references.md Cleanup — Remove Domain-Specific Pollution
+
+**By:** Tank (Integration Dev)
+
+**Date:** 2026-01-27  
+**Status:** Implemented  
+**Scope:** `.github/skills/meta-agentic-method/references.md`
+
+## Context
+
+`references.md` was polluted with domain-specific entries (Oracle, Azure, Microsoft Fabric) from a sample scenario. This violated its purpose: a clean, concise, GENERIC catalog of sources for discovering agentic artifacts (skills, MCP servers, agents, instructions, libraries) to reuse in ANY project.
+
+## Decision
+
+Rewrote `references.md` from scratch with:
+
+1. **Removed entirely:** All Oracle (Database, ORDS, GoldenGate, Integration), Azure, Microsoft Fabric entries, and any worked examples ("Oracle REST APIs → mcp-builder → Oracle MCP server").
+
+2. **Restructured to 7 sections:**
+   - **Skills** — Skills.sh, Awesome Copilot, Anthropic, Microsoft, Google Gemini Cookbook, Vercel, local find-skills
+   - **MCP Servers** — GitHub MCP, Official Registry, reference servers, awesome-mcp-servers, GitHub MCP Server (with configs), Playwright MCP
+   - **Custom Agents & Instructions** — Awesome Copilot, GitHub Copilot docs, VS Code customization
+   - **Libraries & Frameworks** — Testing frameworks (Playwright, Jest, JUnit, Cucumber, Approval Tests, BMAD, Pact, Schemathesis) with concise scenario mapping
+   - **Spec-Driven Development** — GitHub Spec-Kit, ADR
+   - **Build to Bridge the Gap** (KEY ADDITION) — Rule: if no artifact found, BUILD it with mcp-builder/skill-creator; ties to confidence rubric
+   - **How to Keep This Current** — Re-verify links, append generic sources only, keep concise, check periodically
+
+3. **Verified Google reference:** https://github.com/google-gemini/cookbook (confirmed live).
+
+4. **Validated cleanup:** Grepped case-insensitively for `oracle|fabric|azure` — zero matches except meta-commentary in "How to Keep Current".
+
+## Rationale
+
+- **Generic over domain-specific:** references.md guides discovery for ANY project, not just Oracle→Azure migrations.
+- **Build to bridge the gap:** When discovery finds nothing, use meta-cognition skills (mcp-builder, skill-creator) to create the artifact. This prevents capability abandonment and ties to confidence rubric scoring.
+- **Concise format:** Short entries, consistent structure, minimal prose for easy updates.
+
+## Impact
+
+- **Templates/prompts:** Clearer discovery paths; no misleading domain-specific examples.
+- **Confidence rubric:** Explicit "build when missing" rule surfaces in MCP/Skill availability dimension.
+- **Maintenance:** Easier to keep current without domain drift.
+
+## Follow-Up
+
+None — implementation complete, verified.
