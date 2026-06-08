@@ -25,9 +25,9 @@ Execute spec-driven modernization by assessing legacy system capabilities, mappi
 
 **Preconditions:**
 - Access to legacy system (code, infrastructure, documentation) OR sufficient description
-- Access to `.github/prompts/shared/meta-agentic-method.md` for phase model
-- Access to `.github/prompts/references.md` for MCP/skill discovery
-- Access to `.github/prompts/templates/progress-report.template.html` for report generation
+- Access to `.github/skills/meta-agentic-method/SKILL.md` for phase model
+- Access to `.github/skills/meta-agentic-method/references.md` for MCP/skill discovery
+- Access to `.github/skills/progress-report/progress-report.template.html` for report generation
 - Repository authoring instructions at `.github/instructions/`
 
 **Out of Scope:**
@@ -110,7 +110,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 **Objective:** Map legacy capabilities to target platform, identify gaps, assess migration complexity.
 
 **Actions:**
-1. Read `./shared/meta-agentic-method.md` § Assessment phase requirements
+1. Read `../skills/meta-agentic-method/SKILL.md` § Assessment phase requirements
 2. Create `docs/<scenario>-<slug>/03-assessment.md`:
    - **Legacy Capability Matrix:** List every capability the legacy system provides (e.g., "Scheduled ETL jobs", "Data validation rules", "Error retry logic")
    - **Technical Debt Inventory:** Version EOL dates, security vulnerabilities, performance bottlenecks, maintainability issues
@@ -126,7 +126,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - **Migration Risks:** Data loss risk, downtime impact, compatibility breaks, rollback difficulty
    - **Complexity Rating:** Per component (Low/Medium/High)
 3. Research target platform capabilities:
-   - Use `web_fetch` to consult `./references.md` for target platform docs (e.g., Microsoft Fabric docs)
+   - Use `web_fetch` to consult `../skills/meta-agentic-method/references.md` for target platform docs (e.g., Microsoft Fabric docs)
    - Compare feature sets (source vs. target)
 4. Highlight critical gaps:
    - **Missing capabilities:** Features legacy has that target doesn't (document workaround or "not migrating")
@@ -141,7 +141,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 **Objective:** Decompose migration into functional domains and capability requirements.
 
 **Actions:**
-1. Read `./shared/meta-agentic-method.md` § Analysis phase requirements
+1. Read `../skills/meta-agentic-method/SKILL.md` § Analysis phase requirements
 2. Create `docs/<scenario>-<slug>/04-analysis.md` (numbering adjusted for modernization path):
    - **Functional Domains:** Break migration into domains based on Assessment (e.g., "Data Extraction", "Schema Transformation", "Target Provisioning", "Data Validation", "Cutover Orchestration")
    - **Success Criteria:** Measurable outcomes per domain:
@@ -162,10 +162,10 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 **Objective:** Map required capabilities to concrete artifacts, emphasizing MCP server availability for source + target platforms.
 
 **Actions:**
-1. Read `./shared/meta-agentic-method.md` § Capability Acquisition Decision Tree
+1. Read `../skills/meta-agentic-method/SKILL.md` § Capability Acquisition Decision Tree
 2. For each capability from Analysis:
    - **[A] REUSE:** Search `.github/skills/`, `.github/instructions/` for existing repo artifacts
-   - **[B] FIND:** Consult `./references.md` for external MCP servers or published skills
+   - **[B] FIND:** Consult `../skills/meta-agentic-method/references.md` for external MCP servers or published skills
      - **CRITICAL:** Check for MCP servers for BOTH source and target platforms
      - **Oracle example:** Search MCP registry → no first-party Oracle MCP server found → document as gap → path: use Oracle ORDS OpenAPI spec + `mcp-builder`
      - **Microsoft Fabric example:** Search MCP registry → no first-party Fabric MCP server found → document as gap → path: use Fabric REST API OpenAPI spec + `mcp-builder`
@@ -233,7 +233,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 **Objective:** Define agent team roles and capabilities; materialize using chosen execution approach.
 
 **Actions:**
-1. Read `./shared/meta-agentic-method.md` § Team Formation Algorithm
+1. Read `../skills/meta-agentic-method/SKILL.md` § Team Formation Algorithm
 2. Apply algorithm with modernization specialization to define the **role roster** (independent of execution approach):
    - Map functional domains → agent roles using migration-specific heuristics:
      - **Data extraction** → `Extractor` agent (source platform specialist)
@@ -361,7 +361,7 @@ The role roster defined above materializes differently based on the approach cho
      - Document performance delta (% faster/slower)
    - **Test Results:** Pass/fail per criterion (run automated tests)
    - **Known Limitations:** Document acceptable gaps (deprecated features not migrated, performance trade-offs)
-2. Calculate **Confidence Score** using rubric from `./shared/meta-agentic-method.md`:
+2. Calculate **Confidence Score** using rubric from `../skills/meta-agentic-method/SKILL.md`:
    - Score 6 dimensions (0-100 each): Capability Coverage, MCP Availability, Skill/Instruction Coverage, Data/Domain Knowledge, Spec Completeness, Verification Status
    - Weights: 25%, 20%, 15%, 15%, 15%, 10%
    - Formula: `sum(dimension_score × weight)`
@@ -390,7 +390,7 @@ The role roster defined above materializes differently based on the approach cho
    - **Next Steps:** Clear actions for user (e.g., "Decommission Oracle instance", "Monitor Fabric performance for 30 days", "Migrate remaining non-critical tables")
    - **Known Gaps:** Documented limitations and recommended follow-up (e.g., "Real-time CDC not implemented; batch sync runs hourly")
 2. **Generate HTML Report:**
-   - Copy `./templates/progress-report.template.html` → `docs/<scenario>-<slug>/progress-report.html`
+   - Copy `../skills/progress-report/progress-report.template.html` → `docs/<scenario>-<slug>/progress-report.html`
    - Update `<script id="report-data">` JSON block with:
      ```json
      {
@@ -535,6 +535,6 @@ Run this checklist before declaring workflow complete:
 - For extending existing systems: `.github/prompts/brown-field.prompt.md`
 
 **References:**
-- SDD phases: `./shared/meta-agentic-method.md`
-- MCP/skill catalog: `./references.md`
-- Report template: `./templates/progress-report.template.html`
+- SDD phases: `../skills/meta-agentic-method/SKILL.md`
+- MCP/skill catalog: `../skills/meta-agentic-method/references.md`
+- Report template: `../skills/progress-report/progress-report.template.html`

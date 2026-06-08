@@ -94,9 +94,9 @@ Three comprehensive workflows in `.github/prompts/` orchestrate complete develop
 | `modernization.prompt.md` | MIGRATING platforms or MODERNIZING legacy systems | Legacy assessment → Target mapping → Team formation → Risk mitigation → Migration execution |
 
 **Shared resources**:
-- `.github/prompts/shared/meta-agentic-method.md` — Phase model and methodology
-- `.github/prompts/references.md` — Authoritative sources for MCP servers, skills, and Copilot customizations
-- `.github/prompts/templates/` — Progress report templates and scaffolds
+- `.github/skills/meta-agentic-method/SKILL.md` — Phase model and methodology
+- `.github/skills/meta-agentic-method/references.md` — Authoritative sources for MCP servers, skills, and Copilot customizations
+- `.github/skills/progress-report/` — Progress report templates and scaffolds
 
 ## How to Extend
 
@@ -133,7 +133,7 @@ Three comprehensive workflows in `.github/prompts/` orchestrate complete develop
 ### Discovering Existing Capabilities
 
 - **Skills**: Use `.github/skills/find-skills` to search the skills ecosystem (`npx skills find <query>`)
-- **MCP servers**: Check `.github/prompts/references.md` for registries and marketplaces
+- **MCP servers**: Check `.github/skills/meta-agentic-method/references.md` for registries and marketplaces
 - **Build MCP servers**: Use `.github/skills/mcp-builder` to generate MCP servers from OpenAPI specs
 
 ## General Working Conventions

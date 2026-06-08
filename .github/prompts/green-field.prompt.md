@@ -23,9 +23,9 @@ Execute spec-driven green-field development by decomposing user requirements int
 - Goal is production-ready deliverables with documentation
 
 **Preconditions:**
-- Access to `.github/prompts/shared/meta-agentic-method.md` for phase model
-- Access to `.github/prompts/references.md` for MCP/skill discovery
-- Access to `.github/prompts/templates/progress-report.template.html` for report generation
+- Access to `.github/skills/meta-agentic-method/SKILL.md` for phase model
+- Access to `.github/skills/meta-agentic-method/references.md` for MCP/skill discovery
+- Access to `.github/skills/progress-report/progress-report.template.html` for report generation
 - Repository authoring instructions at `.github/instructions/`
 
 **Out of Scope:**
@@ -78,7 +78,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 **Objective:** Decompose scenario into functional domains and capability requirements.
 
 **Actions:**
-1. Read `./shared/meta-agentic-method.md` § Analysis phase requirements
+1. Read `../skills/meta-agentic-method/SKILL.md` § Analysis phase requirements
 2. Create `docs/<scenario>-<slug>/01-analysis.md`:
    - **Functional Domains:** Break scenario into ≥2 distinct domains (e.g., Authentication, API Layer, Data Persistence, Monitoring)
    - **Success Criteria:** Measurable outcomes per domain (e.g., "API supports 1000 req/sec", "Zero plaintext secrets in code")
@@ -95,10 +95,10 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 **Objective:** Map required capabilities to concrete artifacts (MCP servers, skills, instructions, agents).
 
 **Actions:**
-1. Read `./shared/meta-agentic-method.md` § Capability Acquisition Decision Tree
+1. Read `../skills/meta-agentic-method/SKILL.md` § Capability Acquisition Decision Tree
 2. For each capability from Analysis:
    - **[A] REUSE:** Search `.github/skills/`, `.github/instructions/` for existing repo artifacts
-   - **[B] FIND:** Consult `./references.md` for external MCP servers or published skills
+   - **[B] FIND:** Consult `../skills/meta-agentic-method/references.md` for external MCP servers or published skills
      - Use `web_fetch` to verify registry links and check MCP availability
      - Use `find-skills` skill to discover published skills
    - **[C] BUILD:** If not found, mark for creation:
@@ -146,7 +146,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 **Objective:** Define agent team roles and capabilities; materialize using chosen execution approach.
 
 **Actions:**
-1. Read `./shared/meta-agentic-method.md` § Team Formation Algorithm
+1. Read `../skills/meta-agentic-method/SKILL.md` § Team Formation Algorithm
 2. Apply algorithm to define the **role roster** (independent of execution approach):
    - Map functional domains → agent roles (e.g., "Data Persistence" → `DatabaseArchitect` agent)
    - Assign capabilities from Capability Map to agents (≥1 per agent)
@@ -246,7 +246,7 @@ The role roster defined above materializes differently based on the approach cho
    - **Requirements Traceability Matrix:** Map each success criterion → artifact(s) that satisfy it
    - **Test Results:** Pass/fail per criterion (run automated tests where applicable)
    - **Known Limitations:** Document gaps with workarounds
-2. Calculate **Confidence Score** using rubric from `./shared/meta-agentic-method.md`:
+2. Calculate **Confidence Score** using rubric from `../skills/meta-agentic-method/SKILL.md`:
    - Score 6 dimensions (0-100 each): Capability Coverage, MCP Availability, Skill/Instruction Coverage, Data/Domain Knowledge, Spec Completeness, Verification Status
    - Weights: 25%, 20%, 15%, 15%, 15%, 10%
    - Formula: `sum(dimension_score × weight)`
@@ -269,7 +269,7 @@ The role roster defined above materializes differently based on the approach cho
    - **Next Steps:** Clear actions for user (e.g., "Deploy to staging", "Set up monitoring")
    - **Known Gaps:** Documented limitations and recommended follow-up
 2. **Generate HTML Report:**
-   - Copy `./templates/progress-report.template.html` → `docs/<scenario>-<slug>/progress-report.html`
+   - Copy `../skills/progress-report/progress-report.template.html` → `docs/<scenario>-<slug>/progress-report.html`
    - Update `<script id="report-data">` JSON block with:
      ```json
      {
@@ -394,6 +394,6 @@ Run this checklist before declaring workflow complete:
 - For migrations: `.github/prompts/modernization.prompt.md`
 
 **References:**
-- SDD phases: `./shared/meta-agentic-method.md`
-- MCP/skill catalog: `./references.md`
-- Report template: `./templates/progress-report.template.html`
+- SDD phases: `../skills/meta-agentic-method/SKILL.md`
+- MCP/skill catalog: `../skills/meta-agentic-method/references.md`
+- Report template: `../skills/progress-report/progress-report.template.html`

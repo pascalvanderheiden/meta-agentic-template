@@ -1,8 +1,20 @@
+---
+name: meta-agentic-method
+description: 'Spec-Driven Development methodology for meta-agentic workflows. Use when planning or executing green-field, brown-field, or modernization scenarios that require team formation, capability mapping, confidence scoring, and iterative spec-first development. Covers 10-phase SDD pipeline, artifact conventions, team-formation algorithm, capability-acquisition decision tree, and 6-dimension confidence rubric.'
+---
+
 # Meta-Agentic Methodology
 
-## Purpose
+This skill defines the shared Spec-Driven Development (SDD) methodology for meta-agentic workflows. It provides a phase-driven pipeline, artifact schemas, team-formation logic, capability-acquisition decisions, and confidence-scoring criteria.
 
-This document defines the shared Spec-Driven Development (SDD) methodology used by all meta-agentic workflow prompts (green-field, brown-field, modernization). Prompts reference this file via relative path (`./shared/meta-agentic-method.md`) to ensure consistent phase pipelines, artifact schemas, team-formation logic, capability acquisition decisions, and confidence scoring across all scenarios.
+## When to Use This Skill
+
+- Planning a green-field system from requirements
+- Extending or modifying an existing codebase (brown-field)
+- Migrating or modernizing legacy platforms
+- Forming AI agent teams for complex multi-domain scenarios
+- Mapping required capabilities (skills, MCP servers, instructions, agents)
+- Scoring confidence for deliverable readiness
 
 ## Spec-Driven Development (SDD) Phase Model
 
@@ -115,9 +127,9 @@ All scenarios flow through these phases (starting at their scenario-specific ent
 
 **Inputs:**
 - Analysis artifact
-- Capability Acquisition Decision Tree (this doc, § Capability Acquisition)
+- Capability Acquisition Decision Tree (see below)
 - Repository's existing skills/instructions/agents
-- MCP server catalog (`../references.md`)
+- MCP server catalog (see [references.md](./references.md))
 
 **Output Artifact:** `docs/<scenario>-<slug>/03-capability-map.md` (or `05-capability-map.md` for modernization)
 - Capability matrix table:
@@ -141,7 +153,7 @@ All scenarios flow through these phases (starting at their scenario-specific ent
 
 **Inputs:**
 - Capability map
-- Capability Acquisition Decision Tree (this doc)
+- Capability Acquisition Decision Tree (see below)
 - MCP-builder skill (for MCP generation)
 - Skill/instruction authoring guidelines (`.github/instructions/`)
 
@@ -152,7 +164,7 @@ All scenarios flow through these phases (starting at their scenario-specific ent
 - Updated capability map with "Status: Available"
 
 **Authoring Standard:**
-When generating any skill, agent, instruction, or prompt, apply the matching `.github/instructions/*` guideline and the `.squad/skills/project-conventions` skill to ensure consistency (per the standing decision in `.squad/decisions.md`).
+When generating any skill, agent, instruction, or prompt, apply the matching `.github/instructions/*` guideline to ensure consistency (per the standing decision in `.squad/decisions.md`).
 
 **Exit Criteria:**
 - All capabilities marked "Available" in capability map
@@ -168,7 +180,7 @@ When generating any skill, agent, instruction, or prompt, apply the matching `.g
 **Inputs:**
 - Analysis artifact (functional domains)
 - Capability map (available skills/instructions/MCP)
-- Team Formation Algorithm (this doc)
+- Team Formation Algorithm (see below)
 
 **Output Artifact:** `docs/<scenario>-<slug>/04-team.md` (or `06-team.md` for modernization)
 - Agent roster table:
@@ -224,7 +236,7 @@ When generating any skill, agent, instruction, or prompt, apply the matching `.g
 - Requirements traceability matrix (requirement → artifact mapping)
 - Test results (pass/fail per success criterion)
 - Known limitations documented
-- Confidence score (see Confidence Scoring rubric)
+- Confidence score (see Confidence Scoring rubric below)
 
 **Exit Criteria:**
 - ≥80% of success criteria met (or lower threshold with documented exceptions)
@@ -250,7 +262,7 @@ When generating any skill, agent, instruction, or prompt, apply the matching `.g
 - Known gaps and recommended follow-up work
 
 **Exit Criteria:**
-- HTML report generated (using `../templates/progress-report.template.html`)
+- HTML report generated (using [progress-report skill](../progress-report/SKILL.md))
 - All artifacts committed to repository
 - Handoff README is self-contained (readable without re-running workflow)
 
@@ -350,7 +362,7 @@ CAPABILITY NEEDED
 │   └─ Action: Add to Capability Map as "Status: Available (Reused)"
 │
 ├─→ [B] FIND EXISTING MCP SERVER OR PUBLISHED SKILL
-│   ├─ Search `../references.md` for MCP servers matching capability domain
+│   ├─ Search `references.md` (same folder) for MCP servers matching capability domain
 │   ├─ Search published skill repositories (Anthropic skills, GitHub awesome-copilot)
 │   ├─ Evidence: URL, installation command, compatibility notes
 │   └─ Action: Add to Capability Map as "Status: Available (External)"
@@ -474,5 +486,5 @@ This migration is ready for production execution. The primary risk is lack of en
 - Team formation guidelines: `.github/instructions/agents.instructions.md`
 - Skill authoring standards: `.github/instructions/agent-skills.instructions.md`
 - Instruction authoring standards: `.github/instructions/instructions.instructions.md`
-- MCP server catalog: `../references.md` (when available)
-- HTML report template: `../templates/progress-report.template.html` (rendered by Trinity agent)
+- MCP server catalog: [references.md](./references.md)
+- HTML report template: [progress-report skill](../progress-report/SKILL.md)

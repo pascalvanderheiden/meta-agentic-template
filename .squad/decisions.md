@@ -2,6 +2,36 @@
 
 ## Active Decisions
 
+### 2026-06-08: Repository Restructure — Move Methodology & Report Into Skills
+
+**By:** Trinity (Template Engineer), Oracle (Knowledge Architect), Tank (Integration Dev)
+
+**Decision:** Restructured `.github/` to consolidate Copilot artifacts:
+- Progress report capability → `.github/skills/progress-report/` (SKILL.md + template)
+- Methodology + references → `.github/skills/meta-agentic-method/` (SKILL.md + references.md)
+- Removed `.github/prompts/shared/`, `.github/prompts/templates/`, `.github/prompts/references.md`
+- Rewired all prompt file links + copilot-instructions.md to new skill paths
+- Condensed README.md: 547 → 149 lines
+- Added MIT LICENSE at repo root
+
+**Rationale:** 
+- `.github/` now holds only Copilot-native artifacts (agents, skills, instructions, prompts, hooks)
+- Skills follow standing decision on artifact placement + authoring guidelines
+- Cleaner structure, better discoverability, proper progressive loading
+- No link breakage verified
+
+**Verification:** 
+- `.github/skills/progress-report/SKILL.md`, `.github/skills/progress-report/progress-report.template.html` exist
+- `.github/skills/meta-agentic-method/SKILL.md`, `.github/skills/meta-agentic-method/references.md` exist
+- No stale links in prompts or instructions (grep verified)
+- New links confirmed operational
+
+**Sub-decisions documented:**
+- `trinity-report-skill.md` — Progress report skill conversion details
+- `oracle-method-skill.md` — Methodology skill conversion + rationale
+- `oracle-readme-condense.md` — README condensation (73% reduction)
+- `tank-link-rewire.md` — Link rewiring + verification
+
 ### 2026-06-08: Project Standards Enforcement
 
 **By:** Pascal van der Heiden (via Copilot)

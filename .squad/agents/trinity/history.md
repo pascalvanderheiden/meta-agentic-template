@@ -78,3 +78,19 @@ Built self-contained HTML progress report template for multi-phase meta-agentic 
 **Key design**: Single self-contained HTML (inline CSS/JS, no CDN), offline-functional, professional GitHub styling. Confidence dimensions sourced from Oracle's rubric in `../shared/meta-agentic-method.md`.
 
 Location: `.github/prompts/templates/progress-report.template.html` + README.md
+
+### 2024-06-08: Progress Report Skill Migration
+
+Restructured progress-report capability from loose files in `.github/prompts/templates/` into proper Agent Skill at `.github/skills/progress-report/`.
+
+**New structure**:
+- `SKILL.md` — Full specification following `agent-skills.instructions.md` (frontmatter with `name` + `description`, when to use, update protocol, JSON contract, examples, gotchas, references)
+- `progress-report.template.html` — Bundled template (moved with `git mv` to preserve history)
+
+**JSON contract home**: Now documented in `SKILL.md` with full schema, field descriptions, minimal/full examples, and strict validation rules (ISO 8601 timestamps, dimension weights sum to 1.0, status enums).
+
+**Key improvements**:
+- Progressive disclosure: SKILL.md loads only when relevant to user's request
+- Portable across VS Code, Copilot CLI, GitHub Copilot coding agent
+- References Oracle's confidence rubric at `../meta-agentic-method/SKILL.md` (created by Oracle in parallel)
+- Removed old `.github/prompts/templates/` directory (empty after migration)

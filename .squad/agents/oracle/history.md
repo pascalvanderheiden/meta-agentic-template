@@ -78,3 +78,19 @@ All squad agents MUST leverage authoring instruction files when creating/editing
 - Documentation as first-class output
 - Imperative mood instructions
 - Context budget awareness (concise descriptions)
+
+### 2026-06-08: Methodology Restructured as Skill
+
+**Migration:**
+- Converted `.github/prompts/shared/meta-agentic-method.md` + `references.md` into proper skill
+- New location: `.github/skills/meta-agentic-method/SKILL.md` + `references.md`
+- Old shared directory removed; `.github/` now holds only Copilot-native artifacts
+- Skill follows `agent-skills.instructions.md` spec: frontmatter, progressive disclosure, bundled resources
+
+**Skill Content:**
+- 10-phase SDD pipeline (Intake → Handoff)
+- Artifact numbering convention (base vs modernization)
+- Team-formation algorithm (domain → role → capability → handoff)
+- Capability-acquisition decision tree (Reuse → Find → Build)
+- 6-dimension confidence rubric + worked example
+- References catalog bundled as `references.md` in same folder

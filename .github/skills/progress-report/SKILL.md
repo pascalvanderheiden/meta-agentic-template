@@ -1,30 +1,42 @@
-# Progress Report Template
+---
+name: progress-report
+description: 'Generate and update real-time HTML progress reports for meta-agentic workflows. Use when generating progress dashboards, tracking multi-phase SDD execution, visualizing confidence scores, reporting team composition, displaying capability gaps, or updating status for green-field, brown-field, and modernization scenarios. Self-contained HTML with embedded JSON data island.'
+---
 
-Self-contained HTML progress report for meta-agentic development workflows.
+# Progress Report Generator
 
-## Purpose
+Generate self-contained HTML progress reports for meta-agentic development workflows. Provides real-time visibility into multi-phase, spec-driven development driven by green-field, brown-field, and modernization prompts.
 
-Provides real-time visibility into multi-phase, spec-driven development driven by green-field, brown-field, and modernization prompts. Each prompt generates and updates a report showing confidence scores, phase progress, team roster, capability gaps, and risks.
+## When to Use This Skill
 
-## Usage Protocol
+- User asks to generate a progress report for a meta-agentic workflow
+- User requests a status dashboard for SDD (Spec-Driven Development) execution
+- User needs to visualize confidence scores and team composition
+- User wants to track phase completion and capability gaps
+- User asks to update an existing progress report after phase completion
+- User needs to display MCP server status and risk assessment
 
-### Initial Generation
+## How the Report Works
 
-1. Copy `progress-report.template.html` to `docs/<scenario>-<slug>/progress-report.html`
-2. Replace JSON data island (`<script id="report-data">`) with actual project data
-3. Update `generatedAt` timestamp
-4. Open file in browser — renders immediately, no network required
+The progress report uses a **data island pattern** — a self-contained HTML file with embedded JSON that renders without external dependencies:
 
-### Phase Updates
+1. **Initial Generation**: Copy the bundled `progress-report.template.html` to `docs/<scenario>-<slug>/progress-report.html`
+2. **Data Embedding**: Replace the JSON block inside `<script id="report-data" type="application/json">` with actual project data
+3. **Rendering**: Open the HTML file in any browser — JavaScript reads the JSON and renders all sections
+4. **Updates**: After each SDD phase completion, rewrite only the JSON block + `generatedAt` timestamp; HTML/CSS/JS remain static
 
-After each SDD phase completion:
+**Key advantage**: No network required, works offline, single file contains everything.
 
-1. Locate `<script id="report-data" type="application/json">` block in the HTML
+## Update Protocol
+
+After each phase completion:
+
+1. Locate `<script id="report-data" type="application/json">` block in the HTML file
 2. Replace entire JSON payload with updated data
-3. Update `generatedAt` timestamp
+3. Update `generatedAt` timestamp to current ISO 8601 time
 4. Save file — page auto-refreshes on reload
 
-**Key**: Only the JSON block changes. HTML/CSS/JS remain static.
+**Only the JSON changes.** Never modify HTML/CSS/JS structure.
 
 ## JSON Data Contract
 
@@ -106,12 +118,12 @@ After each SDD phase completion:
 
 - **overallConfidence.score**: Composite 0–100 score calculated from weighted dimensions
 - **overallConfidence.interpretation**: One-sentence human summary (e.g., "High confidence — all capabilities available")
-- **confidenceDimensions**: Array of rubric dimensions from `../shared/meta-agentic-method.md`
+- **confidenceDimensions**: Array of rubric dimensions from the meta-agentic-method skill
   - **name**: Dimension name (e.g., "Capability Coverage", "MCP Availability")
   - **score**: 0–100 assessment for this dimension
   - **weight**: Fractional weight (0–1); all weights sum to 1.0
 
-**Important**: Dimension names and weights are defined by Oracle's rubric. Prompts must read the rubric and emit matching JSON.
+**Important**: Dimension names and weights are defined by Oracle's confidence rubric in `../meta-agentic-method/SKILL.md`. Read the rubric and emit matching JSON.
 
 #### Phases
 
@@ -189,56 +201,35 @@ Identified gaps and blockers:
 
 ### Full Payload
 
-See embedded JSON in `progress-report.template.html` for a complete Oracle → Fabric ETL example.
-
-## Confidence Rubric Sync
-
-Confidence dimensions and weights are **not hardcoded** in the template. The report renders whatever the JSON provides.
-
-**Source of truth**: `../shared/meta-agentic-method.md` — Oracle's confidence rubric.
-
-**Prompt responsibility**: Read the rubric, calculate dimension scores, emit matching JSON. The template only visualizes.
-
-**Maintaining sync**: If Oracle updates the rubric (adds/removes dimensions, changes weights), prompts auto-adapt. Template requires no changes.
-
-## File Organization
-
-```
-.github/prompts/
-├── templates/
-│   ├── progress-report.template.html    # This template
-│   └── README.md                        # This doc
-├── shared/
-│   └── meta-agentic-method.md          # Oracle's confidence rubric (source of truth)
-└── <green-field|brown-field|modernization>.prompt.md
-
-docs/
-└── <scenario-slug>/
-    ├── progress-report.html             # Generated report (copy of template)
-    └── <other-spec-docs>.md
-```
-
-## Design Notes
-
-- **Self-contained**: No external dependencies. Works offline.
-- **Data island pattern**: JSON embedded in HTML as `<script type="application/json">`. JS reads on load.
-- **Update efficiency**: Prompts rewrite only the JSON block + timestamp. No HTML/CSS/JS changes.
-- **Accessible**: Semantic HTML, ARIA-friendly, responsive design.
-- **Professional**: GitHub-inspired palette, clean layout, print-friendly.
+See the embedded JSON in `progress-report.template.html` for a complete Oracle → Fabric ETL example with all sections populated.
 
 ## Rendering Logic
 
-On page load:
+On page load, the template:
 
-1. Read `<script id="report-data">` JSON
-2. Parse and validate
-3. Render each section:
-   - Confidence gauge with color thresholds (≥80 green, 50–79 amber, <50 red)
-   - Dimension bars with weighted percentages
-   - Phase timeline with status badges
-   - Team cards with resources
-   - Capability table with color-coded status
-   - MCP server list with connection state
-   - Risk list with severity colors
+1. Reads `<script id="report-data">` JSON
+2. Parses and validates structure
+3. Renders each section:
+   - **Confidence gauge** with color thresholds (≥80 green, 50–79 amber, <50 red)
+   - **Dimension bars** with weighted percentages
+   - **Phase timeline** with status badges
+   - **Team cards** with resources
+   - **Capability table** with color-coded status
+   - **MCP server list** with connection state
+   - **Risk list** with severity colors
 
-All styling inline. No runtime network requests.
+All styling is inline. No runtime network requests.
+
+## Gotchas
+
+- **Never edit HTML/CSS/JS** — only update the JSON data island and timestamp
+- **Confidence dimensions must match Oracle's rubric** — if Oracle updates dimension names or weights, update your JSON accordingly
+- **ISO 8601 timestamps required** — use format `2024-01-15T10:00:00Z` for `generatedAt`
+- **Weights must sum to 1.0** — validate `confidenceDimensions` weights before writing
+- **Phase status values are strict** — only use `pending`, `in-progress`, `done`, `blocked`
+- **Capability status values are strict** — only use `found`, `built`, `reused`, `missing`
+
+## References
+
+- Template file: [progress-report.template.html](./progress-report.template.html)
+- Confidence rubric source: [../meta-agentic-method/SKILL.md](../meta-agentic-method/SKILL.md)

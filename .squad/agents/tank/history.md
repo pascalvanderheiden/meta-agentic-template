@@ -43,3 +43,13 @@
 - Remote origin configured and pushed successfully
 
 <!-- Append learnings below -->
+
+**2025-01-XX: Repo Restructure Link Rewiring**
+- Moved shared prompts INTO skills:
+  - `.github/prompts/shared/meta-agentic-method.md` → `.github/skills/meta-agentic-method/SKILL.md`
+  - `.github/prompts/references.md` → `.github/skills/meta-agentic-method/references.md`
+  - `.github/prompts/templates/progress-report.template.html` → `.github/skills/progress-report/progress-report.template.html`
+- Updated link references in 3 prompt files (green-field, brown-field, modernization) + copilot-instructions.md
+- Replaced both absolute (`.github/prompts/...`) and relative (`./shared/...`, `./templates/...`) paths
+- Preserved section anchors (e.g., `§ Analysis phase requirements`) when present
+- Verification: `grep -rnE "prompts/(shared|templates|references)|\./(shared|templates|references)"` returns nothing
