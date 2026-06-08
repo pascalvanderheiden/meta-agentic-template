@@ -100,11 +100,49 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - `view` for configuration files (package.json, docker-compose.yml, etc.)
    - `bash` to run existing tests/build commands (verify baseline)
 
-**Exit Gate:** Complete component inventory, data flows traced, architecture diagram produced. No "unknown" placeholders without follow-up.
+**Exit Gate:** Complete component inventory, data flows traced, architecture diagram produced. No "unknown" placeholders without follow-up. **Baseline test pass-rate recorded** (if existing test suite present).
 
 ---
 
-### Phase 3: Analysis
+### Phase 3: Safety Net Establishment
+
+**Objective:** Capture existing behavior via snapshot + characterization testing BEFORE altering code.
+
+**Actions:**
+1. Read `../skills/meta-agentic-method/SKILL.md` § Testing Strategy (Brown-Field)
+2. **Snapshot Tests (Approval Tests):**
+   - Identify critical outputs (API responses, rendered pages, data transformations, file generations)
+   - Implement Approval Tests to lock current outputs (ApprovalTests.Java, ApprovalTests.Net, approvaltests-python)
+   - Run tests → capture baselines → commit approved files
+3. **Characterization Tests:**
+   - Reverse-engineer unit tests from existing code
+   - Focus on non-obvious behavior, edge cases, legacy quirks
+   - Goal: document current behavior as executable tests (even if behavior is "wrong")
+4. **Dependency Mapping:**
+   - Run BMAD (Bayesian Model for Automated Dependency analysis) or static analysis
+   - Map component dependencies → understand blast radius of changes
+   - Document coupling hotspots in `docs/<scenario>-<slug>/03-safety-net.md`
+5. **UI Baselines (if applicable):**
+   - Use Playwright MCP server to capture screenshots of existing UI states
+   - Record interaction flows (login, navigation, forms)
+   - Store baselines for visual regression testing
+6. Document testing approach in `docs/<scenario>-<slug>/03-safety-net.md`:
+   - Approval test inventory (what outputs are locked)
+   - Characterization test coverage (which behaviors documented)
+   - Dependency graph (coupling analysis)
+   - Playwright baseline inventory (UI states captured)
+7. **Run all tests → verify green:** If tests fail, fix TESTS (update baselines), not code (code is ground truth)
+8. Framework selection:
+   - **Snapshot:** Approval Tests (language-specific library)
+   - **Unit:** Existing test framework + new characterization tests
+   - **Dependency:** BMAD, Understand, CodeScene, or `jdeps`/`dependency-cruiser`
+   - **UI:** Playwright (via Playwright MCP server — see `../skills/meta-agentic-method/references.md`)
+
+**Exit Gate:** Safety net green (all approval tests, characterization tests, Playwright baselines pass). Dependency map documented. **Only NOW** proceed to change analysis.
+
+---
+
+### Phase 4: Analysis
 
 **Objective:** Decompose change request into functional domains and capability requirements.
 
@@ -124,7 +162,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 ---
 
-### Phase 4: Capability Mapping
+### Phase 5: Capability Mapping
 
 **Objective:** Map required capabilities to concrete artifacts (MCP servers, skills, instructions, agents).
 
@@ -155,7 +193,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 ---
 
-### Phase 5: Capability Acquisition
+### Phase 6: Capability Acquisition
 
 **Objective:** Obtain all "To Build" and "To Find" capabilities.
 
@@ -180,7 +218,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 ---
 
-### Phase 6: Team Formation
+### Phase 7: Team Formation
 
 **Objective:** Define agent team roles and capabilities; materialize using chosen execution approach.
 
@@ -258,7 +296,7 @@ The role roster defined above materializes differently based on the approach cho
 
 ---
 
-### Phase 7: Execution (Iterative)
+### Phase 8: Execution (Iterative)
 
 **Objective:** Execute changes using agent team while preserving existing functionality.
 
@@ -283,7 +321,7 @@ The role roster defined above materializes differently based on the approach cho
 
 ---
 
-### Phase 8: Verification
+### Phase 9: Verification
 
 **Objective:** Validate changes against requirements AND preservation of existing functionality.
 
@@ -306,7 +344,7 @@ The role roster defined above materializes differently based on the approach cho
 
 ---
 
-### Phase 9: Handoff
+### Phase 10: Handoff
 
 **Objective:** Package deliverables for user handoff.
 
@@ -371,7 +409,7 @@ The role roster defined above materializes differently based on the approach cho
 
 ---
 
-### Phase 10: Template Feedback (If Applicable)
+### Phase 11: Template Feedback (If Applicable)
 
 **Objective:** Report template-level gaps back to upstream for continuous improvement.
 

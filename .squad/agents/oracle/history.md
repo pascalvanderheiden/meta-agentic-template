@@ -130,3 +130,31 @@ All squad agents MUST leverage authoring instruction files when creating/editing
 - Maps template gaps to 6-dimension rubric (Capability Coverage, MCP Availability, Skill/Instruction Coverage, Data/Domain Knowledge, Spec Completeness, Verification Status)
 - Only significant gaps (>5 point impact) warrant filing
 - Helps template maintainers prioritize improvements by quantified confidence delta
+## Learnings
+
+### 2026-06-08: Testing as First-Class Methodology Component
+
+**Context:** Directive to integrate testing strategy into the meta-agentic methodology with scenario-specific approaches tied to confidence scoring.
+
+**Learning:** Testing is NOT a final phase — it's woven into the SDD pipeline at scenario-specific entry points:
+- **Green-field (TDD+BDD):** Tests authored BEFORE implementation (Phase 6: Testing Strategy Definition). BDD scenarios + failing unit tests lock specs, THEN code implements to green. Frameworks: Playwright (E2E/UI), Jest/JUnit (unit), Gherkin/Cucumber (BDD).
+- **Brown-field (Safety Net):** Snapshot + characterization tests authored BEFORE altering code (Phase 3: Safety Net Establishment). Approval Tests lock current outputs, characterization tests document existing behavior, BMAD maps dependencies, Playwright captures UI baselines. Only modify code once safety net is green.
+- **Modernization (Parity):** API contract + parity testing ensures modernized modules output EXACT same data as legacy (Phase 7: Parity Testing Strategy Definition). Golden datasets capture legacy outputs, contract tests compare legacy vs. modernized responses on identical inputs. Legacy system must remain operational during migration for comparison.
+
+**Impact on Confidence Rubric:**
+- **Verification Status (10%):** Direct link — 0 (no tests), 50 (manual), 100 (automated tests green + requirements traced).
+- **Capability Coverage (25%):** Penalized if testing framework capabilities (Playwright MCP, Approval Tests, contract testing tools) missing.
+- **Spec Completeness (15%):** Penalized if test specifications (BDD scenarios, characterization suites, parity datasets) incomplete.
+
+**Auth Clarification Applied:** Filing issues on PUBLIC repos requires authentication (no anonymous issue creation), but does NOT require hand-made PATs — host OAuth (GitHub MCP / IDE sign-in) provides identity; PAT is fallback. Reading public issues requires no auth.
+
+**Artifacts Updated:**
+1. `.github/skills/meta-agentic-method/SKILL.md` — Added § Testing Strategy (65 lines: scenario table, phase integration, rubric link, tool availability, gotchas) + auth correction in § Upstream Template Feedback Loop
+2. `.github/copilot-instructions.md` — Added § Testing Strategy (by Scenario) subsection (9 lines) + auth correction in § Template Feedback Loop
+3. `.github/prompts/green-field.prompt.md` — Added Phase 6: Testing Strategy Definition (TDD+BDD before implementation), renumbered Execution→Verification→Handoff→Template Feedback to Phases 7-10
+4. `.github/prompts/brown-field.prompt.md` — Added Phase 3: Safety Net Establishment (snapshot+characterization+BMAD BEFORE altering), renumbered Analysis→Capability Mapping→...→Template Feedback to Phases 4-11
+5. `.github/prompts/modernization.prompt.md` — Added Phase 7: Parity Testing Strategy Definition (contract+parity tests with golden datasets), renumbered Team Formation→...→Template Feedback to Phases 8-12
+
+**Verification:** Grep confirmed "Testing Strategy" in SKILL.md, copilot-instructions.md; "Testing Strategy Definition" in green-field.prompt.md; "Safety Net Establishment" in brown-field.prompt.md; "Parity Testing Strategy Definition" in modernization.prompt.md.
+
+**Key Insight:** Testing drives spec-locking (green-field), regression prevention (brown-field), and migration validation (modernization). Weak testing lowers Verification Status AND cascades into Capability Coverage + Spec Completeness degradation — a 10% direct hit can trigger 20-30 point confidence drops via secondary rubric impacts.

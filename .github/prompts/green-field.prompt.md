@@ -217,27 +217,54 @@ The role roster defined above materializes differently based on the approach cho
 
 ---
 
-### Phase 6: Execution (Iterative)
+### Phase 6: Testing Strategy Definition
 
-**Objective:** Execute scenario using agent team.
+**Objective:** Define TDD + BDD testing approach BEFORE implementation.
+
+**Actions:**
+1. Read `../skills/meta-agentic-method/SKILL.md` § Testing Strategy (Green-Field)
+2. Assign a `Tester` or `QA` agent role (if not already in roster) with testing capabilities
+3. For each functional domain from Analysis:
+   - **BDD Scenarios:** Author executable `.feature` files (Gherkin syntax) derived from success criteria
+   - **Test Stubs:** Create failing unit tests (Jest/JUnit) that specify expected behavior (TDD red phase)
+4. Document testing approach in `docs/<scenario>-<slug>/05-testing-strategy.md`:
+   - BDD scenario inventory (feature files per domain)
+   - Unit test suites per component
+   - E2E test plan (Playwright scripts for UI flows)
+   - Test data requirements (fixtures, mocks, seeds)
+5. Framework selection:
+   - **Unit:** Jest (JS/TS), JUnit (Java), pytest (Python), xUnit (.NET)
+   - **BDD:** Cucumber (Java/Ruby), Behave (Python), SpecFlow (.NET), Cucumber.js (JS/TS)
+   - **E2E/UI:** Playwright (via Playwright MCP server — see `../skills/meta-agentic-method/references.md`)
+6. **CRITICAL:** Tests authored NOW, implementation comes AFTER (next phase)
+
+**Exit Gate:** All BDD scenarios authored, all unit tests failing (red), E2E test plan documented. No implementation code yet.
+
+---
+
+### Phase 7: Execution (Iterative)
+
+**Objective:** Execute scenario using agent team, implementing to make tests green.
 
 **Actions:**
 1. Create `docs/<scenario>-<slug>/execution-log.md` (append-only timestamped log)
 2. For each functional domain (in dependency order):
    - Instantiate responsible agent(s) with their assigned capabilities
+   - **Implement code to make failing tests pass** (TDD green phase)
+   - Refactor as needed (TDD refactor phase)
    - Agent produces spec/code artifacts
    - Log agent actions: `## [ISO8601 timestamp] <AgentName>: <Action>`
    - Handoff to next agent in chain
 3. Record architecture decisions in `docs/<scenario>-<slug>/adr/*.md`:
    - Use standard ADR format: Status, Context, Decision, Consequences
    - Examples: framework choice, database schema design, API versioning strategy
-4. Iterate until all success criteria from Analysis met
+4. Iterate until all success criteria from Analysis met **and all tests green**
 
-**Exit Gate:** All success criteria met, all agents report completion, no blockers.
+**Exit Gate:** All success criteria met, all BDD scenarios passing, all unit tests green, all agents report completion, no blockers.
 
 ---
 
-### Phase 7: Verification
+### Phase 8: Verification
 
 **Objective:** Validate deliverables against requirements.
 

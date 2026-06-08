@@ -151,6 +151,10 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - **Non-Functional Requirements:** Performance parity, security posture, compliance (e.g., GDPR data residency)
    - **Capability Requirements:** List needed agents, skills, instructions, MCP servers
      - **Key modernization-specific need:** MCP servers for BOTH source and target platforms
+   - **Parity Testing Requirements:**
+     - Define golden datasets (representative inputs + expected legacy outputs)
+     - Specify parity success criteria (e.g., "100% match on golden dataset", "performance within 10% of legacy")
+     - Identify APIs/endpoints requiring contract testing
 3. Prioritize domains by dependency and risk
 
 **Exit Gate:** ≥2 functional domains defined, each with success criteria. Migration sequence (domain execution order) documented.
@@ -228,7 +232,45 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 ---
 
-### Phase 7: Team Formation
+### Phase 7: Parity Testing Strategy Definition
+
+**Objective:** Define API contract + parity testing approach to guarantee backward compatibility.
+
+**Actions:**
+1. Read `../skills/meta-agentic-method/SKILL.md` § Testing Strategy (Modernization)
+2. **Golden Datasets:**
+   - Extract representative inputs from legacy system (sample queries, API requests, data files)
+   - Capture expected outputs from legacy system (responses, processed data, generated files)
+   - Store as golden dataset in `docs/<scenario>-<slug>/golden-data/`
+   - Document dataset provenance (what it represents, coverage %)
+3. **API Contract Tests:**
+   - For each API/interface to migrate, author contract tests:
+     - Send identical inputs to legacy vs. modernized system
+     - Assert byte-for-byte equality (or semantic equality with documented deviations)
+     - Test error handling parity (same errors for same invalid inputs)
+   - Frameworks: Pact (consumer-driven), Spring Cloud Contract, Postman/Newman
+4. **Parity Test Plan:**
+   - Create `docs/<scenario>-<slug>/07-parity-testing.md`:
+     - Golden dataset inventory (inputs + expected outputs)
+     - Contract test inventory (API endpoints, data transformations tested)
+     - Parity success criteria (100% match? 99.9%? Acceptable deviations documented?)
+     - Performance parity thresholds (legacy baseline + acceptable degradation)
+5. **Continuous Parity Validation:**
+   - Run parity tests continuously during migration (legacy system operational)
+   - Track parity score over time (% of golden dataset passing)
+   - Document divergences (intended vs. bugs)
+6. Framework selection:
+   - **Contract Testing:** Pact, Spring Cloud Contract, Postman/Newman (API validation)
+   - **Data Validation:** Custom scripts comparing CSV/JSON/XML outputs
+   - **Performance:** JMeter, k6, Locust (compare legacy vs. modernized throughput/latency)
+   - See `../skills/meta-agentic-method/references.md` for framework sources
+7. **CRITICAL:** Legacy system must remain operational during migration for comparison testing
+
+**Exit Gate:** Golden datasets captured, contract tests authored, parity test plan documented. Baseline parity score established (legacy vs. itself = 100%).
+
+---
+
+### Phase 8: Team Formation
 
 **Objective:** Define agent team roles and capabilities; materialize using chosen execution approach.
 
@@ -316,7 +358,7 @@ The role roster defined above materializes differently based on the approach cho
 
 ---
 
-### Phase 8: Execution (Iterative)
+### Phase 9: Execution (Iterative)
 
 **Objective:** Execute migration using agent team.
 
@@ -345,7 +387,7 @@ The role roster defined above materializes differently based on the approach cho
 
 ---
 
-### Phase 9: Verification
+### Phase 10: Verification
 
 **Objective:** Validate migration against requirements and data parity.
 
@@ -375,7 +417,7 @@ The role roster defined above materializes differently based on the approach cho
 
 ---
 
-### Phase 10: Handoff
+### Phase 11: Handoff
 
 **Objective:** Package migration deliverables for user handoff.
 
@@ -443,7 +485,7 @@ The role roster defined above materializes differently based on the approach cho
 
 ---
 
-### Phase 11: Template Feedback (If Applicable)
+### Phase 12: Template Feedback (If Applicable)
 
 **Objective:** Report template-level gaps back to upstream for continuous improvement.
 

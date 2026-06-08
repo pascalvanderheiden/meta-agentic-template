@@ -306,6 +306,125 @@
 
 **Orchestration Log:** `.squad/orchestration-log/2026-06-08T20:06:34Z-oracle.md`
 
+### 2026-06-08T22:14:00Z: User Directive — Testing Strategy per Scenario + Playwright MCP + Auth Clarification
+
+**By:** Pascal van der Heiden (via Copilot)
+
+**Directive:**
+1. Add Playwright MCP server to `.copilot/mcp-config.json` (`npx @playwright/mcp@latest`). Testing is first-class for the template.
+2. Embed scenario-specific testing strategies into methodology + prompts:
+   - **Green-field:** TDD + BDD (specs lock BEFORE coding); Frameworks: Playwright, Jest/JUnit
+   - **Brown-field:** Safety Net (snapshot + characterization BEFORE altering); Frameworks: Approval Tests, BMAD, Playwright
+   - **Modernization:** Backward Compatibility (API contract testing for parity); Frameworks: Pact, Schemathesis
+3. Tie testing to confidence rubric (Verification Status dimension)
+4. Auth clarification: Filing issues on public repos requires authentication, but NOT mandatory PAT — host OAuth (GitHub MCP / IDE sign-in) provides identity; PAT is fallback. Reading public issues needs no auth.
+
+**Rationale:** User request — testing is a first-class success factor; testing-to-rubric tie improves decision-making clarity; auth docs had been misleading.
+
+**Status:** Implemented by Tank + Oracle; Approved by Neo.
+
+### 2026-06-08T20:24:53Z: Playwright MCP Server Integration + Testing Source Catalog
+
+**By:** Tank (Integration Dev)
+
+**Decision:** Added Playwright MCP server to `.copilot/mcp-config.json` alongside GitHub server. Created comprehensive testing source catalog in `.github/skills/meta-agentic-method/references.md` § 3 "Testing & MCP" with scenario-specific framework mapping.
+
+**Rationale:**
+- Playwright MCP enables AI-assisted E2E testing (browser automation, snapshots, accessibility checks)
+- Testing frameworks map to scenarios (green-field: Playwright+Jest/JUnit+BDD; brown-field: Approval Tests+BMAD+Playwright; modernization: Pact+Schemathesis)
+- Unified catalog enables prompts to discover testing sources during Capability Mapping phase
+
+**Configuration:**
+```json
+{
+  "mcpServers": {
+    "github": { ... },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
+  }
+}
+```
+
+**Testing Source Catalog (§ 3 in references.md):**
+- Playwright MCP: https://github.com/microsoft/playwright-mcp
+- E2E/UI: Playwright (https://playwright.dev)
+- Unit: Jest (https://jestjs.io), JUnit (https://junit.org)
+- BDD: Cucumber/Gherkin (https://cucumber.io)
+- Snapshot/Approval: Approval Tests (https://approvaltests.com)
+- AI-assisted refactoring: BMAD (https://github.com/bmad-code-org/BMAD-METHOD)
+- API contract: Pact (https://pact.io), Schemathesis (https://schemathesis.readthedocs.io)
+
+**Verification:**
+- JSON syntax valid
+- Both servers (`github`, `playwright`) registered
+- All framework URLs present in references.md
+
+**Impact:**
+- Prompts can now discover testing MCP + frameworks during capability mapping
+- Per-scenario testing frameworks explicitly documented
+- GitHub auth confusion eliminated (OAuth primary, PAT fallback)
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-08T20:24:53Z-tank.md`
+
+### 2026-06-08T20:24:53Z: Testing Strategy Integrated as First-Class Methodology Component
+
+**By:** Oracle (Knowledge Architect)
+
+**Decision:** Integrated scenario-specific testing strategies into SDD methodology, tying to confidence rubric's Verification Status dimension (10%), with explicit phase placement:
+- **Green-field Phase 6:** Testing Strategy Definition (TDD+BDD before coding)
+- **Brown-field Phase 3:** Safety Net Establishment (snapshot+characterization before altering)
+- **Modernization Phase 7:** Parity Testing Strategy Definition (golden datasets + API contract tests)
+
+**Implementation:**
+1. `.github/skills/meta-agentic-method/SKILL.md` — Added § Testing Strategy (scenario table, phase mapping, rubric linkage, tool availability, gotchas)
+2. `.github/copilot-instructions.md` — Added § Testing Strategy (by Scenario) with concise strategy + Playwright MCP note
+3. `.github/prompts/green-field.prompt.md` — Added Phase 6, renumbered 7-10
+4. `.github/prompts/brown-field.prompt.md` — Added Phase 3, renumbered 4-11
+5. `.github/prompts/modernization.prompt.md` — Added Phase 7, renumbered 8-12
+
+**Auth Clarification Applied:** Corrected documentation in 4 locations to clarify OAuth (primary) vs. PAT (fallback) for public issue creation.
+
+**Consequences:**
+- **Positive:** Explicit testing guidance, TDD/safety nets prevent rework, parity prevents data loss, testing gaps lower confidence scores visibly
+- **Negative:** Phase count increased (10-12 phases), cognitive load up; **Mitigation:** Each phase focused with clear exit gates
+
+**Verification:**
+- All testing keywords confirmed via grep across 5 files
+- Framework references align with Tank's source catalog
+- Phase numbering consistent (no collisions)
+- Rubric linkage explicit (Verification Status 10% impact documented)
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-08T20:24:53Z-oracle.md`
+
+### 2026-06-08T20:24:53Z: Neo Review — Testing Strategy + Playwright MCP APPROVED
+
+**By:** Neo (Reviewer-Gate)
+
+**Requested:** Verify Testing Strategy integration + Playwright MCP + auth correction
+
+**Verdict:** ✅ **APPROVED FOR PRODUCTION**
+
+**Verification Summary:**
+
+| Check | Status | Evidence |
+|-------|--------|----------|
+| mcp-config.json valid JSON | ✅ PASS | Python + jq |
+| `github` server config correct | ✅ PASS | MCP tool prefix match |
+| `playwright` server config canonical | ✅ PASS | `npx @playwright/mcp@latest` |
+| Auth accuracy (no PAT-mandatory) | ✅ PASS | 4 locations verified |
+| Testing phase placement | ✅ PASS | Green: before coding; Brown: before altering; Modernization: during migration |
+| Framework alignment | ✅ PASS | Playwright, Jest/JUnit, Approval Tests, BMAD, Pact |
+| Verification Status linkage | ✅ PASS | Explicit in SKILL.md |
+| Dual-path parity | ✅ PASS | Both custom-agent + Squad inherit |
+| Link integrity | ✅ PASS | 45+ relative links resolve |
+| No regression | ✅ PASS | Rubric weights, artifact numbering preserved |
+
+**Recommendation:** APPROVE for merge. Both features correctly implemented with valid configurations, accurate documentation, proper phase integration, cross-path consistency. No changes requested.
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-08T20:24:53Z-neo.md`
+
 ## Governance
 
 - All meaningful changes require team consensus

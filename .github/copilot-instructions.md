@@ -98,6 +98,16 @@ Three comprehensive workflows in `.github/prompts/` orchestrate complete develop
 - `.github/skills/meta-agentic-method/references.md` — Authoritative sources for MCP servers, skills, and Copilot customizations
 - `.github/skills/progress-report/` — Progress report templates and scaffolds
 
+### Testing Strategy (by Scenario)
+
+Testing is **first-class** and **scenario-specific** in the methodology:
+
+- **Green-field:** Use **TDD + BDD** to lock specs BEFORE coding. Write executable BDD scenarios (Gherkin) and failing tests, THEN implement to green. Frameworks: Playwright (E2E/UI), Jest/JUnit (unit).
+- **Brown-field:** Establish a **SAFETY NET** BEFORE altering existing code. Capture current state with snapshot tests (Approval Tests), characterize behavior with unit tests, map dependencies (BMAD), capture Playwright UI baselines. Only modify code once the safety net is green.
+- **Modernization:** Focus on **BACKWARD COMPATIBILITY** via API contract testing. Modernized modules must output the EXACT same data as legacy on identical inputs (parity tests with golden datasets).
+
+**Tool Availability:** Playwright MCP server available for browser/UI automation. See `.github/skills/meta-agentic-method/SKILL.md` § Testing Strategy for phase-specific integration guidance and link to Verification Status confidence dimension.
+
 ## How to Extend
 
 ### Adding a New Skill
@@ -155,7 +165,7 @@ Repos created FROM this template can report template-level improvements back to 
    - **Confidence impact** (rubric dimension + estimated point delta)
    - **Repro / context** (links to artifacts)
 
-**Transport:** GitHub MCP server (`.copilot/mcp-config.json`, server `github`) or `gh api` fallback.
+**Transport:** Filing issues on a **public** repository requires authentication (no anonymous issue creation), but does NOT require a hand-made PAT — host OAuth (GitHub MCP server / IDE sign-in) provides the necessary identity; a PAT is only a fallback. Reading public issues requires no authentication. Uses GitHub MCP server (`.copilot/mcp-config.json`, server `github`) or `gh api` fallback.
 
 **Who triggers:** Any custom-agent role, Squad member, or the GitHub Copilot agent orchestrating a scenario. This is a cross-cutting responsibility for all team members.
 

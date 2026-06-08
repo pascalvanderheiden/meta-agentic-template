@@ -30,3 +30,55 @@ Reviewed restructure converting loose `.github/prompts/` files into proper skill
 4. **Vision fit** — `.github/` now contains only Copilot-native artifacts (prompts, skills, instructions, agents, hooks). Methodology/report no longer loose files.
 
 **Learning:** Skill migration requires explicit cross-reference linking between skills (e.g., progress-report → meta-agentic-method for rubric source). Verify relative paths work from skill folder context.
+
+## 2026-06-08: Testing Strategy + Template Feedback Loop Review
+
+**Features Reviewed:**
+1. **Feature A (committed HEAD):** Upstream Template Feedback Loop — `template-feedback` label mechanism, `github-issues` skill transport, Squad routing rule #10
+2. **Feature B (uncommitted):** Testing strategy by scenario + Playwright MCP + Auth correction
+
+**VERDICT: APPROVED**
+
+### Findings
+
+1. **mcp-config.json validity** — ✅ PASS. Valid JSON, both `github` and `playwright` servers present:
+   - `github`: HTTP type, `https://api.githubcopilot.com/mcp/`, Bearer auth (canonical form)
+   - `playwright`: command `npx`, args `["@playwright/mcp@latest"]` (correct)
+   - Server named `github` so `mcp__github__*` tools resolve correctly.
+
+2. **Auth accuracy** — ✅ PASS. Verified in 4 locations (copilot-instructions.md line 168, SKILL.md line 633-637, decisions.md line 293-296, references.md line 64-66):
+   - Filing issues on public repos requires auth — TRUE (no anonymous creation)
+   - Host OAuth primary (GitHub MCP / IDE sign-in provides identity) — TRUE
+   - PAT is fallback, NOT mandatory — TRUE
+   - Reading public issues needs no auth — TRUE
+   - **No remaining PAT-mandatory wording found.**
+
+3. **Testing strategy soundness** — ✅ PASS.
+   - Green-field: TDD+BDD BEFORE coding (SKILL.md lines 500-508) — correct phase placement at Analysis/Execution
+   - Brown-field: Safety Net BEFORE altering (SKILL.md lines 509-517, brown-field.prompt.md Phase 3 lines 107-141) — correct placement
+   - Modernization: API contract/parity testing (SKILL.md lines 519-527) — tied to legacy operational during migration
+   - Frameworks match intent: Playwright (E2E), Jest/JUnit (unit), Gherkin/Cucumber (BDD), Approval Tests (snapshot), BMAD (dependency), Pact/Schemathesis (contract)
+   - Verification Status linkage present (SKILL.md lines 530-540) — explicitly maps to rubric dimension
+
+4. **Consistency / dual-path parity** — ✅ PASS.
+   - Custom-agent AND Squad paths both inherit template feedback (SKILL.md lines 574-580, routing rule #10 line 62)
+   - All 3 prompts have template feedback phase (Phase 9/10/11/12)
+   - No contradictions found between method skill, instructions, prompts
+
+5. **Link integrity** — ✅ PASS.
+   - `../skills/meta-agentic-method/SKILL.md` — exists (23 references)
+   - `../skills/meta-agentic-method/references.md` — exists (13 references)
+   - `../skills/progress-report/progress-report.template.html` — exists (6 references)
+   - `../skills/github-issues/SKILL.md` — exists (3 references)
+   - Routing.md rule #10 references correct skill paths
+
+6. **No regression** — ✅ PASS.
+   - 6-dimension confidence rubric intact (weights sum to 1.0)
+   - All prompt phases preserved with testing + feedback phases added
+   - Artifact numbering convention unchanged
+
+### Learnings
+
+- Auth model for public repo issue filing: Host OAuth via GitHub MCP is preferred; PAT is fallback. Documentation now correct across all touchpoints.
+- Testing strategy is phase-gated by scenario: green-field locks specs first, brown-field establishes safety net first, modernization maintains parity tests during dual-operation. Playwright MCP enables all UI testing paths.
+- Template feedback loop is cross-cutting: routing rule #10 enforces both Approach A (custom-agent) and Approach B (Squad) filing to upstream.

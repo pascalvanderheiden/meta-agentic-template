@@ -61,14 +61,76 @@ Curated catalog of authoritative URLs for discovering MCP servers, skills, and C
 ```
 
 **Usage in Template:**
-- **Read operations:** MCP server provides `mcp__github__*` tools (search issues, list repos, query projects)
-- **Write operations:** `.github/skills/github-issues` skill uses `gh api` fallback (create/update/comment/close issues)
-- **PAT scopes:** Classic token with `repo` scope, or fine-grained token with Issues = Read/Write on target repository
+- **Read operations:** MCP server provides `mcp__github__*` tools (search issues, list repos, query projects). Public repo reads need no auth.
+- **Write operations:** `.github/skills/github-issues` skill uses `gh api` fallback (create/update/comment/close issues). Filing issues on public repos requires authentication but does NOT require a manual PAT — the remote GitHub MCP server supports host OAuth (IDE/Copilot sign-in) which provides identity. A classic-`repo` / fine-grained Issues:Write PAT is a fallback when OAuth isn't available.
 - **Feedback loop:** Repos created from this template use GitHub MCP server to file issues upstream
 
 ---
 
-## 3. MCP — Building Your Own
+## 3. Testing & MCP
+
+**verified:** yes  
+**url:** https://github.com/microsoft/playwright-mcp  
+**description:** Official Playwright MCP server — provides browser automation and E2E testing capabilities via MCP. Enables AI-assisted UI testing, snapshot generation, and accessibility checks.
+
+**Config:**
+```json
+{
+  "playwright": {
+    "command": "npx",
+    "args": ["@playwright/mcp@latest"]
+  }
+}
+```
+
+**Testing Framework Sources:**
+
+### E2E / UI Testing
+**verified:** yes  
+**url:** https://playwright.dev  
+**description:** Playwright — modern E2E testing framework for web apps (Chromium, Firefox, WebKit). First-class for green-field scenario UI testing.
+
+### Unit Testing
+**verified:** yes  
+**url:** https://jestjs.io  
+**description:** Jest — JavaScript testing framework with snapshot testing, mocking, coverage. Green-field default for JavaScript/TypeScript unit tests.
+
+**verified:** yes  
+**url:** https://junit.org  
+**description:** JUnit — standard Java unit testing framework. Green-field default for Java/Kotlin projects.
+
+### BDD / Gherkin
+**verified:** yes  
+**url:** https://cucumber.io  
+**description:** Cucumber — BDD framework using Gherkin syntax (Given/When/Then). Maps to green-field scenario Behavior Specification phase.
+
+### Approval / Snapshot Testing (Legacy Lock-Down)
+**verified:** yes  
+**url:** https://approvaltests.com  
+**description:** Approval Tests — characterization testing for legacy code. Lock down existing behavior before refactoring. Critical for brown-field scenario Discovery → Lock-Down phase.
+
+### AI-Assisted Refactoring / Dependency Mapping
+**verified:** yes  
+**url:** https://github.com/bmad-code-org/BMAD-METHOD  
+**description:** BMAD-METHOD — AI-assisted legacy code analysis and refactoring. Dependency mapping, blast radius analysis. Brown-field scenario companion for safe changes.
+
+### API Contract Testing (Parity for Modernization)
+**verified:** yes  
+**url:** https://pact.io  
+**description:** Pact — consumer-driven contract testing for APIs and microservices. Ensures API compatibility during modernization migrations.
+
+**verified:** yes  
+**url:** https://schemathesis.readthedocs.io  
+**description:** Schemathesis — property-based API testing using OpenAPI/GraphQL schemas. Validates API contract parity in modernization scenario.
+
+**Scenario Mapping:**
+- **Green-field** (`green-field.prompt.md`): Playwright + Jest/JUnit + Cucumber/Gherkin for new systems
+- **Brown-field** (`brown-field.prompt.md`): Approval Tests + BMAD-METHOD + Playwright for safe legacy changes
+- **Modernization** (`modernization.prompt.md`): Pact + Schemathesis for API contract/parity testing during platform migration
+
+---
+
+## 4. MCP — Building Your Own
 
 **verified:** unverified  
 **url:** https://modelcontextprotocol.io/introduction  
@@ -91,7 +153,7 @@ Curated catalog of authoritative URLs for discovering MCP servers, skills, and C
 
 ---
 
-## 3. MCP — Data & Cloud Servers (Migration/ETL Relevant)
+## 5. MCP — Data & Cloud Servers (Migration/ETL Relevant)
 
 ### Azure & Microsoft Fabric
 
@@ -133,7 +195,7 @@ Curated catalog of authoritative URLs for discovering MCP servers, skills, and C
 
 ---
 
-## 4. Skills Ecosystem
+## 6. Skills Ecosystem
 
 **verified:** yes  
 **url:** https://www.skills.sh/  
@@ -163,7 +225,7 @@ Curated catalog of authoritative URLs for discovering MCP servers, skills, and C
 
 ---
 
-## 5. Copilot Customization
+## 7. Copilot Customization
 
 **verified:** yes  
 **url:** https://github.com/github/awesome-copilot  
@@ -191,7 +253,7 @@ Curated catalog of authoritative URLs for discovering MCP servers, skills, and C
 
 ---
 
-## 6. Spec-Driven Development
+## 8. Spec-Driven Development
 
 **verified:** yes  
 **url:** https://github.com/github/spec-kit  
@@ -215,7 +277,7 @@ Curated catalog of authoritative URLs for discovering MCP servers, skills, and C
 
 ---
 
-## 7. Domain Docs — Oracle
+## 9. Domain Docs — Oracle
 
 **verified:** yes  
 **url:** https://docs.oracle.com/en/database/  
@@ -239,7 +301,7 @@ Curated catalog of authoritative URLs for discovering MCP servers, skills, and C
 
 ---
 
-## 8. Domain Docs — Microsoft Fabric
+## 10. Domain Docs — Microsoft Fabric
 
 **verified:** yes  
 **url:** https://learn.microsoft.com/en-us/fabric/  

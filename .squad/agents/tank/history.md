@@ -74,3 +74,38 @@
 - Replaced both absolute (`.github/prompts/...`) and relative (`./shared/...`, `./templates/...`) paths
 - Preserved section anchors (e.g., `§ Analysis phase requirements`) when present
 - Verification: `grep -rnE "prompts/(shared|templates|references)|\./(shared|templates|references)"` returns nothing
+
+### 2025-01-XX: Playwright MCP Server Integration + Testing Source Catalog
+
+**MCP config updated:**
+- Added Playwright MCP server to `.copilot/mcp-config.json` alongside existing `github` server
+- Config: `"playwright": { "command": "npx", "args": ["@playwright/mcp@latest"] }`
+- Verified both servers present: `python3 -c "import json; d=json.load(open('.copilot/mcp-config.json')); print(sorted(d['mcpServers']))"` → `['github', 'playwright']`
+- Source: https://github.com/microsoft/playwright-mcp (canonical config)
+
+**Testing catalog added:**
+- Created § 3 "Testing & MCP" in `.github/skills/meta-agentic-method/references.md`
+- Playwright MCP server documented with config snippet
+- E2E/UI: Playwright (https://playwright.dev)
+- Unit testing: Jest (https://jestjs.io), JUnit (https://junit.org)
+- BDD: Cucumber/Gherkin (https://cucumber.io)
+- Approval/snapshot testing (brown-field lock-down): Approval Tests (https://approvaltests.com)
+- AI-assisted refactoring: BMAD-METHOD (https://github.com/bmad-code-org/BMAD-METHOD)
+- API contract testing (modernization parity): Pact (https://pact.io), Schemathesis (https://schemathesis.readthedocs.io)
+- Mapped each framework to scenario: green-field (Playwright+Jest/JUnit+BDD), brown-field (Approval Tests+BMAD+Playwright), modernization (Pact+Schemathesis)
+
+**GitHub auth note corrected:**
+- Fixed § 2 "MCP — GitHub Server" to clarify: filing issues on public repos does NOT require manual PAT
+- Remote GitHub MCP server supports host OAuth (IDE/Copilot sign-in provides identity)
+- PAT (classic-`repo` / fine-grained Issues:Write) is FALLBACK when OAuth unavailable
+- Public repo reads need no auth
+
+**Renumbered sections:**
+- § 3 Testing & MCP (new)
+- § 4 MCP — Building Your Own (was § 3)
+- § 5 MCP — Data & Cloud Servers (was § 3, renumbered)
+- § 6 Skills Ecosystem (was § 4)
+- § 7 Copilot Customization (was § 5)
+- § 8 Spec-Driven Development (was § 6)
+- § 9 Domain Docs — Oracle (was § 7)
+- § 10 Domain Docs — Microsoft Fabric (was § 8)
