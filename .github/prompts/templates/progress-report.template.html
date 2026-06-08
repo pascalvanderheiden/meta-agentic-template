@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta-Agentic Development Progress Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #24292e;
+            background: #f6f8fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            padding: 30px;
+        }
+        
+        header {
+            border-bottom: 3px solid #0366d6;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #0366d6;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            color: #24292e;
+            border-bottom: 1px solid #e1e4e8;
+            padding-bottom: 8px;
+        }
+        
+        h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #586069;
+        }
+        
+        .meta-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            font-size: 14px;
+            color: #586069;
+            margin-top: 10px;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .meta-item strong {
+            color: #24292e;
+        }
+        
+        .confidence-gauge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #f6f8fa 0%, #e1e4e8 100%);
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .gauge-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: 700;
+            color: white;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .gauge-high { background: linear-gradient(135deg, #28a745 0%, #22863a 100%); }
+        .gauge-medium { background: linear-gradient(135deg, #ffd33d 0%, #dbab09 100%); color: #24292e; }
+        .gauge-low { background: linear-gradient(135deg, #d73a49 0%, #b31d28 100%); }
+        
+        .gauge-label {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #24292e;
+        }
+        
+        .gauge-interpretation {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #586069;
+            text-align: center;
+            max-width: 500px;
+        }
+        
+        .dimension-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .dimension {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .dimension-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+        
+        .dimension-name {
+            font-weight: 600;
+            color: #24292e;
+        }
+        
+        .dimension-weight {
+            color: #586069;
+            font-size: 12px;
+        }
+        
+        .dimension-bar {
+            width: 100%;
+            height: 24px;
+            background: #e1e4e8;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .dimension-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            transition: width 0.3s ease;
+        }
+        
+        .fill-high { background: #28a745; }
+        .fill-medium { background: #ffd33d; color: #24292e; }
+        .fill-low { background: #d73a49; }
+        
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .phase {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #f6f8fa;
+            border-radius: 6px;
+            border-left: 4px solid #e1e4e8;
+        }
+        
+        .phase-pending { border-left-color: #959da5; }
+        .phase-in-progress { border-left-color: #0366d6; background: #f1f8ff; }
+        .phase-done { border-left-color: #28a745; background: #f0fff4; }
+        .phase-blocked { border-left-color: #d73a49; background: #ffeef0; }
+        
+        .phase-status {
+            width: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-pending { color: #959da5; }
+        .status-in-progress { color: #0366d6; }
+        .status-done { color: #28a745; }
+        .status-blocked { color: #d73a49; }
+        
+        .phase-content {
+            flex: 1;
+        }
+        
+        .phase-name {
+            font-weight: 600;
+            color: #24292e;
+            margin-bottom: 3px;
+        }
+        
+        .phase-artifact {
+            font-size: 13px;
+            color: #586069;
+        }
+        
+        .phase-artifact a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+        
+        .phase-artifact a:hover {
+            text-decoration: underline;
+        }
+        
+        .team-roster {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .agent-card {
+            padding: 15px;
+            background: #f6f8fa;
+            border-radius: 6px;
+            border: 1px solid #e1e4e8;
+        }
+        
+        .agent-name {
+            font-weight: 600;
+            color: #24292e;
+            margin-bottom: 5px;
+        }
+        
+        .agent-role {
+            font-size: 13px;
+            color: #586069;
+            margin-bottom: 10px;
+        }
+        
+        .agent-resources {
+            font-size: 12px;
+            color: #586069;
+        }
+        
+        .agent-resources div {
+            margin-top: 3px;
+        }
+        
+        .capability-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .capability-table th {
+            background: #f6f8fa;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        
+        .capability-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .badge-found { background: #dcffe4; color: #22863a; }
+        .badge-built { background: #dcffe4; color: #22863a; }
+        .badge-reused { background: #dbedff; color: #0366d6; }
+        .badge-missing { background: #ffeef0; color: #b31d28; }
+        
+        .evidence {
+            font-size: 12px;
+            color: #586069;
+            font-style: italic;
+        }
+        
+        .mcp-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .mcp-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: #f6f8fa;
+            border-radius: 6px;
+            border-left: 3px solid #e1e4e8;
+        }
+        
+        .mcp-connected { border-left-color: #28a745; }
+        .mcp-disconnected { border-left-color: #d73a49; }
+        
+        .mcp-info {
+            flex: 1;
+        }
+        
+        .mcp-name {
+            font-weight: 600;
+            color: #24292e;
+        }
+        
+        .mcp-source {
+            font-size: 13px;
+            color: #586069;
+        }
+        
+        .mcp-status {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 3px;
+        }
+        
+        .status-connected { background: #dcffe4; color: #22863a; }
+        .status-disconnected { background: #ffeef0; color: #b31d28; }
+        
+        .risks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .risk-item {
+            padding: 12px 15px;
+            border-left: 3px solid;
+            border-radius: 6px;
+            background: #f6f8fa;
+        }
+        
+        .risk-critical { border-left-color: #d73a49; background: #ffeef0; }
+        .risk-high { border-left-color: #e36209; background: #fff5e8; }
+        .risk-medium { border-left-color: #ffd33d; background: #fffbdd; }
+        .risk-low { border-left-color: #959da5; background: #f6f8fa; }
+        
+        .risk-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .risk-severity {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .severity-critical { color: #b31d28; }
+        .severity-high { color: #e36209; }
+        .severity-medium { color: #dbab09; }
+        .severity-low { color: #586069; }
+        
+        .risk-description {
+            font-size: 14px;
+            color: #24292e;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .meta-info {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .gauge-circle {
+                width: 140px;
+                height: 140px;
+                font-size: 36px;
+            }
+            
+            .team-roster {
+                grid-template-columns: 1fr;
+            }
+            
+            .capability-table {
+                font-size: 12px;
+            }
+            
+            .capability-table th,
+            .capability-table td {
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="scenario-name">{{SCENARIO}}</h1>
+            <div class="meta-info">
+                <div class="meta-item">
+                    <strong>Prompt Type:</strong>
+                    <span id="prompt-type">{{PROMPT_TYPE}}</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Generated:</strong>
+                    <span id="generated-at">{{GENERATED_AT}}</span>
+                </div>
+                <div class="meta-item">
+                    <strong>Current Phase:</strong>
+                    <span id="current-phase">{{CURRENT_PHASE}}</span>
+                </div>
+            </div>
+        </header>
+
+        <section id="overall-confidence">
+            <h2>Overall Confidence</h2>
+            <div class="confidence-gauge">
+                <div class="gauge-circle" id="gauge-circle">
+                    <span id="confidence-score">0</span>
+                </div>
+                <div class="gauge-label" id="confidence-label">Confidence Level</div>
+                <div class="gauge-interpretation" id="confidence-interpretation"></div>
+            </div>
+        </section>
+
+        <section id="confidence-breakdown">
+            <h2>Confidence Breakdown</h2>
+            <div class="dimension-bars" id="dimension-bars"></div>
+        </section>
+
+        <section id="phase-timeline">
+            <h2>Phase Timeline</h2>
+            <div class="timeline" id="timeline"></div>
+        </section>
+
+        <section id="team">
+            <h2>Team Roster</h2>
+            <div class="team-roster" id="team-roster"></div>
+        </section>
+
+        <section id="capabilities">
+            <h2>Capability Acquisition</h2>
+            <table class="capability-table">
+                <thead>
+                    <tr>
+                        <th>Capability</th>
+                        <th>Status</th>
+                        <th>Evidence</th>
+                    </tr>
+                </thead>
+                <tbody id="capability-tbody"></tbody>
+            </table>
+        </section>
+
+        <section id="mcp-servers">
+            <h2>MCP Servers</h2>
+            <div class="mcp-list" id="mcp-list"></div>
+        </section>
+
+        <section id="risks">
+            <h2>Risks & Gaps</h2>
+            <div class="risks-list" id="risks-list"></div>
+        </section>
+    </div>
+
+    <!-- Data island - runtime agents overwrite this JSON block on each update -->
+    <script id="report-data" type="application/json">
+    {
+        "scenario": "Oracle Database → Azure Fabric ETL Migration",
+        "promptType": "modernization",
+        "generatedAt": "2024-01-15T14:30:00Z",
+        "currentPhase": "Domain Discovery",
+        "overallConfidence": {
+            "score": 72,
+            "interpretation": "Moderate confidence. Core ETL capabilities available but Fabric-specific tooling requires custom build."
+        },
+        "confidenceDimensions": [
+            { "name": "Capability Coverage", "score": 85, "weight": 0.25 },
+            { "name": "MCP Availability", "score": 60, "weight": 0.20 },
+            { "name": "Skill/Instruction Coverage", "score": 70, "weight": 0.15 },
+            { "name": "Domain Knowledge Access", "score": 75, "weight": 0.15 },
+            { "name": "Spec Completeness", "score": 65, "weight": 0.15 },
+            { "name": "Verification", "score": 70, "weight": 0.10 }
+        ],
+        "phases": [
+            {
+                "name": "Domain Discovery",
+                "status": "in-progress",
+                "artifact": "docs/oracle-fabric-etl/domain-map.md"
+            },
+            {
+                "name": "Capability Analysis",
+                "status": "done",
+                "artifact": "docs/oracle-fabric-etl/capability-analysis.md"
+            },
+            {
+                "name": "Architecture Design",
+                "status": "pending",
+                "artifact": null
+            },
+            {
+                "name": "Implementation",
+                "status": "pending",
+                "artifact": null
+            },
+            {
+                "name": "Verification",
+                "status": "pending",
+                "artifact": null
+            }
+        ],
+        "team": [
+            {
+                "name": "etl-architect",
+                "role": "ETL pipeline design and orchestration",
+                "skills": ["azure-data-factory", "pipeline-patterns"],
+                "instructions": ["etl-best-practices"],
+                "mcpServers": ["fabric-api"]
+            },
+            {
+                "name": "oracle-expert",
+                "role": "Oracle schema analysis and query translation",
+                "skills": ["oracle-db"],
+                "instructions": ["database-migration"],
+                "mcpServers": ["oracle-mcp"]
+            },
+            {
+                "name": "fabric-specialist",
+                "role": "Azure Fabric data lakehouse setup",
+                "skills": [],
+                "instructions": ["fabric-deployment"],
+                "mcpServers": ["fabric-api", "azure-cli"]
+            }
+        ],
+        "capabilities": [
+            {
+                "capability": "Oracle schema introspection",
+                "status": "found",
+                "evidence": "Found oracle-db skill with schema export"
+            },
+            {
+                "capability": "Fabric REST API access",
+                "status": "built",
+                "evidence": "Built MCP from Fabric OpenAPI spec"
+            },
+            {
+                "capability": "Data lineage tracking",
+                "status": "reused",
+                "evidence": "Reused Azure Purview integration skill"
+            },
+            {
+                "capability": "Real-time CDC from Oracle",
+                "status": "missing",
+                "evidence": "No CDC connector found - requires custom solution"
+            }
+        ],
+        "mcpServers": [
+            {
+                "name": "oracle-mcp",
+                "source": "found in registry",
+                "connectionStatus": "connected"
+            },
+            {
+                "name": "fabric-api",
+                "source": "built from OpenAPI",
+                "connectionStatus": "connected"
+            },
+            {
+                "name": "azure-cli",
+                "source": "registry",
+                "connectionStatus": "connected"
+            }
+        ],
+        "risks": [
+            {
+                "severity": "high",
+                "description": "No CDC connector available for Oracle → Fabric real-time sync. Custom solution required."
+            },
+            {
+                "severity": "medium",
+                "description": "Fabric data lakehouse schema evolution patterns not well documented in available skills."
+            },
+            {
+                "severity": "low",
+                "description": "Performance testing capability gaps - manual validation needed."
+            }
+        ]
+    }
+    </script>
+
+    <script>
+        // Read the JSON data island and render the report
+        function renderReport() {
+            const dataElement = document.getElementById('report-data');
+            const data = JSON.parse(dataElement.textContent);
+
+            // Header metadata
+            document.getElementById('scenario-name').textContent = data.scenario;
+            document.getElementById('prompt-type').textContent = data.promptType;
+            document.getElementById('generated-at').textContent = new Date(data.generatedAt).toLocaleString();
+            document.getElementById('current-phase').textContent = data.currentPhase;
+
+            // Overall confidence gauge
+            renderConfidenceGauge(data.overallConfidence);
+
+            // Confidence dimensions
+            renderDimensions(data.confidenceDimensions);
+
+            // Phase timeline
+            renderTimeline(data.phases);
+
+            // Team roster
+            renderTeam(data.team);
+
+            // Capabilities
+            renderCapabilities(data.capabilities);
+
+            // MCP servers
+            renderMCPServers(data.mcpServers);
+
+            // Risks
+            renderRisks(data.risks);
+        }
+
+        function renderConfidenceGauge(confidence) {
+            const score = confidence.score;
+            const gaugeCircle = document.getElementById('gauge-circle');
+            const scoreElement = document.getElementById('confidence-score');
+            const interpretationElement = document.getElementById('confidence-interpretation');
+
+            scoreElement.textContent = score;
+            interpretationElement.textContent = confidence.interpretation;
+
+            // Set color based on score thresholds
+            gaugeCircle.className = 'gauge-circle';
+            if (score >= 80) {
+                gaugeCircle.classList.add('gauge-high');
+            } else if (score >= 50) {
+                gaugeCircle.classList.add('gauge-medium');
+            } else {
+                gaugeCircle.classList.add('gauge-low');
+            }
+        }
+
+        function renderDimensions(dimensions) {
+            const container = document.getElementById('dimension-bars');
+            container.innerHTML = '';
+
+            dimensions.forEach(dim => {
+                const dimensionDiv = document.createElement('div');
+                dimensionDiv.className = 'dimension';
+
+                const header = document.createElement('div');
+                header.className = 'dimension-header';
+                header.innerHTML = `
+                    <span class="dimension-name">${dim.name}</span>
+                    <span class="dimension-weight">Weight: ${(dim.weight * 100).toFixed(0)}%</span>
+                `;
+
+                const bar = document.createElement('div');
+                bar.className = 'dimension-bar';
+
+                const fill = document.createElement('div');
+                fill.className = 'dimension-fill';
+                fill.style.width = `${dim.score}%`;
+                fill.textContent = `${dim.score}%`;
+
+                // Color coding
+                if (dim.score >= 80) {
+                    fill.classList.add('fill-high');
+                } else if (dim.score >= 50) {
+                    fill.classList.add('fill-medium');
+                } else {
+                    fill.classList.add('fill-low');
+                }
+
+                bar.appendChild(fill);
+                dimensionDiv.appendChild(header);
+                dimensionDiv.appendChild(bar);
+                container.appendChild(dimensionDiv);
+            });
+        }
+
+        function renderTimeline(phases) {
+            const container = document.getElementById('timeline');
+            container.innerHTML = '';
+
+            phases.forEach(phase => {
+                const phaseDiv = document.createElement('div');
+                phaseDiv.className = `phase phase-${phase.status}`;
+
+                const statusSpan = document.createElement('div');
+                statusSpan.className = `phase-status status-${phase.status}`;
+                statusSpan.textContent = phase.status.replace('-', ' ');
+
+                const content = document.createElement('div');
+                content.className = 'phase-content';
+
+                const name = document.createElement('div');
+                name.className = 'phase-name';
+                name.textContent = phase.name;
+
+                const artifact = document.createElement('div');
+                artifact.className = 'phase-artifact';
+                if (phase.artifact) {
+                    artifact.innerHTML = `Artifact: <a href="${phase.artifact}">${phase.artifact}</a>`;
+                } else {
+                    artifact.textContent = 'No artifact yet';
+                }
+
+                content.appendChild(name);
+                content.appendChild(artifact);
+                phaseDiv.appendChild(statusSpan);
+                phaseDiv.appendChild(content);
+                container.appendChild(phaseDiv);
+            });
+        }
+
+        function renderTeam(team) {
+            const container = document.getElementById('team-roster');
+            container.innerHTML = '';
+
+            team.forEach(agent => {
+                const card = document.createElement('div');
+                card.className = 'agent-card';
+
+                const name = document.createElement('div');
+                name.className = 'agent-name';
+                name.textContent = agent.name;
+
+                const role = document.createElement('div');
+                role.className = 'agent-role';
+                role.textContent = agent.role;
+
+                const resources = document.createElement('div');
+                resources.className = 'agent-resources';
+
+                if (agent.skills && agent.skills.length > 0) {
+                    const skills = document.createElement('div');
+                    skills.innerHTML = `<strong>Skills:</strong> ${agent.skills.join(', ')}`;
+                    resources.appendChild(skills);
+                }
+
+                if (agent.instructions && agent.instructions.length > 0) {
+                    const instructions = document.createElement('div');
+                    instructions.innerHTML = `<strong>Instructions:</strong> ${agent.instructions.join(', ')}`;
+                    resources.appendChild(instructions);
+                }
+
+                if (agent.mcpServers && agent.mcpServers.length > 0) {
+                    const mcp = document.createElement('div');
+                    mcp.innerHTML = `<strong>MCP:</strong> ${agent.mcpServers.join(', ')}`;
+                    resources.appendChild(mcp);
+                }
+
+                card.appendChild(name);
+                card.appendChild(role);
+                card.appendChild(resources);
+                container.appendChild(card);
+            });
+        }
+
+        function renderCapabilities(capabilities) {
+            const tbody = document.getElementById('capability-tbody');
+            tbody.innerHTML = '';
+
+            capabilities.forEach(cap => {
+                const row = document.createElement('tr');
+
+                const capCell = document.createElement('td');
+                capCell.textContent = cap.capability;
+
+                const statusCell = document.createElement('td');
+                const badge = document.createElement('span');
+                badge.className = `status-badge badge-${cap.status}`;
+                badge.textContent = cap.status;
+                statusCell.appendChild(badge);
+
+                const evidenceCell = document.createElement('td');
+                evidenceCell.className = 'evidence';
+                evidenceCell.textContent = cap.evidence;
+
+                row.appendChild(capCell);
+                row.appendChild(statusCell);
+                row.appendChild(evidenceCell);
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderMCPServers(servers) {
+            const container = document.getElementById('mcp-list');
+            container.innerHTML = '';
+
+            servers.forEach(server => {
+                const item = document.createElement('div');
+                item.className = `mcp-item mcp-${server.connectionStatus}`;
+
+                const info = document.createElement('div');
+                info.className = 'mcp-info';
+
+                const name = document.createElement('div');
+                name.className = 'mcp-name';
+                name.textContent = server.name;
+
+                const source = document.createElement('div');
+                source.className = 'mcp-source';
+                source.textContent = server.source;
+
+                info.appendChild(name);
+                info.appendChild(source);
+
+                const status = document.createElement('span');
+                status.className = `mcp-status status-${server.connectionStatus}`;
+                status.textContent = server.connectionStatus;
+
+                item.appendChild(info);
+                item.appendChild(status);
+                container.appendChild(item);
+            });
+        }
+
+        function renderRisks(risks) {
+            const container = document.getElementById('risks-list');
+            container.innerHTML = '';
+
+            if (!risks || risks.length === 0) {
+                container.innerHTML = '<p style="color: #586069; font-style: italic;">No risks identified.</p>';
+                return;
+            }
+
+            risks.forEach(risk => {
+                const item = document.createElement('div');
+                item.className = `risk-item risk-${risk.severity}`;
+
+                const header = document.createElement('div');
+                header.className = 'risk-header';
+
+                const severity = document.createElement('span');
+                severity.className = `risk-severity severity-${risk.severity}`;
+                severity.textContent = risk.severity;
+
+                header.appendChild(severity);
+
+                const description = document.createElement('div');
+                description.className = 'risk-description';
+                description.textContent = risk.description;
+
+                item.appendChild(header);
+                item.appendChild(description);
+                container.appendChild(item);
+            });
+        }
+
+        // Render on page load
+        document.addEventListener('DOMContentLoaded', renderReport);
+    </script>
+</body>
+</html>
