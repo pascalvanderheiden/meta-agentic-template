@@ -174,6 +174,43 @@
 
 **Purpose:** Enables community/teams to clone via template, model spec-driven development via scenario prompts, accelerate MCP discovery/generation, orchestrate teams with Squad system.
 
+### 2026-06-08: Neo Review — Restructure Into Skills APPROVED
+
+**By:** Neo (Reviewer Gate)
+
+**Review Date:** 2026-06-08T14:44:21Z
+
+**Request:** Verify repository restructure consolidating methodology, reports, templates into `.github/skills/` follows artifact standards and contains no regressions.
+
+**Verdict:** ✅ **APPROVED**
+
+**Standards Applied:**
+- `.github/instructions/agent-skills.instructions.md`
+- `.squad/decisions.md` (artifact placement, numbering convention, methodology standard)
+
+**Key Findings:**
+
+| Criterion | Status |
+|-----------|--------|
+| Skill frontmatter validity | ✅ PASS |
+| Progressive disclosure | ✅ PASS |
+| Bundled resources | ✅ PASS |
+| Line count limits | ✅ PASS (490, 236 lines) |
+| Link integrity | ✅ PASS (60+ verified) |
+| No content regression | ✅ PASS |
+| Vision fit (.github Copilot-native only) | ✅ PASS |
+
+**Preserved Content:**
+- Artifact numbering convention (SKILL.md lines 276-281)
+- 6-dimension confidence rubric (lines 408-417, weights sum to 1.0)
+- JSON data contract (10 fields, progress-report lines 46-105)
+- Dual execution approach (all 3 prompts A/B)
+- Team formation algorithm (lines 300-349)
+
+**Recommendation:** Ready for production. No changes required. Restructure achieves goal of Copilot-native `.github/` structure with all content preserved and all links verified.
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-08T14:44:21Z-neo.md`
+
 ## Governance
 
 - All meaningful changes require team consensus
