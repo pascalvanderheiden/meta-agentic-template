@@ -104,6 +104,38 @@
 
 **Non-blocking:** Add project-conventions skill reference in Capability Acquisition sections (optional).
 
+### 2026-06-08: Dual Execution Approach for Scenario Prompts
+
+**By:** Trinity (Template Engineer)
+
+**Decision:** Expanded all three scenario prompts (green-field, brown-field, modernization) and README to present two execution approaches as first-class, user-selectable options.
+
+**Approach A — Custom Agents:** Generates standalone `.github/agents/<role>.agent.md` files; best for linear workflows, simple handoffs, direct control.
+
+**Approach B — Squad Team:** Reuses Squad coordinator; roles hired into `.squad/agents/<role>/charter.md`; best for complex orchestration, parallel execution, reviewer gates; no installation needed.
+
+**Design:** Same role roster, skills, instructions, MCP servers regardless of approach; execution approach determines only storage/coordination, not agent behavior.
+
+**Changes:** Updated green-field.prompt.md, brown-field.prompt.md, modernization.prompt.md (added Execution Approach section to Team Formation); expanded README with comparison table and guidance; defaults to Squad for multi-agent scenarios.
+
+**Impact:** Users can now choose execution approach based on workflow complexity; Squad system (pre-installed) is now documented and integrated.
+
+### 2026-06-08: Repository Published — Public Template
+
+**By:** Tank (Integration Dev)
+
+**Status:** Completed
+
+**Outcome:** Meta-agentic template repository initialized, committed (116 files, 23,742 insertions), and published as public template on GitHub.
+
+**Repository:** https://github.com/pascalvanderheiden/meta-agentic-template  
+**Commit SHA:** ae27c16  
+**Template Status:** Enabled (supports "Use this template")
+
+**Verification:** Gitignore compliance confirmed; sensitive files excluded; no tokens exposed; initial structure preserved; remote origin configured and verified.
+
+**Purpose:** Enables community/teams to clone via template, model spec-driven development via scenario prompts, accelerate MCP discovery/generation, orchestrate teams with Squad system.
+
 ## Governance
 
 - All meaningful changes require team consensus
