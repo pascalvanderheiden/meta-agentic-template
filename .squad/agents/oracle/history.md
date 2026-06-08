@@ -94,3 +94,39 @@ All squad agents MUST leverage authoring instruction files when creating/editing
 - Capability-acquisition decision tree (Reuse → Find → Build)
 - 6-dimension confidence rubric + worked example
 - References catalog bundled as `references.md` in same folder
+
+### 2026-06-08: Upstream Template Feedback Loop Integrated
+
+**Convention Established:**
+- Repos created FROM this template can report template-level improvements back to upstream
+- Any agent (custom-agent role, Squad member, or GitHub Copilot agent) files structured feedback when detecting template gaps
+
+**Upstream Repo Constant:**
+- Target: `pascalvanderheiden/meta-agentic-template`
+- Forks override this in their `.github/copilot-instructions.md`
+
+**Label & Transport:**
+- Required label: `template-feedback`
+- Transport: GitHub MCP server (`github` in `.copilot/mcp-config.json`) or `gh api` fallback
+- Invokes bundled `github-issues` skill (`.github/skills/github-issues/SKILL.md`)
+
+**Structured Issue Body:**
+- Scenario (green/brown/modernization)
+- Prompt file active
+- Phase where gap surfaced
+- What was missing / friction description
+- Suggested improvement (actionable)
+- Confidence impact: rubric dimension + estimated point delta (0-100 scale)
+- Repro / context (artifact links, logs)
+
+**Integration Points:**
+- Added to `.github/skills/meta-agentic-method/SKILL.md` § Upstream Template Feedback Loop (full workflow + example)
+- Added to `.github/copilot-instructions.md` § Template Feedback Loop (concise protocol)
+- Added Phase 9 to `green-field.prompt.md` (after Handoff)
+- Added Phase 10 to `brown-field.prompt.md` (after Handoff)
+- Added Phase 11 to `modernization.prompt.md` (after Handoff)
+
+**Confidence Impact Mapping:**
+- Maps template gaps to 6-dimension rubric (Capability Coverage, MCP Availability, Skill/Instruction Coverage, Data/Domain Knowledge, Spec Completeness, Verification Status)
+- Only significant gaps (>5 point impact) warrant filing
+- Helps template maintainers prioritize improvements by quantified confidence delta

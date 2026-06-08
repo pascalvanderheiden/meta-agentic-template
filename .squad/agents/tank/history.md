@@ -44,6 +44,27 @@
 
 <!-- Append learnings below -->
 
+### 2026-06-08: GitHub MCP Server Configuration for Upstream Feedback Loop
+
+**Action completed:**
+- Replaced EXAMPLE-github placeholder in `.copilot/mcp-config.json` with production GitHub MCP server config
+- Server named `github` (exact match for `mcp__github__*` tool resolution in github-issues skill)
+- Remote HTTP server: `https://api.githubcopilot.com/mcp/` (GitHub-hosted, canonical config)
+- Auth: `Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}` placeholder (no hardcoded secrets)
+- File NOT gitignored → ships in template for downstream repos
+
+**Documentation added:**
+- Added § 2 "MCP — GitHub Server (Feedback Loop Transport)" to `.github/skills/meta-agentic-method/references.md`
+- Documented remote config (recommended) + local Docker fallback (stdio)
+- Clarified MCP server = reads, `gh api` = writes (per github-issues skill pattern)
+- PAT scope requirements: classic `repo` or fine-grained Issues = Read/Write
+
+**Technical notes:**
+- JSON validated: `python3 -c "import json; json.load(open('.copilot/mcp-config.json'))"` passes
+- Server key verified: `github` (not EXAMPLE-github)
+- `.copilot/mcp-config.json` ships in template (exit code 1 from git check-ignore confirms NOT ignored)
+- Source: https://github.com/github/github-mcp-server
+
 **2025-01-XX: Repo Restructure Link Rewiring**
 - Moved shared prompts INTO skills:
   - `.github/prompts/shared/meta-agentic-method.md` → `.github/skills/meta-agentic-method/SKILL.md`

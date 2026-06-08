@@ -59,6 +59,7 @@ When triaging, the Lead should ask:
    - `**/*.prompt.md` → `.github/instructions/prompt.instructions.md`
    - `.github/hooks/**`, `hooks/**` → `.github/instructions/hooks.instructions.md`
    - Always also offer `.squad/skills/project-conventions/SKILL.md` when relevant. Apply `caveman-mode.instructions.md` only when the user asks for terse/low-token output.
+10. **Upstream template feedback (standing directive).** When ANY scenario run (custom-agent OR Squad) surfaces a gap, bug, friction, or improvement in the TEMPLATE ITSELF (missing capability the methodology should cover, broken/missing reference, a confidence-lowering friction, a missing MCP/skill the catalog should list, an unclear prompt step), route a member (default: Tank for tooling/integration, Oracle for methodology/docs) to invoke the bundled `.github/skills/github-issues/SKILL.md` skill and file an issue in the upstream template repo `pascalvanderheiden/meta-agentic-template` with the `template-feedback` label, using the structured body defined in `.github/skills/meta-agentic-method/SKILL.md` (Upstream Template Feedback Loop). Forks override the upstream repo constant. Do NOT file template-feedback issues against the derived/working repo.
 
 ## Work Type → Agent
 

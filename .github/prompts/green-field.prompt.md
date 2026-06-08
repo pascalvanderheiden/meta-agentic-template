@@ -319,6 +319,26 @@ The role roster defined above materializes differently based on the approach cho
 
 ---
 
+### Phase 9: Template Feedback (If Applicable)
+
+**Objective:** Report template-level gaps back to upstream for continuous improvement.
+
+**Actions:**
+1. **Review execution for template friction:**
+   - Did a capability gap force manual implementation when the template catalog should have included it?
+   - Was a reference broken, outdated, or missing in `../skills/meta-agentic-method/references.md`?
+   - Did unclear prompt instructions cause rework or delay?
+   - Did missing guidance (ADR template, validation checklist) hurt a confidence dimension by >5 points?
+2. **If YES to any:** Invoke the `github-issues` skill (`../skills/github-issues/SKILL.md`) to file an issue:
+   - **Repository:** `pascalvanderheiden/meta-agentic-template` (upstream template repo; forks override this)
+   - **Label:** `template-feedback` (required)
+   - **Issue body:** Use structured template from `../skills/meta-agentic-method/SKILL.md` § Upstream Template Feedback Loop (Scenario, Prompt, Phase, What was missing, Suggested improvement, Confidence impact with rubric dimension + point delta, Repro/context)
+3. **If NO gaps found:** Skip this phase. No action required.
+
+**Exit Gate:** Template feedback filed (if applicable), or confirmed no template-level gaps detected.
+
+---
+
 ## Progressive Report Updates
 
 **CRITICAL:** After EACH phase (not just at handoff), update `progress-report.html` JSON block:

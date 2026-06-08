@@ -136,6 +136,33 @@ Three comprehensive workflows in `.github/prompts/` orchestrate complete develop
 - **MCP servers**: Check `.github/skills/meta-agentic-method/references.md` for registries and marketplaces
 - **Build MCP servers**: Use `.github/skills/mcp-builder` to generate MCP servers from OpenAPI specs
 
+## Template Feedback Loop
+
+Repos created FROM this template can report template-level improvements back to the upstream source. When any agent discovers a capability gap, broken reference, unclear prompt step, or friction that lowered the confidence score **in the template itself**, file a GitHub issue to the upstream repo.
+
+**Upstream repository:** `pascalvanderheiden/meta-agentic-template`  
+⚠️ **Forks:** Override this in your `.github/copilot-instructions.md` if using a custom template origin.
+
+**How to file:**
+1. Invoke the `github-issues` skill (`.github/skills/github-issues/SKILL.md`)
+2. Use label `template-feedback` (required)
+3. Use structured issue body from `.github/skills/meta-agentic-method/SKILL.md` § Upstream Template Feedback Loop:
+   - **Scenario** (green/brown/modernization)
+   - **Prompt** file active
+   - **Phase** where gap surfaced
+   - **What was missing / friction**
+   - **Suggested improvement**
+   - **Confidence impact** (rubric dimension + estimated point delta)
+   - **Repro / context** (links to artifacts)
+
+**Transport:** GitHub MCP server (`.copilot/mcp-config.json`, server `github`) or `gh api` fallback.
+
+**Who triggers:** Any custom-agent role, Squad member, or the GitHub Copilot agent orchestrating a scenario. This is a cross-cutting responsibility for all team members.
+
+See `.github/skills/meta-agentic-method/SKILL.md` § Upstream Template Feedback Loop for complete workflow and examples.
+
+---
+
 ## General Working Conventions
 
 ### File Naming

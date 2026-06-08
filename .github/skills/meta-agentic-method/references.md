@@ -28,7 +28,47 @@ Curated catalog of authoritative URLs for discovering MCP servers, skills, and C
 
 ---
 
-## 2. MCP — Building Your Own
+## 2. MCP — GitHub Server (Feedback Loop Transport)
+
+**verified:** yes  
+**url:** https://github.com/github/github-mcp-server  
+**description:** Official GitHub MCP server — provides read/search/projects tools for GitHub API access. Source repository for canonical configuration.
+
+**Config (Remote, Recommended):**
+```json
+{
+  "github": {
+    "type": "http",
+    "url": "https://api.githubcopilot.com/mcp/",
+    "headers": {
+      "Authorization": "Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}"
+    }
+  }
+}
+```
+
+**Config (Local Fallback, No Remote MCP Support):**
+```json
+{
+  "github": {
+    "command": "docker",
+    "args": ["run", "-i", "--rm", "-e", "GITHUB_PERSONAL_ACCESS_TOKEN", "ghcr.io/github/github-mcp-server"],
+    "env": {
+      "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+    }
+  }
+}
+```
+
+**Usage in Template:**
+- **Read operations:** MCP server provides `mcp__github__*` tools (search issues, list repos, query projects)
+- **Write operations:** `.github/skills/github-issues` skill uses `gh api` fallback (create/update/comment/close issues)
+- **PAT scopes:** Classic token with `repo` scope, or fine-grained token with Issues = Read/Write on target repository
+- **Feedback loop:** Repos created from this template use GitHub MCP server to file issues upstream
+
+---
+
+## 3. MCP — Building Your Own
 
 **verified:** unverified  
 **url:** https://modelcontextprotocol.io/introduction  

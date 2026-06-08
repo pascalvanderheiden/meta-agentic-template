@@ -211,6 +211,101 @@
 
 **Orchestration Log:** `.squad/orchestration-log/2026-06-08T14:44:21Z-neo.md`
 
+### 2026-06-08T22:01:00Z: User Directive — Upstream Template Feedback Loop
+
+**By:** Pascal van der Heiden (via Copilot)
+
+**What:** Build a feedback loop into the template. When a repo created FROM this template runs a scenario (green/brown/modernization) and discovers that the template itself needs a change/optimization/improvement, a Squad member OR the GitHub Copilot agent invokes the bundled `github-issues` skill to file a GitHub issue in the UPSTREAM template repo (`pascalvanderheiden/meta-agentic-template`) so the template can be improved from real user feedback.
+
+**How (design):**
+- Transport: GitHub MCP server (remote hosted `https://api.githubcopilot.com/mcp/`, `type: http`; local Docker `ghcr.io/github/github-mcp-server` as fallback)
+- Upstream target repo constant: `pascalvanderheiden/meta-agentic-template` (forks override this)
+- Standard label: `template-feedback`
+- Structured body: scenario, prompt, phase, capability gap, suggested improvement, confidence impact
+- Convention lives in the `meta-agentic-method` skill so both custom-agent teams and the Squad team inherit it (dual-execution parity, consistent with existing Approach A / Approach B design and routing rule #9)
+
+**Why:** User request — captured for team memory and template behavior.
+
+### 2026-06-08: GitHub MCP Server Registration in Template
+
+**By:** Tank (Integration Dev)
+
+**Status:** Implemented
+
+**Decision:** Ship GitHub-hosted remote MCP server as primary config in `.copilot/mcp-config.json` (not local Docker or npx).
+
+**Config Details:**
+- **Server name:** `github` (exact match for skill tool resolution)
+- **Type:** `http`
+- **URL:** `https://api.githubcopilot.com/mcp/`
+- **Auth:** `Bearer ${GITHUB_PERSONAL_ACCESS_TOKEN}` (placeholder, not a real token)
+- **Fallback:** Local Docker `ghcr.io/github/github-mcp-server` (documented in `.github/skills/meta-agentic-method/references.md`)
+
+**Rationale:**
+- Downstream repos get working GitHub integration immediately
+- Remote HTTP is fast, portable, requires no local dependencies
+- Supports read operations; `gh api` provides write operations (skill implementation detail)
+- No secrets hardcoded; users supply PAT via environment variable
+
+**Verification:**
+- JSON syntax valid
+- Server key `github` confirmed
+- File NOT in .gitignore (ships with template)
+- Placeholder token prevents accidental secret commits
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-08T20:06:34Z-tank.md`
+
+### 2026-06-08T22:30:00Z: Upstream Template Feedback Loop Convention
+
+**By:** Oracle (Knowledge Architect)
+
+**Status:** Approved — integrated into methodology, instructions, and all 3 prompts
+
+**What:** Established a structured feedback loop for repos created from this template to report template-level improvements back to the upstream source.
+
+**Why:** Real-world scenario execution surfaces gaps the template should address (missing capabilities, broken references, unclear instructions, friction that lowers confidence scores). Without a feedback mechanism, these learnings are lost. A structured loop enables continuous template improvement from user experience.
+
+**How Implemented:**
+
+1. **Methodology Documentation** (`.github/skills/meta-agentic-method/SKILL.md`):
+   - Added § Upstream Template Feedback Loop with full workflow
+   - Defined triggering conditions: capability gaps, broken references, unclear prompt steps, confidence-impacting friction
+   - Specified who triggers: custom-agent roles, Squad members, GitHub Copilot agent (cross-cutting responsibility)
+   - Documented structured issue body template (Scenario, Prompt, Phase, What was missing, Suggested improvement, Confidence impact with rubric dimension + point delta, Repro/context)
+   - Mapped template gaps to 6-dimension confidence rubric for quantified prioritization
+   - Provided worked example (missing Fabric MCP server in catalog)
+
+2. **Repository Instructions** (`.github/copilot-instructions.md`):
+   - Added § Template Feedback Loop subsection for quick reference
+   - Documented upstream repo constant (`pascalvanderheiden/meta-agentic-template`) with fork override note
+   - Specified transport (GitHub MCP server via `github-issues` skill, `gh api` fallback)
+
+3. **Scenario Prompts** (all 3):
+   - **Green-field** (`green-field.prompt.md`): Added Phase 9 (Template Feedback) after Handoff
+   - **Brown-field** (`brown-field.prompt.md`): Added Phase 10 (Template Feedback) after Handoff
+   - **Modernization** (`modernization.prompt.md`): Added Phase 11 (Template Feedback) after Handoff
+   - Each phase instructs agents to review execution for template friction, file via `github-issues` skill with `template-feedback` label if gaps found
+
+**Design Decisions:**
+- **Label:** `template-feedback` (required for routing to template maintainers)
+- **Upstream Repo Constant:** `pascalvanderheiden/meta-agentic-template` (forks override in their copilot-instructions.md)
+- **Transport:** GitHub MCP server (`.copilot/mcp-config.json`, server `github`) with `gh api` fallback per `github-issues` skill
+- **Issue Types:** `type=Bug` for broken references/errors, `type=Feature` for capability gaps/enhancements
+- **Confidence Impact Required:** Must map gap to one of 6 rubric dimensions with estimated point delta; only significant gaps (>5 points) warrant filing
+- **Cross-Cutting Responsibility:** Applies to custom-agent roles (Approach A), Squad members (Approach B), and the GitHub Copilot agent — ensures feedback regardless of execution path
+- **Dual-Execution Parity:** Inherited by BOTH Approach A (custom agents) and Approach B (Squad team) — consistent with routing rule #9
+
+**Verification:**
+- All 5 files now mention `template-feedback`: method SKILL.md, copilot-instructions.md, green-field.prompt.md, brown-field.prompt.md, modernization.prompt.md
+- Referenced paths validated: `github-issues` skill exists at `.github/skills/github-issues/SKILL.md`
+
+**Impact:**
+- Template maintainers receive structured, actionable, confidence-quantified feedback from real scenario executions
+- Enables data-driven template improvements (prioritize by confidence impact)
+- Closes the learning loop: template → derived repo → scenario execution → template improvement
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-08T20:06:34Z-oracle.md`
+
 ## Governance
 
 - All meaningful changes require team consensus
