@@ -109,3 +109,7 @@
 - § 8 Spec-Driven Development (was § 6)
 - § 9 Domain Docs — Oracle (was § 7)
 - § 10 Domain Docs — Microsoft Fabric (was § 8)
+
+## Learnings
+
+**2026-01-27** — `references.md` = generic discovery catalog, no domain/example entries. Rule: if discovery finds no suitable artifact, BUILD it via mcp-builder/skill-creator rather than abandoning capability. This ties to confidence rubric (gap filled by building scores lower until verified).
