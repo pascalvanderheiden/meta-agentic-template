@@ -179,3 +179,21 @@ Scenario-specific (gated): discovery green(0)/brown(1)/modern(2) ✓; assessment
 
 **Status:** Complete. All 12 templates fully wired into all 3 prompts with correct scenario gating. Trinity's template creation can proceed in parallel; prompts ready to consume them.
 
+### 2026-06-08: Optional SDD Framework Selection Added
+
+**Verified framework URLs:**
+- GitHub Spec-Kit: https://github.com/github/spec-kit and https://github.github.io/spec-kit/
+- OpenSpec: https://github.com/Fission-AI/OpenSpec
+- Superpowers: https://github.com/obra/superpowers
+
+**Framework Analysis Summary:**
+- **Spec-Kit:** Most prescriptive. Uses constitution → specify → clarify/checklist → plan → tasks → analyze → implement. It supersedes native Analysis/Execution structure where selected, while native Discovery, Assessment, Capability Mapping, Team Formation, Verification, and Handoff remain as scenario envelope and governance.
+- **OpenSpec:** Lightweight, iterative, brownfield-first. Uses `openspec/specs/` for current behavior and `openspec/changes/<change>/` for proposals, delta specs, design, tasks, verify/sync/archive. It maps best to brown-field and modernization increments, augmenting Discovery/Assessment and replacing Execution structure with change-folder apply/archive flow.
+- **Superpowers:** Composable process-skill methodology rather than a spec repository format. Uses brainstorming → writing-plans → TDD → subagent-driven or inline execution → review → branch finishing. It augments Intake/Analysis and strongly modifies Execution/Verification discipline.
+
+**Methodology Update:** Added `.github/skills/meta-agentic-method/SKILL.md` section `## SDD Framework Selection (Optional)` immediately after the native 10-phase phase model and before `## Spec/Document Artifacts`. The section defines None as default, keeps SDD Framework orthogonal to Custom Agents vs Squad Team, maps each framework to the 10-phase pipeline, and provides per-scenario best-practice guidance for green-field, brown-field, and modernization.
+
+
+### 2026-06-08: SDD Framework Recommended Defaults Refined
+
+Added non-mandatory per-scenario framework advice: green-field defaults to OpenSpec, brown-field defaults to native None, and modernization defaults to Spec-Kit while preserving user freedom to choose any framework.

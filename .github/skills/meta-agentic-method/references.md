@@ -100,9 +100,9 @@ Clean, concise catalog of generic sources for discovering agentic artifacts (ski
 
 **GitHub Spec-Kit** — https://github.com/github/spec-kit (verified: yes), docs https://github.github.io/spec-kit/ (verified: yes)
 
-**OpenSpec** — https://github.com/Fission-AI/OpenSpec (verified: unverified) — spec-driven workflow that aligns humans and agents on specs/change proposals before coding.
+**OpenSpec** — https://github.com/Fission-AI/OpenSpec (verified: yes) — spec-driven workflow that aligns humans and agents on specs/change proposals before coding.
 
-**Superpowers** — https://github.com/obra/superpowers (verified: unverified) — composable agent skills (brainstorming, writing-plans, TDD) for a spec-first, plan-driven workflow.
+**Superpowers** — https://github.com/obra/superpowers (verified: yes) — composable agent skills (brainstorming, writing-plans, TDD) for a spec-first, plan-driven workflow.
 
 **Architecture Decision Records** — https://adr.github.io/ (verified: unverified)
 

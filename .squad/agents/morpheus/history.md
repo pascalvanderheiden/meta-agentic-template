@@ -41,3 +41,7 @@ Explicitly encoded: Oracle/Fabric lack first-party MCP servers → locate OpenAP
 - All use 6-dimension confidence rubric: Capability Coverage 25%, MCP Availability 20%, Skill/Instruction Coverage 15%, Data/Domain Knowledge 15%, Spec Completeness 15%, Verification Status 10%
 
 <!-- Append learnings below -->
+
+### 2026-06-08: Optional SDD Framework Choice in Scenario Prompts
+
+Prompts now offer an optional, orthogonal SDD-framework choice during Intake. Per-scenario recommended defaults are green-field = OpenSpec, brown-field = None/native, and modernization = Spec-Kit. All three prompts wire the choice to `.github/skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)" while keeping Execution Approach independent.

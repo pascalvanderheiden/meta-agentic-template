@@ -101,6 +101,8 @@ Three comprehensive workflows in `.github/prompts/` orchestrate complete develop
 
 **Artifact Scaffolding:** SDD artifacts (intake, analysis, discovery, assessment, capability-map, team, verification, summary, checklist) are scaffolded from templates in `.github/skills/meta-agentic-method/templates/`. Each scenario uses a specific template set: green-field skips discovery/assessment, brown-field adds discovery, modernization adds both discovery and assessment. Templates provide fixed structure with dynamic placeholders for scenario-specific content (team roster rows, capability rows, included phases).
 
+**Optional SDD Framework:** Scenario prompts offer an SDD-framework choice: **None** (default native 10-phase pipeline), **Spec-Kit**, **OpenSpec**, or **Superpowers**. This is orthogonal to Execution Approach (Custom Agents vs Squad Team): framework controls spec workflow; execution approach controls who runs it.
+
 ### Testing Strategy (by Scenario)
 
 Testing is **first-class** and **scenario-specific** in the methodology:

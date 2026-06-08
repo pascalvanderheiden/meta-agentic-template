@@ -567,3 +567,39 @@ Rewrote `references.md` from scratch with:
 ## Follow-Up
 
 None — implementation complete, verified.
+
+---
+
+# Decision: Optional SDD Framework Selection
+
+**Owner:** Oracle
+**Date:** 2026-06-08
+**Status:** APPROVED
+
+## Decision
+
+SDD framework is an **optional, orthogonal** scenario choice. Valid choices are **None** (default), **Spec-Kit**, **OpenSpec**, or **Superpowers**. The native 10-phase pipeline runs unchanged when **None** is selected.
+
+## Rationale
+
+Framework choice controls how specs and spec-workflow artifacts are produced and structured. Execution Approach remains a separate choice controlling who runs the work: Custom Agents or Squad Team. This preserves the template's native guided workflow for users who do not want framework lock-in while enabling framework-specific rigor for users who do.
+
+## Implementation (Morpheus)
+
+Wire optional SDD Framework choice into all scenario prompts next to Execution Approach during Intake. Per-scenario recommended defaults:
+- `green-field.prompt.md` → OpenSpec
+- `brown-field.prompt.md` → None (native pipeline)
+- `modernization.prompt.md` → Spec-Kit
+
+Each prompt records framework independently in `00-intake.md`, adds `#### SDD Framework (choose one from Intake)` section, and points Analysis/Capability Mapping to `.github/skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)".
+
+## Consequences
+
+- Scenario prompts MUST ask framework choice separately from Execution Approach.
+- `None + Custom Agents`, `None + Squad`, `Spec-Kit + Squad`, `OpenSpec + Custom Agents`, and `Superpowers + Squad` are all valid.
+- Brown-field still requires Discovery and modernization still requires Assessment regardless of framework.
+- Missing or unaligned framework artifacts lower Confidence Rubric scores, especially Spec Completeness and Verification Status.
+
+## Review
+
+✅ APPROVED by Neo (Reviewer-Gate) on 2026-06-08T21:51:41Z

@@ -70,9 +70,11 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - **Timeline:** Deadline, phasing milestones?
    - **Rollback:** Rollback strategy if migration fails?
    - **Execution approach:** Would you prefer **(A) Custom Agents** (standalone `.agent.md` files invoked individually) or **(B) Squad Team** (coordinator-orchestrated team with parallel execution, handoff enforcement, reviewer gates)? **Default to Squad Team** for multi-agent scenarios with complex orchestration needs; choose Custom Agents for simpler, linear workflows.
+   - **SDD framework:** Would you like to use a spec-driven-development framework — **(1) None** (our native pipeline), **(2) GitHub Spec-Kit**, **(3) OpenSpec**, or **(4) Superpowers**? These are prescriptive and change the workflow somewhat. **Recommended default for this scenario: Spec-Kit.** If unsure, choose the recommended default. See `../skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)" for what each entails.
 4. Capture answers in `00-intake.md` under `## Clarifications`
 5. Document the chosen execution approach in `00-intake.md` under `## Execution Approach`
-6. Document assumptions for any unanswered questions under `## Assumptions`
+6. Document the chosen SDD framework independently in `00-intake.md` under `## SDD Framework`
+7. Document assumptions for any unanswered questions under `## Assumptions`
 
 **Exit Gate:** Source + target platforms confirmed, migration scope understood. No blocking unknowns.
 
@@ -109,7 +111,8 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 **Actions:**
 1. Read `../skills/meta-agentic-method/SKILL.md` § Assessment phase requirements
-2. Scaffold `docs/<scenario>-<slug>/03-assessment.md` from `../skills/meta-agentic-method/templates/assessment.template.md`, fill placeholders, generate:
+2. If an SDD framework was selected in Intake, follow its flow per `../skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)" and feed Assessment outputs into that framework's artifacts.
+3. Scaffold `docs/<scenario>-<slug>/03-assessment.md` from `../skills/meta-agentic-method/templates/assessment.template.md`, fill placeholders, generate:
    - **Legacy Capability Matrix:** List every capability the legacy system provides (e.g., "Scheduled ETL jobs", "Data validation rules", "Error retry logic")
    - **Technical Debt Inventory:** Version EOL dates, security vulnerabilities, performance bottlenecks, maintainability issues
    - **Target-State Requirements:** What each capability must do post-migration (may differ from legacy)
@@ -123,10 +126,10 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
    - **Migration Risks:** Data loss risk, downtime impact, compatibility breaks, rollback difficulty
    - **Complexity Rating:** Per component (Low/Medium/High)
-3. Research target platform capabilities:
+4. Research target platform capabilities:
    - Use `web_fetch` to consult `../skills/meta-agentic-method/references.md` for target platform docs (e.g., Microsoft Fabric docs)
    - Compare feature sets (source vs. target)
-4. Highlight critical gaps:
+5. Highlight critical gaps:
    - **Missing capabilities:** Features legacy has that target doesn't (document workaround or "not migrating")
    - **New capabilities:** Features target offers that legacy doesn't (opportunity to enhance)
 
@@ -140,7 +143,8 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 **Actions:**
 1. Read `../skills/meta-agentic-method/SKILL.md` § Analysis phase requirements
-2. Scaffold `docs/<scenario>-<slug>/04-analysis.md` from `../skills/meta-agentic-method/templates/analysis.template.md`, fill placeholders, generate (numbering adjusted for modernization path):
+2. If an SDD framework was selected in Intake, follow its flow per `../skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)" and reconcile framework specs with native analysis artifacts.
+3. Scaffold `docs/<scenario>-<slug>/04-analysis.md` from `../skills/meta-agentic-method/templates/analysis.template.md`, fill placeholders, generate (numbering adjusted for modernization path):
    - **Functional Domains:** Break migration into domains based on Assessment (e.g., "Data Extraction", "Schema Transformation", "Target Provisioning", "Data Validation", "Cutover Orchestration")
    - **Success Criteria:** Measurable outcomes per domain:
      - "100% of Oracle tables migrated with <0.01% data loss"
@@ -153,7 +157,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
      - Define golden datasets (representative inputs + expected legacy outputs)
      - Specify parity success criteria (e.g., "100% match on golden dataset", "performance within 10% of legacy")
      - Identify APIs/endpoints requiring contract testing
-3. Prioritize domains by dependency and risk
+4. Prioritize domains by dependency and risk
 
 **Exit Gate:** ≥2 functional domains defined, each with success criteria. Migration sequence (domain execution order) documented.
 
@@ -165,7 +169,8 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 **Actions:**
 1. Read `../skills/meta-agentic-method/SKILL.md` § Capability Acquisition Decision Tree
-2. For each capability from Analysis:
+2. If an SDD framework was selected in Intake, include its required commands, skills, templates, and artifact locations in the capability map.
+3. For each capability from Analysis:
    - **[A] REUSE:** Search `.github/skills/`, `.github/instructions/` for existing repo artifacts
    - **[B] FIND:** Consult `../skills/meta-agentic-method/references.md` for external MCP servers or published skills
      - **CRITICAL:** Check for MCP servers for BOTH source and target platforms
@@ -178,7 +183,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
      - **C2:** New skill → author following `.github/instructions/agent-skills.instructions.md`
      - **C3:** New instruction → author following `.github/instructions/instructions.instructions.md` (domain knowledge: Oracle-specific patterns, Fabric best practices)
      - **C4:** Custom agent role → defer to Team Formation
-3. Scaffold `docs/<scenario>-<slug>/05-capability-map.md` from `../skills/meta-agentic-method/templates/capability-map.template.md`, fill placeholders, generate capability rows:
+4. Scaffold `docs/<scenario>-<slug>/05-capability-map.md` from `../skills/meta-agentic-method/templates/capability-map.template.md`, fill placeholders, generate capability rows:
 
    | Capability Needed | Type | Source | Status | Evidence |
    |-------------------|------|--------|--------|----------|
@@ -187,8 +192,8 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    | ETL data transformation patterns | Skill | Find `data-transformation-skill` | To Find | Search awesome-mcp-servers |
    | Oracle PL/SQL to Python conversion | Instruction | Generate new | To Build | Domain-specific conversion rules |
 
-4. Document discovery sources used (registries checked, OpenAPI specs located)
-5. **Record MCP gaps:** Explicitly note when no first-party MCP server exists (Oracle, Fabric in this example) and the build path chosen
+5. Document discovery sources used (registries checked, OpenAPI specs located)
+6. **Record MCP gaps:** Explicitly note when no first-party MCP server exists (Oracle, Fabric in this example) and the build path chosen
 
 **Exit Gate:** Every capability mapped with source/status. All platform MCP server gaps identified with OpenAPI-to-MCP build path. No "Unknown" or "TBD" without action.
 
@@ -299,10 +304,22 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    | DataValidator | Verify migration completeness and performance | `data-validation-skill` | - | `oracle-ords-mcp`, `fabric-api-mcp` | - |
 
 4. **Document the chosen execution approach** in `06-team.md` under `## Execution Approach`.
+5. **Document the chosen SDD framework** in `06-team.md` under `## SDD Framework` and note how framework artifacts map to the native workflow.
 
 **Exit Gate:** ≥3 agents defined (source specialist, target specialist, validator), each with ≥1 capability, acyclic handoff chain, reviewer designated.
 
 ---
+
+#### SDD Framework (choose one from Intake)
+
+Recommended default for modernization work: **Spec-Kit**. This is optional and orthogonal to Execution Approach: framework controls how specs/workflow artifacts are produced; Execution Approach controls whether Custom Agents or Squad Team performs the work. For full details, follow `../skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)".
+
+- **None — native pipeline:** Run this prompt's existing Assessment, target mapping, parity testing, staged migration, Verification, and Handoff phases unchanged. Native `docs/<scenario>-<slug>/` artifacts remain the source of truth.
+- **GitHub Spec-Kit — recommended:** Initialize with `uvx --from git+https://github.com/github/spec-kit.git specify init . --integration copilot`, put migration principles in `/speckit.constitution`, express target capabilities in `/speckit.specify`, resolve ambiguity with `/speckit.clarify`, validate with `/speckit.checklist`, plan phased architecture with `/speckit.plan`, slice migration work with `/speckit.tasks`, run `/speckit.analyze` with parity gates, then `/speckit.implement`. Spec-Kit supersedes native Analysis and Execution structure; native Discovery, Assessment, Capability Mapping, Parity Testing, Team Formation, Verification, and Handoff still augment it.
+- **OpenSpec:** Strong optional fit for incremental modernization. Use `npm install -g @fission-ai/openspec@latest && openspec init`, treat each migration slice as `openspec/changes/<change>/` with `/opsx:propose` or `/opsx:explore`, then `/opsx:apply`, `/opsx:verify`, `/opsx:sync`, and `/opsx:archive`. Use parallel changes only for independent components.
+- **Superpowers:** Optional risk-reduction overlay. Use `brainstorming` → `writing-plans` → `test-driven-development` → `subagent-driven-development` or `executing-plans` → `requesting-code-review` → `finishing-a-development-branch`; enforce parity-first RED-GREEN-REFACTOR around adapter and contract tests.
+
+Framework artifacts live alongside, or in place of the native `docs/<scenario>-<slug>/` artifacts as defined in SKILL.md. The Confidence Rubric and Verification phases still apply; lower confidence if required framework artifacts are missing, stale, unsynced, or unverified.
 
 #### Execution Approach (choose one from Intake)
 

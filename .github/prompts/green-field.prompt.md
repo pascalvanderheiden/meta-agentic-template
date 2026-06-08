@@ -64,9 +64,11 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - **Scope boundaries:** What's explicitly OUT of scope (e.g., mobile apps, internationalization)?
    - **Data/integration:** External APIs, databases, third-party services to integrate?
    - **Execution approach:** Would you prefer **(A) Custom Agents** (standalone `.agent.md` files invoked individually) or **(B) Squad Team** (coordinator-orchestrated team with parallel execution, handoff enforcement, reviewer gates)? **Default to Squad Team** for multi-agent scenarios with complex orchestration needs; choose Custom Agents for simpler, linear workflows.
+   - **SDD framework:** Would you like to use a spec-driven-development framework — **(1) None** (our native pipeline), **(2) GitHub Spec-Kit**, **(3) OpenSpec**, or **(4) Superpowers**? These are prescriptive and change the workflow somewhat. **Recommended default for this scenario: OpenSpec.** If unsure, choose the recommended default. See `../skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)" for what each entails.
 4. Capture answers in `00-intake.md` under `## Clarifications`
 5. Document the chosen execution approach in `00-intake.md` under `## Execution Approach`
-6. Document assumptions for any unanswered questions under `## Assumptions`
+6. Document the chosen SDD framework independently in `00-intake.md` under `## SDD Framework`
+7. Document assumptions for any unanswered questions under `## Assumptions`
 
 **Exit Gate:** No blocking unknowns remain. Proceed only when scenario is unambiguous.
 
@@ -78,12 +80,13 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 **Actions:**
 1. Read `../skills/meta-agentic-method/SKILL.md` § Analysis phase requirements
-2. Scaffold `docs/<scenario>-<slug>/01-analysis.md` from `../skills/meta-agentic-method/templates/analysis.template.md`, fill placeholders, generate:
+2. If an SDD framework was selected in Intake, follow its flow per `../skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)" and reconcile framework specs with native analysis artifacts.
+3. Scaffold `docs/<scenario>-<slug>/01-analysis.md` from `../skills/meta-agentic-method/templates/analysis.template.md`, fill placeholders, generate:
    - **Functional Domains:** Break scenario into ≥2 distinct domains (e.g., Authentication, API Layer, Data Persistence, Monitoring)
    - **Success Criteria:** Measurable outcomes per domain (e.g., "API supports 1000 req/sec", "Zero plaintext secrets in code")
    - **Non-Functional Requirements:** Performance, security, scalability, observability
    - **Capability Requirements:** List needed agents, skills, instructions, MCP servers (names only; defer implementation)
-3. Validate decomposition: each domain has clear boundaries and success criteria
+4. Validate decomposition: each domain has clear boundaries and success criteria
 
 **Exit Gate:** ≥2 functional domains defined, each with measurable success criteria.
 
@@ -95,7 +98,8 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 **Actions:**
 1. Read `../skills/meta-agentic-method/SKILL.md` § Capability Acquisition Decision Tree
-2. For each capability from Analysis:
+2. If an SDD framework was selected in Intake, include its required commands, skills, templates, and artifact locations in the capability map.
+3. For each capability from Analysis:
    - **[A] REUSE:** Search `.github/skills/`, `.github/instructions/` for existing repo artifacts
    - **[B] FIND:** Consult `../skills/meta-agentic-method/references.md` for external MCP servers or published skills
      - Use `web_fetch` to verify registry links and check MCP availability
@@ -105,7 +109,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
      - **C2:** New skill → author following `.github/instructions/agent-skills.instructions.md`
      - **C3:** New instruction → author following `.github/instructions/instructions.instructions.md`
      - **C4:** Custom agent role → defer to Team Formation
-3. Scaffold `docs/<scenario>-<slug>/03-capability-map.md` from `../skills/meta-agentic-method/templates/capability-map.template.md`, fill placeholders, generate capability rows:
+4. Scaffold `docs/<scenario>-<slug>/03-capability-map.md` from `../skills/meta-agentic-method/templates/capability-map.template.md`, fill placeholders, generate capability rows:
 
    | Capability Needed | Type | Source | Status | Evidence |
    |-------------------|------|--------|--------|----------|
@@ -113,7 +117,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    | Next.js project setup | Skill | Generate new | To Build | Follow agent-skills.instructions.md |
    | Stripe integration | Instruction | Generate new | To Build | Stripe API docs + instructions.instructions.md |
 
-4. Document discovery sources used (which registries checked, search queries run)
+5. Document discovery sources used (which registries checked, search queries run)
 
 **Exit Gate:** Every capability mapped with source/status. No "Unknown" or "TBD" without action.
 
@@ -160,10 +164,22 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    | Validator | Verify requirements met | `validation-skill` | - | - | - |
 
 4. **Document the chosen execution approach** in `04-team.md` under `## Execution Approach`.
+5. **Document the chosen SDD framework** in `04-team.md` under `## SDD Framework` and note how framework artifacts map to the native workflow.
 
 **Exit Gate:** ≥2 agents defined, each with ≥1 capability, acyclic handoff chain, reviewer designated.
 
 ---
+
+#### SDD Framework (choose one from Intake)
+
+Recommended default for green-field work: **OpenSpec**. This is optional and orthogonal to Execution Approach: framework controls how specs/workflow artifacts are produced; Execution Approach controls whether Custom Agents or Squad Team performs the work. For full details, follow `../skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)".
+
+- **None — native pipeline:** Run this prompt's existing phases unchanged. Native `docs/<scenario>-<slug>/` artifacts remain the source of truth.
+- **GitHub Spec-Kit:** Good for broad product requirements. Initialize with `uvx --from git+https://github.com/github/spec-kit.git specify init . --integration copilot`, then use `/speckit.constitution`, `/speckit.specify`, `/speckit.clarify`, `/speckit.checklist`, `/speckit.plan`, `/speckit.tasks`, `/speckit.analyze`, and `/speckit.implement`. Spec-Kit largely supersedes native Analysis and Execution structure; native Capability Mapping, Team Formation, Verification, and Handoff still augment it.
+- **OpenSpec — recommended:** Use `npm install -g @fission-ai/openspec@latest && openspec init`, then `/opsx:propose <change>` (or `/opsx:explore` first for ambiguity). Model initial features as OpenSpec changes, use `/opsx:apply`, `/opsx:verify`, `/opsx:sync`, and `/opsx:archive` so `openspec/specs/` becomes the living product contract. OpenSpec reframes Analysis as change scoping and replaces Execution structure with change-folder tasks.
+- **Superpowers:** Use `brainstorming` → `writing-plans` → `test-driven-development` → `subagent-driven-development` or `executing-plans` → `requesting-code-review` → `finishing-a-development-branch`. Superpowers augments Intake/Analysis and replaces execution discipline with plan/TDD/review loops.
+
+Framework artifacts live alongside, or in place of the native `docs/<scenario>-<slug>/` artifacts as defined in SKILL.md. The Confidence Rubric and Verification phases still apply; lower confidence if required framework artifacts are missing, stale, unsynced, or unverified.
 
 #### Execution Approach (choose one from Intake)
 
