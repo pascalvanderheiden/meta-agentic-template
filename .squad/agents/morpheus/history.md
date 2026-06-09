@@ -93,3 +93,14 @@ Team Formation Approach A now designates the shipped Orchestrator agent (`.githu
 ## 2026-06-09: Orchestration Log + Session Log Consolidation
 
 Scribe created orchestration logs for each agent, session log for execution-handoff-redesign batch, merged decision inbox to decisions.md, updated cross-agent history records. All deliverables staged for git commit.
+
+### 2026-06-09: Phase 1 Intake Hard Gate for Execution Approach & SDD Framework
+
+**Deliverables:**
+- `.github/prompts/green-field.prompt.md` (Phase 1, Action 3 + Action 7 + Exit Gate)
+- `.github/prompts/brown-field.prompt.md` (Phase 1, Action 3 + Action 7 + Exit Gate)
+- `.github/prompts/modernization.prompt.md` (Phase 1, Action 3 + Action 7 + Exit Gate)
+- `.squad/decisions/inbox/morpheus-intake-hardgate.md`
+
+**Learning:**
+Phase 1 Intake soft clarification language permitted agents to silently assume defaults for **Execution Approach** (Custom Agents vs Squad Team) and **SDD Framework** (None/Spec-Kit/OpenSpec/Superpowers). Added emphatic **⚠️ MANDATORY** gate after the clarification bank: agent MUST present both questions and WAIT for user's explicit answer before proceeding — may recommend scenario default but cannot auto-select. Qualified "Document assumptions" clause (Action 7) to exclude these two (applies only to secondary clarifiers like target stack, constraints, non-functionals, scope). Strengthened each prompt's Exit Gate to require: "Execution Approach and SDD Framework are explicitly chosen by the user (not assumed)." Parallel wording applied to all three scenario prompts, preserving existing numbering/format conventions.

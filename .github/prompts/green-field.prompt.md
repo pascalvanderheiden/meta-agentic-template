@@ -66,12 +66,14 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - **Data/integration:** External APIs, databases, third-party services to integrate?
    - **Execution approach:** Would you prefer **(A) Custom Agents** (standalone `.agent.md` files invoked individually) or **(B) Squad Team** (coordinator-orchestrated team with parallel execution, handoff enforcement, reviewer gates)? **Default to Squad Team** for multi-agent scenarios with complex orchestration needs; choose Custom Agents for simpler, linear workflows.
    - **SDD framework:** Would you like to use a spec-driven-development framework — **(1) None** (our native pipeline), **(2) GitHub Spec-Kit**, **(3) OpenSpec**, or **(4) Superpowers**? These are prescriptive and change the workflow somewhat. **Recommended default for this scenario: OpenSpec.** If unsure, choose the recommended default. See `../skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)" for what each entails.
+   
+   **⚠️ MANDATORY:** You MUST present the **Execution Approach** and **SDD Framework** questions to the user and WAIT for their explicit answer before proceeding to the next phase. You may recommend this scenario's default, but DO NOT silently assume it. Only fall back to the default if the user explicitly defers (e.g., "use the default") or indicates they don't care.
 4. Capture answers in `00-intake.md` under `## Clarifications`
 5. Document the chosen execution approach in `00-intake.md` under `## Execution Approach`
 6. Document the chosen SDD framework independently in `00-intake.md` under `## SDD Framework`
-7. Document assumptions for any unanswered questions under `## Assumptions`
+7. Document assumptions for any unanswered secondary questions (target stack, constraints, non-functionals, success criteria, scope boundaries, data/integration) under `## Assumptions`. DO NOT assume answers for Execution Approach or SDD Framework — these require explicit user input.
 
-**Exit Gate:** No blocking unknowns remain. Proceed only when scenario is unambiguous.
+**Exit Gate:** No blocking unknowns remain. **Execution Approach and SDD Framework are explicitly chosen by the user (not assumed).** Proceed only when scenario is unambiguous.
 
 ---
 
