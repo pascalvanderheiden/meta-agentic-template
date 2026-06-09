@@ -1792,3 +1792,46 @@ Rewrote usage section with:
 - README example prompts cover all three scenarios with realistic, scenario-agnostic use cases
 - SDD framework defaults match those in SKILL.md and prompts
 - No hardcoded file paths or domain-specific details in examples
+
+### 2026-06-09: CLI Wrapper Skills + README Restructure
+
+**By:** Trinity (Template Engineer)  
+**Reviewed by:** Neo (Quality Reviewer)  
+**Requested by:** Pascal van der Heiden
+
+**Context:**
+Template had 3 scenario workflows as VS Code `.prompt.md` files but no Copilot CLI equivalent. README falsely claimed `gh copilot prompt <scenario>` works (that command doesn't exist). Needed CLI parity via skills, cleaner README, corrected APM install list.
+
+**Decision:**
+Created 3 thin wrapper skills for CLI invocation:
+- `.github/skills/green-field/SKILL.md`
+- `.github/skills/brown-field/SKILL.md`
+- `.github/skills/modernization/SKILL.md`
+
+Each delegates to authoritative `.github/prompts/<scenario>.prompt.md` (single source of truth). Skills have YAML frontmatter with scenario-distinguishing descriptions (green = build new; brown = extend in-repo; mod = migrate side-by-side). Body notes VS Code users can invoke via `/<scenario>` slash command.
+
+README restructured into 3-step flow (Get template → Run scenario → Execute by team), removed false `gh copilot prompt` claim, updated Repository Structure section, added Mermaid "How This Meta-Template Works" diagram. APM install list corrected: added orchestrator.agent.md, 3 scenario skills, find-skills, mcp-builder (all 17 paths verified).
+
+**Rationale:**
+- **CLI Parity:** Copilot CLI doesn't execute prompt files — it uses skills. Wrapper skills let CLI users ask naturally ("Run the modernization workflow to..."), triggering the skill, which reads the prompt.
+- **Single Source of Truth:** Workflow content lives in `.prompt.md` (not duplicated). Skills are thin routing layer.
+- **README Clarity:** Removed false commands, merged redundant sections, 3-step flow makes path obvious. Both CLI + VS Code surfaces documented together.
+- **APM Correctness:** Execution lead (orchestrator.agent.md) + CLI skills (green-field, brown-field, modernization) + capability-phase skills (find-skills, mcp-builder) all included.
+
+**Consequences:**
+- CLI users can invoke scenarios naturally via skill triggering
+- VS Code users still use `/<scenario>` slash commands
+- Both surfaces share `.prompt.md` (no duplication)
+- APM installs into existing repos now include execution lead + CLI skills
+- README accurate (no false commands)
+
+**Verification (Neo, 6-criteria review):**
+- ✅ Skills follow agent-skills.instructions.md (wrapper pattern valid, YAML complete, descriptions distinguish scenarios)
+- ✅ Single source of truth (workflow logic in `.prompt.md`, skills delegate)
+- ✅ README accurate (no false `gh copilot prompt`, both CLI + VS Code documented, 3-step flow clear)
+- ✅ APM install list (orchestrator.agent.md, 3 skills, find-skills, mcp-builder added; all 17 paths verified)
+- ✅ No broken links (all internal references resolve, cross-references in instructions/skills intact)
+- ✅ Documentation updated (copilot-instructions.md Scenario Prompts + APM install corrected)
+
+**Pattern:**
+GENERIC scenario entry-points allowed (not domain-fixed). Delegate to authoritative workflow files, note alternative invocation surfaces (VS Code slash commands).

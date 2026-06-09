@@ -194,3 +194,18 @@ Reviewed 10 scenario-agnostic improvements validated via Angular→React probe b
 ## 2026-06-09: Orchestration Log + Session Log Consolidation
 
 Scribe created orchestration logs for each agent, session log for execution-handoff-redesign batch, merged decision inbox to decisions.md, updated cross-agent history records. All deliverables staged for git commit.
+
+**Reviewed:** Trinity's CLI Skills + README Restructure work (2026-06-09)  
+**Scope:** 6-criteria gate review (skills compliance, single source of truth, README accuracy, APM list, link integrity, docs updated)
+
+**Findings:**
+1. ✅ Skills follow agent-skills.instructions.md (wrapper pattern valid, YAML frontmatter complete, descriptions distinguish scenarios)
+2. ✅ Single source of truth (workflow logic in `.prompt.md`, skills thin routing layer, no duplication)
+3. ✅ README accurate (no false `gh copilot prompt` command, both CLI + VS Code documented, 3-step flow)
+4. ✅ APM install list corrected (orchestrator.agent.md, 3 scenario skills, find-skills, mcp-builder added; all 17 paths verified)
+5. ✅ Links intact (internal references resolve, cross-references in instructions/skills unbroken)
+6. ✅ Documentation updated (copilot-instructions.md Scenario Prompts + APM install corrected)
+
+**VERDICT: APPROVED**
+
+All criteria pass. Skills ready for commit.

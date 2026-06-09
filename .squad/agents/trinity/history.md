@@ -178,3 +178,37 @@ Added generic "reuse existing test suite as parity oracle" guidance to `testing-
 ## 2026-06-09: Orchestration Log + Session Log Consolidation
 
 Scribe created orchestration logs for each agent, session log for execution-handoff-redesign batch, merged decision inbox to decisions.md, updated cross-agent history records. All deliverables staged for git commit.
+
+## 2026-06-09: CLI Skills + README Fix
+
+**Task:** Create 3 CLI wrapper skills for Copilot CLI parity, rewrite README into 3-step structure, fix APM install list.
+
+**Files Created:**
+- `.github/skills/green-field/SKILL.md` — Thin wrapper delegating to `.github/prompts/green-field.prompt.md`
+- `.github/skills/brown-field/SKILL.md` — Thin wrapper delegating to `.github/prompts/brown-field.prompt.md`
+- `.github/skills/modernization/SKILL.md` — Thin wrapper delegating to `.github/prompts/modernization.prompt.md`
+
+**Pattern:** Each skill has YAML frontmatter (`name`, `description` adapted from prompt), body delegates to authoritative `.prompt.md` file (single source of truth), notes VS Code users can invoke via `/<scenario>` slash command. Descriptions distinguish: green-field = build new, brown-field = extend existing in-repo, modernization = migrate/modernize legacy side-by-side.
+
+**README Restructure:**
+- Removed FALSE claim `gh copilot prompt <scenario>` (command doesn't exist)
+- Condensed into 3 generic steps:
+  1. Get template (fork/clone for green; APM install for brown/mod)
+  2. Run scenario (VS Code `/<scenario>` OR Copilot CLI ask naturally → triggers skill)
+  3. Execute by team (Orchestrator for Custom Agents, Squad for Squad approach)
+- Merged redundant "Run the Scenario Prompt" + "Example Prompts" into one concise block
+- DELETED "## Extending the Template" section (lines ~191-215)
+- UPDATED "## Repository Structure" table: `.github/agents/` now lists `squad.agent.md` + `orchestrator.agent.md`; `.github/skills/` now lists 3 new scenario skills
+
+**APM Section Fixes:**
+1. Added `orchestrator.agent.md` (Custom Agents execution lead)
+2. Added 3 new scenario skills (`green-field`, `brown-field`, `modernization`) for CLI invocation
+3. Added `find-skills` and `mcp-builder` (referenced by capability-acquisition phase in prompts)
+4. Verified all 17 install paths exist via `ls -1` (all resolved)
+5. Updated explanatory sentence: now mentions 3 scenario skills + find/mcp-builder
+
+**Key Learnings:**
+- Wrapper skills are GENERIC scenario entry-points (allowed per decisions.md meta-template principle)
+- Skills trigger via description keywords → user asks naturally, Copilot CLI loads skill, skill reads prompt
+- VS Code and CLI now share single source of truth (`.prompt.md`)
+- APM install pulls scenario skills so CLI users get invocation parity without VS Code prompt files

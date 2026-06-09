@@ -2,6 +2,33 @@
 
 A framework for orchestrating AI-powered development teams using Spec-Driven Development (SDD). Forms custom agent teams, discovers/builds capabilities (skills, MCP servers), and delivers verified solutions with real-time confidence scoring.
 
+## How This Meta-Template Works
+
+```mermaid
+flowchart TD
+    MT[Meta-Agentic Template<br/>pascalvanderheiden/meta-agentic-template]
+    
+    MT --> GF[Green-Field Scenario<br/><b>New project</b><br/>Fork/clone template]
+    MT --> BF[Brown-Field Scenario<br/><b>Imports into existing project</b><br/>APM install into your repo]
+    MT --> MOD[Modernization Scenario<br/><b>Side-car references source</b><br/>Legacy read-only + new target]
+    
+    GF --> S1[Step 1: Get Template]
+    BF --> S1
+    MOD --> S1
+    
+    S1 --> S2[Step 2: Run Scenario<br/>VS Code slash command or<br/>Copilot CLI natural ask]
+    S2 --> S3[Step 3: Execute by Team<br/>Orchestrator/Squad drives<br/>role agents through phases]
+    S3 --> OUT[Deliverables + Progress Report]
+    
+    style MT fill:#e1f5ff
+    style GF fill:#d4edda
+    style BF fill:#fff3cd
+    style MOD fill:#f8d7da
+    style OUT fill:#d1ecf1
+```
+
+*This meta-template generates a focused agentic workspace tuned to your scenario — each relates to source code differently: green-field creates new, brown-field works in-place, modernization references legacy read-only.*
+
 ## Prerequisites
 
 - **VS Code** with GitHub Copilot OR **Copilot CLI**
@@ -13,9 +40,15 @@ A framework for orchestrating AI-powered development teams using Spec-Driven Dev
 
 ## Quick Start Guide
 
-### 1. Choose Your Scenario
+### Step 1 — Get the Template
 
-Pick the scenario that matches your situation:
+**For green-field (building new):** Fork or clone this template repository.
+
+**For brown-field or modernization (working with existing code):** Install the agentic artifacts into your existing repository using APM (see [Use on an Existing Codebase (APM)](#use-on-an-existing-codebase-apm) below).
+
+### Step 2 — Run the Scenario
+
+Choose the scenario that matches your situation:
 
 | Scenario | Use When | Default SDD Framework |
 |----------|----------|----------------------|
@@ -23,43 +56,35 @@ Pick the scenario that matches your situation:
 | **Brown-Field** | Extending or modifying an **existing codebase** | None (native pipeline) |
 | **Modernization** | Migrating platforms or modernizing **legacy systems** | Spec-Kit |
 
-### 2. Run the Scenario Prompt
-
-**In VS Code:**
+**In VS Code** (slash command):
 ```
 @workspace /green-field Build a task management API with Node.js and PostgreSQL
 @workspace /brown-field Add real-time notifications to our Express app
 @workspace /modernization Migrate Oracle ETL pipeline to Microsoft Fabric
 ```
 
-**In Copilot CLI:**
-```bash
-gh copilot prompt green-field "Build a task management API with Node.js and PostgreSQL"
+**In Copilot CLI** (skill-based):
+Start `copilot` and ask naturally. Examples:
+```
+"Run the green-field workflow to build a task management API with Node.js and PostgreSQL"
+"Run the brown-field workflow to add real-time notifications to our Express app"
+"Run the modernization workflow to migrate our Oracle ETL pipeline to Microsoft Fabric"
 ```
 
-### 3. Answer Intake Questions
+The agent will trigger the matching scenario skill, which delegates to the authoritative `.github/prompts/<scenario>.prompt.md` workflow.
 
-The prompt will ask clarifying questions:
-
+**Intake questions:**
 - **Execution Approach**: Choose **(A) Custom Agents** for simple workflows or **(B) Squad Team** (default) for complex multi-agent orchestration
 - **SDD Framework**: Choose **(1) None**, **(2) Spec-Kit**, **(3) OpenSpec**, or **(4) Superpowers** — or accept the scenario's recommended default
 - **Scenario-specific details**: Stack preferences, constraints, success criteria, scope boundaries
 
-### 4. Team Formation → Execution
+### Step 3 — Execute by Team
 
-The workflow proceeds through phases:
-1. **Intake** — Clarify requirements
-2. **Discovery/Assessment** (brown-field/modernization only) — Inventory existing system
-3. **Analysis** — Decompose into functional domains
-4. **Capability Mapping** — Find/build required skills, MCP servers, instructions
-5. **Team Formation** — Assign capabilities to agent roles
-6. **Execution** — The execution lead (Orchestrator or Squad coordinator) invokes agents, enforces handoffs and reviewer gates, runs the SDD framework's implement loop (if chosen)
-7. **Verification** — Validate deliverables, calculate confidence score
-8. **Handoff** — Package artifacts and generate progress report
+The workflow proceeds through 10 phases (Intake → Discovery/Assessment → Analysis → Capability Mapping → Capability Acquisition → Team Formation → Execution → Verification → Handoff).
 
-### 5. Review the Progress Report
+**The execution lead** (Orchestrator for Custom Agents, or Squad coordinator for Squad Team) invokes role agents in handoff order, enforces strict reviewer gates (original author cannot revise rejected work), runs the SDD framework's implement loop (if chosen), and reports back.
 
-Open `docs/<scenario>-<slug>/progress-report.html` in your browser for real-time status, confidence scores, team roster, and capability tracking.
+**Review the progress report**: Open `docs/<scenario>-<slug>/progress-report.html` in your browser for real-time status, confidence scores, team roster, and capability tracking.
 
 ## Example Prompts
 
@@ -126,13 +151,19 @@ apm install \
   pascalvanderheiden/meta-agentic-template/.github/skills/progress-report \
   pascalvanderheiden/meta-agentic-template/.github/skills/github-issues \
   pascalvanderheiden/meta-agentic-template/.github/skills/repo-wiki \
+  pascalvanderheiden/meta-agentic-template/.github/skills/green-field \
+  pascalvanderheiden/meta-agentic-template/.github/skills/brown-field \
+  pascalvanderheiden/meta-agentic-template/.github/skills/modernization \
+  pascalvanderheiden/meta-agentic-template/.github/skills/find-skills \
+  pascalvanderheiden/meta-agentic-template/.github/skills/mcp-builder \
   pascalvanderheiden/meta-agentic-template/.github/instructions \
-  pascalvanderheiden/meta-agentic-template/.github/agents/squad.agent.md
+  pascalvanderheiden/meta-agentic-template/.github/agents/squad.agent.md \
+  pascalvanderheiden/meta-agentic-template/.github/agents/orchestrator.agent.md
 apm install --mcp io.github.github/github-mcp-server --transport http
 apm install --mcp microsoft/playwright-mcp
 ```
 
-Pulls: 3 scenario prompts, method/report/feedback/repo-wiki skills, authoring instructions, Squad agent, and GitHub + Playwright MCP servers. If APM cannot auto-detect Copilot, append `--target copilot`. The upstream feedback loop still works: `github-issues` + GitHub MCP travel with the install, issues file to this template repo, and `apm.lock.yaml` pins what you ran. See `.github/skills/meta-agentic-method/SKILL.md` § *Repository Topology by Scenario* for where work happens.
+Pulls: 3 scenario prompts, 3 scenario skills (for Copilot CLI invocation), meta-agentic-method/progress-report/github-issues/repo-wiki/find-skills/mcp-builder skills, authoring instructions, Squad agent, Orchestrator agent, and GitHub + Playwright MCP servers. If APM cannot auto-detect Copilot, append `--target copilot`. The upstream feedback loop still works: `github-issues` + GitHub MCP travel with the install, issues file to this template repo, and `apm.lock.yaml` pins what you ran. See `.github/skills/meta-agentic-method/SKILL.md` § *Repository Topology by Scenario* for where work happens.
 
 ## How It Works
 
@@ -183,36 +214,11 @@ Report updates after each phase. Open `docs/<scenario>/progress-report.html` in 
 | Path | Purpose |
 |------|---------|
 | `.github/prompts/` | Scenario workflows (green-field.prompt.md, brown-field.prompt.md, modernization.prompt.md) |
-| `.github/skills/` | Reusable skills: `meta-agentic-method` (methodology + references), `progress-report`, `find-skills`, `mcp-builder`, `skill-creator` |
+| `.github/skills/` | Reusable skills: `meta-agentic-method` (methodology + references), `progress-report`, `green-field`, `brown-field`, `modernization` (scenario wrappers), `find-skills`, `mcp-builder`, `skill-creator`, `github-issues`, `repo-wiki` |
 | `.github/instructions/` | Authoring guidelines: `agents.instructions.md`, `agent-skills.instructions.md`, `instructions.instructions.md`, `prompt.instructions.md`, `hooks.instructions.md` |
-| `.github/agents/` | Custom agents including Squad coordinator (`squad.agent.md`) |
+| `.github/agents/` | Custom agents: `squad.agent.md` (Squad coordinator), `orchestrator.agent.md` (Custom Agents execution lead) |
 | `.squad/` | Squad team management (team.md, routing.md, decisions.md, agent folders) |
 
-## Extending the Template
-
-**Add Skill:**
-```
-@workspace Use skill-creator to create skill for [purpose]
-```
-
-**Add Agent:**
-Create `<name>.agent.md` in `.github/agents/` following `agents.instructions.md`
-
-**Add Instruction:**
-Create `<topic>.instructions.md` in `.github/instructions/` following `instructions.instructions.md`
-
-**Find Ecosystem Capabilities:**
-```bash
-@workspace Use find-skills to search for [capability]
-npx skills find <query>
-```
-
-**Build MCP Server:**
-```
-@workspace Use mcp-builder to generate MCP server from [OpenAPI URL]
-```
-
-Check `.github/skills/meta-agentic-method/references.md` for MCP/skill registries.
 
 ## Conventions
 
