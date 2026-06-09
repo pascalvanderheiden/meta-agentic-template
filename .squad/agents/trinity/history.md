@@ -179,6 +179,21 @@ Added generic "reuse existing test suite as parity oracle" guidance to `testing-
 
 Scribe created orchestration logs for each agent, session log for execution-handoff-redesign batch, merged decision inbox to decisions.md, updated cross-agent history records. All deliverables staged for git commit.
 
+### 2026-06-09: Human Checkpoint in README Step 4
+
+**Task:** Update README Step 4 to reflect mandatory human checkpoint after planning-doc generation and before execution starts.
+
+**Changes:**
+- Renamed "### Step 4 — Execute by Team" to "### Step 4 — Review & Execute"
+- Added lead-in paragraph: workflow generates planning artifacts (intake, analysis/discovery, capability map, team, plan, tasks) and PAUSES for human review before execution lead is invoked
+- Reframed `@orchestrator execute the plan` / `@squad execute the plan` as explicit approval signal AFTER reviewing docs
+- Updated Mermaid S4 box text: "Step 4: Review & Execute<br/>Review planning docs, then<br/>approve to start execution"
+- Clarified execution lead drives remaining phases (Execution → Verification → Handoff), not full 10-phase workflow (Intake → Team Formation already completed at pause point)
+
+**Rationale:** Prompts being updated in parallel to pause after team formation. README prose must match: reviewing the generated docs and issuing the execute command IS the approval.
+
+**Key Learning:** Small edit, high clarity gain. Pause point explicit, approval mechanism explicit, no contradiction with prompts.
+
 ## 2026-06-09: CLI Skills + README Fix
 
 **Task:** Create 3 CLI wrapper skills for Copilot CLI parity, rewrite README into 3-step structure, fix APM install list.
@@ -212,3 +227,18 @@ Scribe created orchestration logs for each agent, session log for execution-hand
 - Skills trigger via description keywords → user asks naturally, Copilot CLI loads skill, skill reads prompt
 - VS Code and CLI now share single source of truth (`.prompt.md`)
 - APM install pulls scenario skills so CLI users get invocation parity without VS Code prompt files
+
+### 2026-06-09: Human Checkpoint in README Step 4
+
+**Task:** Update README Step 4 to reflect mandatory human checkpoint after planning-doc generation and before execution starts.
+
+**Changes:**
+- Renamed "### Step 4 — Execute by Team" to "### Step 4 — Review & Execute"
+- Added lead-in paragraph: workflow generates planning artifacts (intake, analysis/discovery, capability map, team, plan, tasks) and PAUSES for human review before execution lead is invoked
+- Reframed `@orchestrator execute the plan` / `@squad execute the plan` as explicit approval signal AFTER reviewing docs
+- Updated Mermaid S4 box text: "Step 4: Review & Execute<br/>Review planning docs, then<br/>approve to start execution"
+- Clarified execution lead drives remaining phases (Execution → Verification → Handoff), not full 10-phase workflow (Intake → Team Formation already completed at pause point)
+
+**Rationale:** Prompts being updated in parallel to pause after team formation. README prose must match: reviewing the generated docs and issuing the execute command IS the approval.
+
+**Key Learning:** Small edit, high clarity gain. Pause point explicit, approval mechanism explicit, no contradiction with prompts.

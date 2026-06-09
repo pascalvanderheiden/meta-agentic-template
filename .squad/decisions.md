@@ -1835,3 +1835,79 @@ README restructured into 3-step flow (Get template → Run scenario → Execute 
 
 **Pattern:**
 GENERIC scenario entry-points allowed (not domain-fixed). Delegate to authoritative workflow files, note alternative invocation surfaces (VS Code slash commands).
+# Decision: Mandatory Human Validation Gate Before Execution
+
+**Date:** 2026-06-09  
+**Status:** Proposed  
+**Decider:** Morpheus (Agent Designer)  
+**Scope:** All scenario prompts (green-field, brown-field, modernization)  
+
+## Context
+
+During live testing, the scenario workflows were found to scaffold all planning documents (plan.md, tasks.md, execution-log.md, and upstream artifacts like intake, discovery/analysis/assessment, capability-map, team, testing-strategy) and then **immediately** hand off to the execution lead and start building implementation code — with NO opportunity for the user to review the generated planning documents in person first.
+
+This violated the expectation that users should have a mandatory human checkpoint to review and approve all planning artifacts before the team is materialized, execution begins, and code is written.
+
+## Decision
+
+Insert a **🚦 Human Validation Gate (MANDATORY)** step in the Execution phase of all three scenario prompts, positioned AFTER all planning documents are scaffolded and IMMEDIATELY BEFORE the "Hand off to execution lead" step.
+
+### Implementation Details
+
+**Placement:**
+- Green-field: Phase 7 Execution, new step 4 (before hand-off step, now step 5)
+- Brown-field: Phase 8 Execution, new step 5 (before hand-off step, now step 6)
+- Modernization: Phase 9 Execution, new step 5 (before hand-off step, now step 6)
+
+**Gate Behavior:**
+1. **STOP** — Do NOT invoke execution lead, materialize/initiate team, or write implementation code yet
+2. Present concise summary + enumerated list of generated planning docs for user review
+3. Ask user to **review docs in person and explicitly approve** before execution proceeds
+4. Make explicit: team/execution lead initiated and building begins ONLY after approval
+5. **WAIT** for explicit approval; if user requests changes, revise docs and re-present gate
+6. Proceed to hand-off step ONLY after user approves
+
+**Document Lists (per scenario):**
+- **Green-field:** 00-intake.md, 01-analysis.md, 03-capability-map.md, 04-team.md, 05-testing-strategy.md, plan.md, tasks.md, plus SDD-framework specs if chosen
+- **Brown-field:** 00-intake.md, 01-discovery.md, wiki/, 02-analysis.md, 03-capability-map.md, 04-team.md, 06-testing-strategy.md, plan.md, tasks.md, plus SDD-framework specs if chosen
+- **Modernization:** 00-intake.md, 01-discovery.md (if source available), wiki/ (if source available), 02-assessment.md, 04-analysis.md, 05-capability-map.md, 06-team.md, 07-testing-strategy.md, plan.md, tasks.md, plus SDD-framework specs if chosen
+
+**Style:** Mirrors existing Phase 1 Intake hard gate (emphatic **⚠️ MANDATORY** / **🚦** marker, unambiguous wording, explicit WAIT instruction). Scenario-agnostic language with scenario-specific doc enumerations.
+
+## Consequences
+
+**Positive:**
+- User gains mandatory review checkpoint before execution begins
+- Prevents unwanted code generation before plan review
+- Aligns with user expectations for human-in-the-loop validation
+- Revision loops supported (user can request changes and re-approve)
+- Consistent gate pattern across all three scenario prompts
+
+**Negative:**
+- Adds one additional step to Execution phase workflow
+- Requires user interaction before automation continues (intentional friction)
+- Longer end-to-end time for fully automated runs (mitigated: this is the intended behavior)
+
+**Neutral:**
+- Gate uses same style as existing Phase 1 Intake gate (familiar pattern)
+- Subsequent steps cleanly renumbered in all three prompts
+- No changes to other phases or prompt logic
+
+## Alternatives Considered
+
+1. **No gate** — rejected; users explicitly requested this checkpoint
+2. **Optional gate** — rejected; must be mandatory to prevent accidental skips
+3. **Gate after team materialization** — rejected; team instantiation itself is part of execution and should require approval
+4. **Gate in Team Formation phase** — rejected; plan/tasks not yet scaffolded at that point
+
+## Related Decisions
+
+- Phase 1 Intake Hard Gate for Execution Approach & SDD Framework (2026-06-09) — established pattern for emphatic mandatory gates
+- Execution Handoff Redesign (2026-06-09) — defined hand-off-to-execution-lead step that this gate precedes
+
+## References
+
+- `.github/prompts/green-field.prompt.md` Phase 7 Execution step 4
+- `.github/prompts/brown-field.prompt.md` Phase 8 Execution step 5
+- `.github/prompts/modernization.prompt.md` Phase 9 Execution step 5
+- User feedback: "I want to review the docs before it starts building"

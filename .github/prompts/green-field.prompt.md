@@ -260,13 +260,27 @@ The role roster defined above materializes differently based on the approach cho
 1. Scaffold `docs/<scenario>-<slug>/plan.md` from `../skills/meta-agentic-method/templates/plan.template.md`, fill placeholders, generate execution plan with phases and milestones.
 2. Scaffold `docs/<scenario>-<slug>/tasks.md` from `../skills/meta-agentic-method/templates/tasks.template.md`, fill placeholders, generate task breakdown per functional domain.
 3. Create `docs/<scenario>-<slug>/execution-log.md` (append-only timestamped log)
-4. **Hand off to execution lead:**
+4. **🚦 Human Validation Gate (MANDATORY):**
+   - **STOP.** Do NOT invoke the execution lead, materialize/initiate the team for execution, or write any implementation code yet.
+   - Present the user with a concise summary and the following generated planning documents for review in `docs/<scenario>-<slug>/`:
+     - `00-intake.md` (requirements and clarifications)
+     - `01-analysis.md` (functional domains and success criteria)
+     - `03-capability-map.md` (MCP servers, skills, instructions, agents)
+     - `04-team.md` (agent roster and responsibilities)
+     - `05-testing-strategy.md` (TDD + BDD test plan)
+     - `plan.md` (execution plan with phases and milestones)
+     - `tasks.md` (task breakdown per functional domain)
+     - Any SDD-framework-native specs generated if a framework was chosen (e.g., Spec-Kit `spec.md`/`plan.md`/`tasks.md`, OpenSpec change proposal, Superpowers plan)
+   - Ask the user to **review these documents in person and explicitly approve** before execution proceeds.
+   - **Make explicit:** The team/execution lead will be initiated and building will begin ONLY after approval.
+   - **WAIT** for the user's explicit approval. If the user requests changes, revise the relevant documents and re-present this gate. Proceed to the next step ONLY once the user approves.
+5. **Hand off to execution lead:**
    - **Approach A:** Invoke the **Orchestrator** (`.github/agents/orchestrator.agent.md`). It reads the roster and plan/tasks from `docs/<scenario>-<slug>/`, invokes role agents as subagents in handoff/parallel order, enforces the reviewer gate (strict lockout — author can't fix own rejected work), maintains `execution-log.md`, and reports back when done.
    - **Approach B:** The **Squad coordinator** (`.github/agents/squad.agent.md`) drives execution — fan-out to members, reviewer gates, Scribe logging — per its charter.
-5. **If an SDD framework was selected at Intake:**
+6. **If an SDD framework was selected at Intake:**
    - The execution lead must (a) **generate the framework's native specs** in addition to the `docs/<scenario>-<slug>/` specs already created (Spec-Kit: `spec.md`/`plan.md`/`tasks.md`; OpenSpec: change proposal under `openspec/changes/<id>/`; Superpowers: plan via `writing-plans`), keeping them derived from / consistent with the `docs/` specs, and (b) **explicitly run that framework's implement loop** (Spec-Kit: `/speckit.implement`; OpenSpec: `/opsx:apply` + `/opsx:verify`; Superpowers: `subagent-driven-development` or `executing-plans`).
    - Reference `../skills/meta-agentic-method/references/sdd-frameworks.md` for per-framework detail.
-6. Record architecture decisions in `docs/<scenario>-<slug>/adr/*.md`:
+7. Record architecture decisions in `docs/<scenario>-<slug>/adr/*.md`:
    - Use standard ADR format: Status, Context, Decision, Consequences
    - Examples: framework choice, database schema design, API versioning strategy
 

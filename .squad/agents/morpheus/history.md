@@ -104,3 +104,18 @@ Scribe created orchestration logs for each agent, session log for execution-hand
 
 **Learning:**
 Phase 1 Intake soft clarification language permitted agents to silently assume defaults for **Execution Approach** (Custom Agents vs Squad Team) and **SDD Framework** (None/Spec-Kit/OpenSpec/Superpowers). Added emphatic **⚠️ MANDATORY** gate after the clarification bank: agent MUST present both questions and WAIT for user's explicit answer before proceeding — may recommend scenario default but cannot auto-select. Qualified "Document assumptions" clause (Action 7) to exclude these two (applies only to secondary clarifiers like target stack, constraints, non-functionals, scope). Strengthened each prompt's Exit Gate to require: "Execution Approach and SDD Framework are explicitly chosen by the user (not assumed)." Parallel wording applied to all three scenario prompts, preserving existing numbering/format conventions.
+
+### 2026-06-09: Human Validation Gate Before Execution
+
+**Deliverables:**
+- `.github/prompts/green-field.prompt.md` (Phase 7 Execution — new step 4)
+- `.github/prompts/brown-field.prompt.md` (Phase 8 Execution — new step 5)
+- `.github/prompts/modernization.prompt.md` (Phase 9 Execution — new step 5)
+- `.squad/decisions/inbox/morpheus-exec-validation-gate.md`
+
+**Learning:**
+Live testing revealed workflows scaffolded planning docs (plan.md, tasks.md, execution-log.md) then immediately handed off to execution lead and started building, with no user review opportunity. Inserted **🚦 Human Validation Gate (MANDATORY)** immediately after scaffolding and BEFORE hand-off-to-execution-lead step in all three Execution phases. Gate instructs agent to STOP, present enumerated list of generated planning docs (intake, discovery/assessment/analysis, capability-map, team, testing-strategy, plan, tasks, plus SDD-framework specs if chosen), ask user to review and approve in person, WAIT for explicit approval, and handle revision loops if user requests changes. Team materialization and implementation code only proceed after user approves. Renumbered subsequent steps cleanly in each prompt. Parallel wording across scenarios (green-field step 4→5, brown-field step 5→6, modernization step 5→6) mirrors existing Phase 1 hard-gate style. Scenario-agnostic; doc list adapted per prompt's artifact numbering conventions.
+
+### 2026-06-09: Orchestration Log + Session Log Consolidation
+
+Scribe created orchestration logs for each agent, session log for execution-handoff-redesign batch, merged decision inbox to decisions.md, staged all for git commit.

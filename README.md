@@ -18,7 +18,7 @@ flowchart TD
     
     S1 --> S2[Step 2: Run Scenario<br/>VS Code slash command or<br/>Copilot CLI natural ask]
     S2 --> S3[Step 3: Answer Intake<br/>Execution approach, SDD framework,<br/>scenario details]
-    S3 --> S4[Step 4: Execute by Team<br/>Orchestrator/Squad drives<br/>role agents through phases]
+    S3 --> S4[Step 4: Review & Execute<br/>Review planning docs, then<br/>approve to start execution]
     S4 --> OUT[Deliverables + Progress Report]
     
     style MT fill:#e1f5ff
@@ -107,15 +107,17 @@ Defaults are **recommendations, not mandates** — you can pick any option (or N
 
 **Shortcut**: Pre-answer these choices in your initial request (e.g., "...using Custom Agents and OpenSpec") to skip the back-and-forth.
 
-### Step 4 — Execute by Team
+### Step 4 — Review & Execute
 
-The execution lead (Orchestrator for Custom Agents, or Squad coordinator for Squad Team) drives role agents through the 10-phase workflow (Intake → Discovery/Assessment → Analysis → Capability Mapping → Capability Acquisition → Team Formation → Execution → Verification → Handoff), enforcing handoffs, reviewer gates (original author cannot revise rejected work), and the SDD framework's implement loop (if chosen).
+After intake, the workflow generates the planning artifacts (intake, analysis/discovery, capability map, team roster, execution plan, task breakdown) and **pauses for you to review them**. Nothing is built and the execution lead is not invoked until you approve. Review the generated docs, then issue the execution command below to proceed.
 
-**Kick off execution:**
+**Approve and kick off execution:**
 ```
 @orchestrator execute the plan
 ```
 (or `@squad execute the plan` for the Squad approach)
+
+The execution lead (Orchestrator for Custom Agents, or Squad coordinator for Squad Team) drives role agents through the remaining phases (Execution → Verification → Handoff), enforcing handoffs, reviewer gates (original author cannot revise rejected work), and the SDD framework's implement loop (if chosen).
 
 **Review the progress report**: Open `docs/<scenario>-<slug>/progress-report.html` in your browser for real-time status, confidence scores, team roster, and capability tracking.
 
