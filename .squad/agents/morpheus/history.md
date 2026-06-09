@@ -78,3 +78,18 @@ Brown-field Discovery and modernization Discovery/Assessment now point to bundle
 
 **Learning:**
 Phase 7 (Parity Testing Strategy) now frames behavioral/E2E test suite reuse as the cross-stack parity oracle for ANY modernization (UI reskin, DB/ETL migration, service rewrite), not just data-output matching. Phase 4 (Analysis) explicitly consumes repo-wiki produced in Discovery via direct read + citation step. Phase 2 Action 4 tool list de-biased from data/ETL to cover any software-development modernization: grep/glob for source inventory, bash for stack-appropriate metadata (manifests, configs, API specs, and when relevant, database schemas), web_fetch for vendor docs.
+
+### 2026-06-09: Explicit Execution Handoff and Generic Modernization Roles
+
+**Deliverables:**
+- `.github/prompts/green-field.prompt.md` (Phase 5 Team Formation, Phase 7 Execution)
+- `.github/prompts/brown-field.prompt.md` (Phase 7 Team Formation, Phase 8 Execution)
+- `.github/prompts/modernization.prompt.md` (Phase 8 Team Formation, Phase 9 Execution, Phase 10 Verification, Phase 11 Handoff)
+- `.squad/decisions/inbox/morpheus-execution-handoff.md`
+
+**Learning:**
+Team Formation Approach A now designates the shipped Orchestrator agent (`.github/agents/orchestrator.agent.md`) as execution lead after role agents are created. Approach B now hands roster to Squad coordinator, which hires via native flow (themed cast names, charter/history generation, team.md update, routing.md). Execution phases make handoff explicit: Approach A invokes Orchestrator (reads roster+plan/tasks, enforces reviewer gate with strict lockout, maintains execution-log.md); Approach B delegates to Squad coordinator (fan-out, reviewer gates, Scribe logging). Both approaches now generate SDD framework native specs when framework selected at Intake (Spec-Kit spec/plan/tasks; OpenSpec change proposal; Superpowers plan via writing-plans) and run framework implement loop (/speckit.implement; /opsx:apply + /opsx:verify; subagent-driven-development/executing-plans), referencing sdd-frameworks.md. Modernization Phase 8 de-biased: replaced hardcoded ETL roles with generic archetype-driven wording from team-formation.md (Discovery/Knowledge-Architect, Domain/Architecture Lead, Implementation/Component Migrator, Data/Schema Migrator, Integration/API, Test/Parity Engineer, Reviewer/Quality, DevOps/Release), with data migration as one illustrative example among many (web migration, API modernization, framework port). Phase 9/10/11 framed generically (parity metrics, cutover, rollback) for any software modernization scenario.
+
+## 2026-06-09: Orchestration Log + Session Log Consolidation
+
+Scribe created orchestration logs for each agent, session log for execution-handoff-redesign batch, merged decision inbox to decisions.md, updated cross-agent history records. All deliverables staged for git commit.

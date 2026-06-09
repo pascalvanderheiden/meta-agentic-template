@@ -298,21 +298,24 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 **Actions:**
 1. Read `../skills/meta-agentic-method/SKILL.md` § Team Formation Algorithm
 2. Apply algorithm with modernization specialization to define the **role roster** (independent of execution approach):
-   - Map functional domains → agent roles using migration-specific heuristics:
-     - **Data extraction** → `Extractor` agent (source platform specialist)
-     - **Data transformation/mapping** → `Transformer` agent (schema/logic conversion)
-     - **Infrastructure provisioning** → `Provisioner` agent (target platform specialist)
-     - **Testing/validation** → `Validator` agent (data parity, performance verification)
-     - **Migration orchestration** → `Orchestrator` agent (coordinates cutover sequence)
-     - **Rollback/recovery** → `SafetyNet` agent (monitors, triggers rollback if needed)
-   - Assign capabilities from Capability Map to agents:
-     - `Extractor` gets source platform MCP server (e.g., `oracle-ords-mcp`)
-     - `Provisioner` gets target platform MCP server (e.g., `fabric-api-mcp`)
-     - `Transformer` gets transformation skills/instructions
-     - `Validator` gets data validation skills
-   - Define handoff protocol (e.g., `Extractor` → produces `schema.json` + `data-sample.csv` → consumed by `Transformer`)
-   - Designate reviewer agent (typically `Validator`)
+   - Map functional domains → agent roles using the **role archetypes** from `../skills/meta-agentic-method/references/team-formation.md` (e.g., Discovery/Knowledge-Architect, Domain/Architecture Lead, Implementation/Component Migrator, Data/Schema Migrator, Integration/API, Test/Parity Engineer, Reviewer/Quality, DevOps/Release)
+   - **Modernization context examples** (illustrative, not prescriptive):
+     - **Data migration scenario** (one of many): Extractor (source platform specialist), Transformer (schema/logic conversion), Provisioner (target platform specialist), Validator (data parity), Orchestrator (cutover sequence), SafetyNet (rollback)
+     - **Web migration scenario**: LegacyAnalyzer, ComponentMigrator, RoutingAdapter, UIRefactorer, ContractValidator, DeploymentEngineer
+     - **API modernization scenario**: APIDiscoverer, EndpointMapper, AuthenticationMigrator, ResponseTransformer, CompatibilityTester, TrafficCutoverManager
+     - **Framework port scenario**: DependencyAnalyzer, CoreMigrator, PluginAdapter, TestingHarness, RegressionValidator, RolloutCoordinator
+   - Assign capabilities from Capability Map to agents (≥1 per agent)
+   - **Key modernization roles** (scenario-dependent):
+     - Source platform specialist (extract/analyze legacy behavior)
+     - Target platform specialist (provision/configure new system)
+     - Validator/Parity Engineer (verify functional/data equivalence)
+     - Cutover Orchestrator (sequence migration, monitor checkpoints)
+     - Safety/Rollback Engineer (detect failure, trigger revert)
+   - Define handoff protocol (e.g., Analyzer → produces `legacy-spec.md` → consumed by Mapper)
+   - Designate reviewer agent (typically Validator/Parity role)
 3. Scaffold `docs/<scenario>-<slug>/06-team.md` from `../skills/meta-agentic-method/templates/team.template.md`, fill placeholders, generate team roster rows with the role roster:
+
+   **Example for data migration scenario:**
 
    | Agent Name | Role | Assigned Skills | Assigned Instructions | MCP Servers | Handoff To |
    |------------|------|-----------------|----------------------|-------------|------------|
@@ -352,8 +355,7 @@ The role roster defined above materializes differently based on the approach cho
    - Path: `.github/agents/<role-name>.agent.md`
    - Frontmatter: `name`, `description`, `tools` (match assigned skills/MCP servers from roster)
    - Body: role charter, assigned skills/instructions/MCP servers, **migration constraints** (parity, rollback, cutover strategy), handoff responsibilities
-2. Each agent is invoked individually by the user or by other agents using the `task` tool
-3. Agents coordinate via documented handoff protocol in their charters
+2. **Designate the Orchestrator** (`.github/agents/orchestrator.agent.md`) as the execution lead. It will read the roster and handoff DAG from `docs/<scenario>-<slug>/06-team.md` and drive Execution (Phase 9) by invoking the role agents as subagents.
 
 **Artifact locations:**
 - Agent files: `.github/agents/<role-name>.agent.md`
@@ -361,29 +363,21 @@ The role roster defined above materializes differently based on the approach cho
 
 ##### **Approach B — Squad Team**
 
-**Use when:** Complex orchestration, parallel execution (e.g., parallel table migrations), reviewer gates, multi-agent coordination needed.
+**Use when:** Complex orchestration, parallel execution (e.g., parallel component migrations), reviewer gates, multi-agent coordination needed.
 
 **Steps:**
 1. The **Squad coordinator** (`.github/agents/squad.agent.md`) is already present in this repository — no installation needed
-2. Hire the roles from the roster table as **Squad team members**:
-   - For each role, create `.squad/agents/<role-name>/charter.md` with:
-     - Role definition (from roster table)
-     - Assigned skills, instructions, MCP servers (same as roster)
-     - **Migration constraints** (parity, rollback, cutover strategy)
-     - Handoff responsibilities
-   - Create `.squad/agents/<role-name>/history.md` seeded with project context
-3. Update `.squad/team.md` with the team roster under `## Members`
-4. The Squad coordinator orchestrates execution:
-   - Spawns agents using the `task` tool
-   - Inlines each agent's `charter.md` into spawn prompts
-   - Enforces handoff protocol and reviewer gates
-   - Supports parallel fan-out for independent migrations (e.g., parallel table loads)
-   - Maintains orchestration log via Scribe
+2. Hand the role roster to the Squad coordinator, which will hire members via its **native flow**:
+   - Squad creates themed cast names (per `.squad/casting/registry.json`)
+   - Squad generates `charter.md` and seeded `history.md` for each member
+   - Squad updates `.squad/team.md` `## Members` table
+   - Squad updates `.squad/routing.md` with task-to-agent routing
+3. The Squad coordinator orchestrates execution (see Phase 9 for handoff details)
 
 **Artifact locations:**
 - Team roster: `.squad/team.md`
-- Agent charters: `.squad/agents/<role-name>/charter.md`
-- Agent history: `.squad/agents/<role-name>/history.md`
+- Agent charters: `.squad/agents/<agent-name>/charter.md`
+- Agent history: `.squad/agents/<agent-name>/history.md`
 - Work products: `docs/<scenario>-<slug>/`
 - Orchestration log: `.squad/orchestration-log/`
 
@@ -400,44 +394,44 @@ The role roster defined above materializes differently based on the approach cho
 2. Scaffold `docs/<scenario>-<slug>/tasks.md` from `../skills/meta-agentic-method/templates/tasks.template.md`, fill placeholders, generate task breakdown per functional domain.
 3. Create `docs/<scenario>-<slug>/execution-log.md` (append-only timestamped log)
 4. **Pre-execution baseline:**
-   - Capture source system metrics: data row counts, query performance, schema definitions
+   - Capture source system metrics (scenario-dependent: data row counts for data migrations, API response signatures for API modernization, rendering snapshots for UI ports, test suite runtime for framework migrations)
    - Document cutover plan: sequence, rollback triggers, success checkpoints
-   - Log baseline: `## [timestamp] Baseline: <table count> tables, <row count> rows, <metric> performance`
-5. For each functional domain (in migration sequence order):
-   - Instantiate responsible agent(s) with their assigned capabilities
-   - Agent produces migration artifacts (schema mappings, ETL pipelines, validation reports)
-   - **After each agent's work:** Run data validation (row counts match, schema parity)
-   - Log agent actions: `## [ISO8601 timestamp] <AgentName>: <Action> | Status: <success/partial/blocked>`
-   - Handoff to next agent in chain
-6. Record architecture decisions in `docs/<scenario>-<slug>/adr/*.md`:
+   - Log baseline with scenario-appropriate detail
+5. **Hand off to execution lead:**
+   - **Approach A:** Invoke the **Orchestrator** (`.github/agents/orchestrator.agent.md`). It reads the roster and plan/tasks from `docs/<scenario>-<slug>/`, invokes role agents as subagents in handoff/parallel order, enforces the reviewer gate (strict lockout — author can't fix own rejected work), maintains `execution-log.md`, and reports back when done.
+   - **Approach B:** The **Squad coordinator** (`.github/agents/squad.agent.md`) drives execution — fan-out to members, reviewer gates, Scribe logging — per its charter.
+6. **If an SDD framework was selected at Intake:**
+   - The execution lead must (a) **generate the framework's native specs** in addition to the `docs/<scenario>-<slug>/` specs already created (Spec-Kit: `spec.md`/`plan.md`/`tasks.md`; OpenSpec: change proposal under `openspec/changes/<id>/`; Superpowers: plan via `writing-plans`), keeping them derived from / consistent with the `docs/` specs, and (b) **explicitly run that framework's implement loop** (Spec-Kit: `/speckit.implement`; OpenSpec: `/opsx:apply` + `/opsx:verify`; Superpowers: `subagent-driven-development` or `executing-plans`).
+   - Reference `../skills/meta-agentic-method/references/sdd-frameworks.md` for per-framework detail.
+7. Record architecture decisions in `docs/<scenario>-<slug>/adr/*.md`:
    - Use standard ADR format: Status, Context, Decision, Consequences
-   - **Migration-specific ADRs:** Data type mappings (Oracle NUMBER → Fabric DECIMAL), CDC strategy, cutover sequence
-7. Iterate until all success criteria from Analysis met
+   - **Migration-specific ADRs** (scenario-dependent examples): data type mappings (e.g., Oracle NUMBER → Fabric DECIMAL), CDC strategy, API contract versioning, UI component library choice, framework adapter patterns
 8. **Cutover execution:**
-   - Document cutover steps (freeze source, migrate final delta, validate, switch traffic)
+   - Document cutover steps (scenario-dependent: freeze source, migrate final delta, validate, switch traffic for data/API migrations; phased rollout for UI/framework ports)
    - Log cutover timeline with checkpoints
    - Monitor for rollback triggers
 
-**Exit Gate:** All success criteria met, data validation passes, target system operational, rollback plan documented.
+**Exit Gate:** All success criteria met, parity validation passes (data, API contracts, UI behavior, test coverage as appropriate to scenario), target system operational, rollback plan documented.
 
 ---
 
 ### Phase 10: Verification
 
-**Objective:** Validate migration against requirements and data parity.
+**Objective:** Validate migration against requirements and parity with legacy system.
 
 **Actions:**
 1. Scaffold `docs/<scenario>-<slug>/verification.md` from `../skills/meta-agentic-method/templates/verification.template.md`, fill placeholders, generate:
    - **Requirements Traceability Matrix:** Map each success criterion → artifact(s) that satisfy it
-   - **Data Parity Report:**
-     - Row count comparison (source vs. target per table)
-     - Schema validation (data types, constraints, indexes)
-     - Data sampling validation (checksum/hash comparison for representative sample)
+   - **Parity Report** (scenario-dependent validation):
+     - **Data migration example:** Row count comparison (source vs. target per table/entity), schema validation (data types, constraints, indexes), data sampling validation (checksum/hash comparison for representative sample)
+     - **API modernization example:** Contract parity (request/response schemas, status codes, error formats), endpoint mapping verification, authentication flow equivalence
+     - **UI migration example:** Visual regression testing (screenshot diff), interaction parity (user flows, accessibility), rendering consistency (cross-browser, responsive)
+     - **Framework port example:** Test suite parity (all tests ported and passing), API surface equivalence (public methods/classes), behavior consistency (integration test results)
    - **Performance Comparison:**
-     - Baseline queries from source system → equivalent queries on target
+     - Baseline operations from source system → equivalent operations on target
      - Document performance delta (% faster/slower)
    - **Test Results:** Pass/fail per criterion (run automated tests)
-   - **Known Limitations:** Document acceptable gaps (deprecated features not migrated, performance trade-offs)
+   - **Known Limitations:** Document acceptable gaps (deprecated features not migrated, performance trade-offs, scope exclusions)
 2. Scaffold `docs/<scenario>-<slug>/checklist.md` from `../skills/meta-agentic-method/templates/checklist.template.md`, fill placeholders, generate migration quality gate checklist.
 3. Calculate **Confidence Score** using rubric from `../skills/meta-agentic-method/SKILL.md`:
    - Score 6 dimensions (0-100 each): Capability Coverage, MCP Availability, Skill/Instruction Coverage, Data/Domain Knowledge, Spec Completeness, Verification Status
@@ -447,9 +441,9 @@ The role roster defined above materializes differently based on the approach cho
    - **Modernization adjustment:** 
      - Penalize MCP Availability if source/target platform MCP servers missing (critical for migration)
      - Reward Data/Domain Knowledge if source platform expertise documented
-3. Document score breakdown in `verification.md`
+4. Document score breakdown in `verification.md`
 
-**Exit Gate:** ≥80% success criteria met (or documented exceptions), data parity validated (≥99.9%), confidence score calculated.
+**Exit Gate:** ≥80% success criteria met (or documented exceptions), parity validated per scenario requirements (≥99.9% for data migrations, 100% for API contracts, acceptable visual delta for UI, full test suite pass for framework ports), confidence score calculated.
 
 ---
 
@@ -462,17 +456,17 @@ The role roster defined above materializes differently based on the approach cho
    - **Executive Summary:** 2-3 paragraph overview of migration completed
    - **Artifacts Inventory:** Links to all docs, code, configs, migration scripts
    - **Confidence Score:** Overall score with dimension breakdown
-   - **Migration Summary:** What was migrated, what was left behind (deprecated features), data volume
-   - **Performance Comparison:** Source vs. target metrics
+   - **Migration Summary:** What was migrated, what was left behind (deprecated features, out-of-scope items), volume/scope metrics (scenario-dependent: data volume for data migrations, endpoint count for API modernization, component count for UI ports, module count for framework migrations)
+   - **Performance Comparison:** Source vs. target metrics (scenario-appropriate: query latency, API response times, rendering speed, test suite runtime)
    - **Rollback Plan:** How to revert to source system if needed (time-sensitive)
-   - **Next Steps:** Clear actions for user (e.g., "Decommission Oracle instance", "Monitor Fabric performance for 30 days", "Migrate remaining non-critical tables")
-   - **Known Gaps:** Documented limitations and recommended follow-up (e.g., "Real-time CDC not implemented; batch sync runs hourly")
+   - **Next Steps:** Clear actions for user (scenario-dependent examples: "Decommission legacy instance", "Monitor target performance for 30 days", "Migrate remaining non-critical components", "Update client SDKs", "Train team on new framework")
+   - **Known Gaps:** Documented limitations and recommended follow-up (e.g., "Real-time sync not implemented; batch runs hourly", "Legacy admin UI not ported; use new admin panel", "Deprecated endpoints removed; update clients to v2 API")
 2. **Generate HTML Report:**
    - Copy `../skills/progress-report/progress-report.template.html` → `docs/<scenario>-<slug>/progress-report.html`
    - Update `<script id="report-data">` JSON block with:
      ```json
      {
-       "scenario": "<migration description, e.g., 'Oracle → Fabric ETL Pipeline Migration'>",
+       "scenario": "<migration description, e.g., 'Oracle → Fabric ETL Pipeline Migration', 'Express → Fastify API Modernization', 'AngularJS → React UI Port'>",
        "promptType": "modernization",
        "generatedAt": "<ISO8601 timestamp>",
        "currentPhase": "Handoff",

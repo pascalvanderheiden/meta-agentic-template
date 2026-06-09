@@ -50,6 +50,16 @@ Spec-Kit is the most prescriptive option. It treats specifications as first-clas
 
 **Artifact precedence:** Spec-Kit's constitution/spec/plan/tasks are authoritative for requirements and implementation sequencing once generated. Native artifacts continue to hold scenario context, capability/team decisions, verification, and handoff. If Spec-Kit artifacts are generated but not analyzed or reconciled, lower **Spec Completeness** in the Confidence Rubric because framework alignment is incomplete.
 
+**Native specs + implement loop:**  
+When Spec-Kit is chosen, the execution lead MUST:
+1. Generate Spec-Kit's native artifacts **in addition to** the `docs/<scenario>-<slug>/` specs already created:
+   - Run `/speckit.specify` to produce `spec.md` (what/why).
+   - Run `/speckit.plan` to produce `plan.md` (architecture/tech choices).
+   - Run `/speckit.tasks` to produce `tasks.md` (actionable implementation tasks).
+2. Execute the Spec-Kit implement loop:
+   - Run `/speckit.implement` to execute the tasks defined in `tasks.md`.
+3. Keep Spec-Kit specs **derived from and consistent with** `docs/` specs (single source of truth = `docs/` specs; Spec-Kit specs are the execution-native projection).
+
 ### OpenSpec
 
 **Verified URL:** https://github.com/Fission-AI/OpenSpec
@@ -84,6 +94,17 @@ OpenSpec is a lightweight, iterative, brownfield-first spec layer. It separates 
 
 **Artifact precedence:** OpenSpec `openspec/specs/` is authoritative for current behavior; `openspec/changes/<change>/` is authoritative for proposed deltas. Native docs remain the scenario envelope and confidence record. Unsynced or unarchived completed changes reduce **Spec Completeness** because source-of-truth specs have not been reconciled.
 
+**Native specs + implement loop:**  
+When OpenSpec is chosen, the execution lead MUST:
+1. Generate OpenSpec's native artifacts **in addition to** the `docs/<scenario>-<slug>/` specs already created:
+   - Run `/opsx:propose <change>` (or use `openspec` CLI) to create a change proposal under `openspec/changes/<id>/` with `proposal.md`, `tasks.md`, `design.md`, and spec deltas.
+   - For complex work, enable expanded workflow and use `/opsx:new`, `/opsx:continue`, or `/opsx:ff` for controlled artifact creation.
+2. Execute the OpenSpec implement loop per change:
+   - Run `/opsx:apply` to implement the tasks defined in the change folder.
+   - Run `/opsx:verify` to validate completeness, correctness, and coherence.
+   - Run `/opsx:archive` to preserve the completed change under `openspec/changes/archive/`.
+3. Keep OpenSpec specs **derived from and consistent with** `docs/` specs (single source of truth = `docs/` specs; OpenSpec change proposals are the execution-native projection).
+
 ### Superpowers
 
 **Verified URL:** https://github.com/obra/superpowers
@@ -116,6 +137,16 @@ Superpowers is not a spec repository format; it is a composable methodology made
 | Handoff | Augmented by `finishing-a-development-branch`; include plan file, commits, tests, and review outcomes. |
 
 **Artifact precedence:** Native scenario artifacts remain authoritative for scenario context. Superpowers plan files are authoritative for task execution detail. If a Superpowers plan lacks exact paths, code, commands, or TDD steps, lower **Spec Completeness** and **Verification Status** because the framework's discipline was not actually followed.
+
+**Native specs + implement loop:**  
+When Superpowers is chosen, the execution lead MUST:
+1. Generate Superpowers' native artifacts **in addition to** the `docs/<scenario>-<slug>/` specs already created:
+   - Use the `writing-plans` skill to produce a complete plan (typically under `docs/superpowers/plans/YYYY-MM-DD-<feature>.md`) with exact files, code snippets, verification commands, and 2-5 minute tasks.
+2. Execute the Superpowers implement loop:
+   - Use `subagent-driven-development` skill to dispatch fresh subagents per task with spec-compliance review and code-quality review.
+   - OR use `executing-plans` skill for inline/batch execution when subagent dispatch overhead is not justified.
+   - Use `test-driven-development` skill for implementation: RED test → verify failure → GREEN minimal code → verify pass → REFACTOR while green.
+3. Keep Superpowers plans **derived from and consistent with** `docs/` specs (single source of truth = `docs/` specs; Superpowers plans are the execution-native projection).
 
 ### Per-Scenario Best-Practice Application
 

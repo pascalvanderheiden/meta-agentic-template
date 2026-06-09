@@ -1520,3 +1520,275 @@ Both additions support testing-first methodology guidance from Tier-1. UI tables
 Template now supports UI/client modernization gap analysis and real-time test/parity tracking across all three scenarios. No breaking changes to existing consumers.
 
 
+# Decision: Explicit Execution Handoff and Generic Modernization Roles
+
+**Date:** 2026-06-09  
+**Author:** Morpheus  
+**Status:** Proposed
+
+## Context
+
+Three scenario prompts (green-field, brown-field, modernization) share Team Formation and Execution phase structure. Team Formation offers Approach A (Custom Agents) and Approach B (Squad Team). Previously:
+
+1. **Approach A** created role agent files but left execution coordination implicit (agents "invoked individually" or via documented handoff protocol).
+2. **Approach B** hand-wrote charter.md/history.md for Squad members, duplicating Squad's native hiring logic.
+3. **Execution phases** described agent invocation in abstract terms without explicit handoff to a concrete execution lead.
+4. **Modernization Phase 8** hardcoded ETL-specific roles (Extractor, Transformer, Provisioner) as the canonical team pattern, biasing the prompt toward data migration and obscuring applicability to web/API/framework modernization scenarios.
+5. **SDD framework integration** was mentioned but not explicitly tied to execution lead responsibility for generating framework-native specs and running implement loops.
+
+This created ambiguity about who orchestrates execution and reinforced perception that modernization = data migration.
+
+## Decision
+
+### 1. Team Formation Approach A (Custom Agents) — all 3 prompts
+
+After creating role agent files, **designate the shipped Orchestrator agent** (`.github/agents/orchestrator.agent.md`) as execution lead. It reads roster + handoff DAG from `docs/<scenario>-<slug>/04-team.md` (green-field), `docs/<scenario>-<slug>/04-team.md` (brown-field), or `docs/<scenario>-<slug>/06-team.md` (modernization). It drives Execution by invoking role agents as subagents.
+
+### 2. Team Formation Approach B (Squad Team) — all 3 prompts
+
+**Hand the role roster to Squad coordinator** (`.github/agents/squad.agent.md`), which hires members via its **native flow**:
+
+- Squad creates themed cast names (per `.squad/casting/registry.json`)
+- Squad generates `charter.md` and seeded `history.md` for each member
+- Squad updates `.squad/team.md` `## Members` table
+- Squad updates `.squad/routing.md` with task-to-agent routing
+
+Do not duplicate charter/history creation steps in the prompt — Squad owns this logic.
+
+### 3. Execution Phase Handoff — all 3 prompts
+
+Make handoff **explicit**:
+
+- **Approach A:** Invoke the **Orchestrator** (`.github/agents/orchestrator.agent.md`). It reads roster + plan/tasks, invokes role agents as subagents in handoff/parallel order, enforces reviewer gate (strict lockout — author can't fix own rejected work), maintains `execution-log.md`, reports when done.
+- **Approach B:** The **Squad coordinator** (`.github/agents/squad.agent.md`) drives execution — fan-out to members, reviewer gates, Scribe logging — per its charter.
+
+### 4. SDD Framework Integration — all 3 prompts
+
+When an SDD framework was selected at Intake, the execution lead must:
+
+a) **Generate the framework's native specs** in addition to `docs/<scenario>-<slug>/` specs already created:
+   - Spec-Kit: `spec.md`, `plan.md`, `tasks.md`
+   - OpenSpec: change proposal under `openspec/changes/<id>/`
+   - Superpowers: plan via `writing-plans`
+
+   Keep framework specs derived from / consistent with `docs/` specs.
+
+b) **Explicitly run that framework's implement loop**:
+   - Spec-Kit: `/speckit.implement`
+   - OpenSpec: `/opsx:apply` + `/opsx:verify`
+   - Superpowers: `subagent-driven-development` or `executing-plans`
+
+Reference `.github/skills/meta-agentic-method/references/sdd-frameworks.md` for per-framework detail rather than restating it.
+
+### 5. Generic Modernization Roles (modernization.prompt.md Phase 8 only)
+
+Replace hardcoded ETL roster with **generic, archetype-driven wording** pointing to `.github/skills/meta-agentic-method/references/team-formation.md` role archetypes:
+
+- Discovery/Knowledge-Architect
+- Domain/Architecture Lead
+- Implementation/Component Migrator
+- Data/Schema Migrator
+- Integration/API
+- UI/Presentation
+- Test/Parity Engineer
+- Reviewer/Quality
+- DevOps/Release
+- Accessibility/Compliance
+
+Provide **scenario-specific examples**:
+
+- **Data migration** (one example): Extractor, Transformer, Provisioner, Validator, Orchestrator, SafetyNet
+- **Web migration:** LegacyAnalyzer, ComponentMigrator, RoutingAdapter, UIRefactorer, ContractValidator, DeploymentEngineer
+- **API modernization:** APIDiscoverer, EndpointMapper, AuthenticationMigrator, ResponseTransformer, CompatibilityTester, TrafficCutoverManager
+- **Framework port:** DependencyAnalyzer, CoreMigrator, PluginAdapter, TestingHarness, RegressionValidator, RolloutCoordinator
+
+Keep valuable concepts (cutover, rollback, parity validation) but frame them **generically** as software-development-agnostic patterns. Mark concrete data-migration wording as **one illustrative example** among many.
+
+### 6. Generic Parity Validation (modernization.prompt.md Phase 10)
+
+Expand parity report to cover **scenario-dependent validation**:
+
+- Data migration: row counts, schema validation, data sampling
+- API modernization: contract parity, endpoint mapping, auth flow equivalence
+- UI migration: visual regression, interaction parity, rendering consistency
+- Framework port: test suite parity, API surface equivalence, behavior consistency
+
+Exit gate: parity validated per scenario requirements (≥99.9% for data migrations, 100% for API contracts, acceptable visual delta for UI, full test suite pass for framework ports).
+
+### 7. Generic Migration Summary (modernization.prompt.md Phase 11)
+
+Handoff README migration summary must be scenario-dependent:
+
+- **Volume/scope metrics:** data volume for data migrations, endpoint count for API modernization, component count for UI ports, module count for framework migrations
+- **Performance metrics:** query latency, API response times, rendering speed, test suite runtime
+- **Next steps examples:** "Decommission legacy instance", "Update client SDKs", "Train team on new framework", "Monitor target performance for 30 days"
+- **Known gaps examples:** "Real-time sync not implemented; batch runs hourly", "Legacy admin UI not ported; use new admin panel", "Deprecated endpoints removed; update clients to v2 API"
+
+## Consequences
+
+### Positive
+
+- **Clear ownership:** Execution lead is named and invoked explicitly (Orchestrator or Squad coordinator).
+- **Single source of truth:** Squad hiring logic lives in squad.agent.md, not duplicated in prompts.
+- **SDD framework discipline:** Framework-native specs and implement loops are explicit execution-lead responsibilities when framework selected.
+- **Scenario-agnostic modernization:** Prompt reads as applicable to web, API, framework, data migrations equally; no single domain is privileged.
+- **Archetype-driven team formation:** Team-formation.md role archetypes become authoritative source for any scenario.
+- **Parallel approaches consistent:** Approach A and Approach B handoff wording is consistent across all 3 prompts.
+
+### Neutral
+
+- Prompt length increases slightly (20-30 lines per file) due to explicit handoff detail and scenario examples.
+
+### Negative
+
+- None identified. Changes are surgical and additive; existing phase numbering and formatting preserved.
+
+## Implementation
+
+**Deliverables:**
+
+- `.github/prompts/green-field.prompt.md` (Phase 5 Team Formation, Phase 7 Execution)
+- `.github/prompts/brown-field.prompt.md` (Phase 7 Team Formation, Phase 8 Execution)
+- `.github/prompts/modernization.prompt.md` (Phase 8 Team Formation, Phase 9 Execution, Phase 10 Verification, Phase 11 Handoff)
+- `.squad/agents/morpheus/history.md` (learning appended)
+
+**Verification:**
+
+- [x] Edits 1-3 applied consistently to all 3 prompts
+- [x] Edit 4 de-biasing applied to modernization.prompt.md only
+- [x] Existing phase numbering, headings, formatting preserved
+- [x] Approach A and Approach B wording parallel across prompts
+
+## References
+
+- `.github/skills/meta-agentic-method/references/team-formation.md` (role archetypes)
+- `.github/skills/meta-agentic-method/references/sdd-frameworks.md` (framework-native specs and implement loops)
+- `.github/agents/orchestrator.agent.md` (Approach A execution lead)
+- `.github/agents/squad.agent.md` (Approach B execution lead)
+# Decision: Orchestrator Agent for Custom Agents Execution Approach
+
+**Date**: 2026-01-16  
+**By**: Oracle (Knowledge Architect)  
+**Requested by**: Pascal van der Heiden
+
+## Context
+
+The meta-agentic template supports two execution approaches for spec-driven workflows:
+1. **Custom Agents**: Explicitly-defined role agents (`.github/agents/<role>.agent.md`) created during Team Formation.
+2. **Squad Team**: Squad members spawned from universes and managed by `.github/agents/squad.agent.md`.
+
+The Squad approach had a dedicated coordinator (squad.agent.md) to orchestrate execution, enforce reviewer gates, and maintain logs. The Custom Agents approach lacked an equivalent execution lead — the workflow just listed role agents for manual invocation.
+
+## Decision
+
+Created `.github/agents/orchestrator.agent.md` — a generic, scenario-agnostic execution lead for the Custom Agents approach.
+
+**Orchestrator Contract**:
+- **Reads** team roster (`docs/<scenario>-<slug>/06-team.md` or `04-team.md`) to extract agent roster, handoff DAG, and reviewer assignment.
+- **Invokes** role agents (`.github/agents/<role>.agent.md`) as subagents via the `task` tool in the handoff order defined by the DAG. Spawns independent agents in parallel; serializes only on real data dependencies.
+- **Enforces reviewer gate** with **strict lockout**: when a reviewer rejects an artifact, the original author may NOT revise it — a different agent must. This mirrors squad.agent.md's Reviewer Rejection Protocol.
+- **Runs SDD implement loop** when an SDD framework (Spec-Kit, OpenSpec, Superpowers) was chosen at Intake:
+  - Generates framework-native specs (in addition to `docs/` specs).
+  - Executes the framework's implement loop (e.g., `/speckit.implement`, `/opsx:apply`, `subagent-driven-development`).
+  - Keeps framework specs derived from and consistent with `docs/` specs (single source of truth).
+- **Maintains** append-only `docs/<scenario>-<slug>/execution-log.md` (timestamps, artifacts, reviewer verdicts, summaries).
+- **Reports** completion summary (what shipped, exit-criteria status, blockers).
+- Is **generic** — reads scenario artifacts at runtime; contains no scenario/domain specifics.
+- Is **NOT used for Squad approach** (squad.agent.md owns that).
+
+**Supporting Edits**:
+1. **`.github/skills/meta-agentic-method/references/sdd-frameworks.md`**: Added "Native specs + implement loop" sections for Spec-Kit, OpenSpec, and Superpowers, detailing which framework-native artifacts to generate and which commands to run for implementation.
+2. **`.github/instructions/agents.instructions.md`**: Added concise note documenting the orchestrator pattern (Custom Agents execution lead that mirrors Squad coordinator's role for a different agent topology).
+
+## Rationale
+
+- **Parity**: Both execution approaches now have dedicated orchestrators — squad.agent.md for Squad, orchestrator.agent.md for Custom Agents.
+- **Automation**: The Custom Agents workflow no longer requires manual agent invocation. The orchestrator drives the handoff DAG automatically.
+- **Quality gates**: Strict reviewer lockout prevents self-justification loops and ensures independent revision, improving artifact quality.
+- **SDD framework support**: Execution leads must know how to run framework implement loops when a framework is chosen. This was implicit before; now it's explicit.
+- **Reusability**: The orchestrator is generic — it works for green-field, brown-field, and modernization by reading scenario artifacts at runtime.
+
+## Constraints Preserved
+
+- **Scenario-agnostic**: No domain/ETL/migration specifics in orchestrator logic.
+- **Framework-agnostic**: Supports None, Spec-Kit, OpenSpec, Superpowers by reading intake/analysis docs.
+- **Execution-approach-specific**: Used ONLY for Custom Agents, not Squad.
+
+## Verification
+
+- **File created**: `.github/agents/orchestrator.agent.md` (219 lines, follows `agents.instructions.md` authoring standard).
+- **sdd-frameworks.md updated**: Three "Native specs + implement loop" sections added (Spec-Kit, OpenSpec, Superpowers).
+- **agents.instructions.md updated**: Orchestrator pattern note added (4 sentences, concise).
+- **Generic operation verified**: No scenario/domain tokens in orchestrator prompt; all specifics read from runtime artifacts.
+- **Reviewer lockout semantics verified**: Mirrors squad.agent.md § Reviewer Rejection Protocol.
+
+## Consequences
+
+- Scenario prompts can now offer both execution approaches with clear orchestration:
+  - **Custom Agents**: Team Formation creates role agents → orchestrator.agent.md drives execution.
+  - **Squad Team**: Team Formation spawns Squad members → squad.agent.md drives execution.
+- The orchestrator becomes the execution entry point for Custom Agents workflows (invoked after Team Formation completes).
+- SDD framework implement loops are now documented as an orchestrator responsibility, ensuring frameworks are actually used (not just installed).
+
+## Next Steps
+
+- Update scenario prompts (green-field.prompt.md, brown-field.prompt.md, modernization.prompt.md) to invoke orchestrator.agent.md after Team Formation when Custom Agents approach is chosen. (Assigned to agent owning prompts, not Oracle.)
+- Update team.template.md to clarify that the "Handoff To" column feeds the orchestrator's DAG parsing. (Assigned to agent owning templates, not Oracle.)
+
+---
+
+**Status**: PROPOSED  
+**Scope**: Repository (meta-agentic-template)
+# Decision: Execution Lead Documentation + README Restructure
+
+**Date:** 2026-06-09  
+**By:** Trinity (Template Engineer)  
+**Requested by:** Pascal van der Heiden
+
+## Context
+
+The Team Formation → Execution handoff needed explicit documentation. Two execution approaches (Custom Agents via Orchestrator, Squad Team via Squad coordinator) both use a generic execution lead that reads the team roster, invokes role agents, enforces reviewer gates, and runs optional SDD framework workflows. The README's usage instructions were comprehensive but not optimized for new users landing on the template.
+
+## Decision
+
+### 1. Team Template: Added Execution Lead Section
+
+Added `## Execution Lead` to `team.template.md` (placed after `## Reviewer Assignment`, before `## Shared Utilities`) documenting:
+
+- **Approach A lead**: `.github/agents/orchestrator.agent.md` (generic Orchestrator)
+- **Approach B lead**: `.github/agents/squad.agent.md` (Squad coordinator)
+- **Lead responsibilities**: invoke agents per handoff protocol, enforce strict reviewer gate (original author cannot revise own rejected work), run SDD framework implement loop if chosen, maintain execution-log.md, report completion
+- **Lead-specific contracts**: what each lead reads, how it invokes agents, reviewer-rejection enforcement
+- **SDD framework integration**: if a framework was chosen, the lead generates framework-native specs and runs the framework's implement loop
+
+### 2. README: Restructured for Clarity
+
+Rewrote usage section with:
+
+- **Quick Start Guide** (5 numbered steps): choose scenario → run prompt → answer Intake → team formation/execution → review report
+- **Example Prompts** (3 concrete examples): green-field task API, brown-field OAuth addition, modernization Angular→React with parity oracle
+- **Simplified Execution Approaches** table: removed redundant examples, focused on orchestration differences
+- **Refined How It Works**: emphasized execution lead's role in Phase 8, clarified lead responsibilities
+- **Verified defaults**: green-field → OpenSpec, brown-field → None, modernization → Spec-Kit (confirmed against SKILL.md and prompts)
+
+## Rationale
+
+**Execution Lead placement:** Reviewer is assigned BEFORE execution (Team Formation outputs reviewer assignment), and the lead enforces reviewer gates DURING execution (Execution phase). Logical sequence: Reviewer Assignment → Execution Lead → Shared Utilities.
+
+**README restructure:** New users need a clear "what to do first" flow. The previous version was accurate but required reading multiple sections to understand the basic workflow. The Quick Start Guide + Example Prompts pattern reduces time-to-first-run and provides copy-paste starting points.
+
+**Example prompt strategy:** Used generic, illustrative examples across all three scenarios to avoid locking the template to any specific domain while still showing realistic use cases (task API, OAuth, Angular→React).
+
+## Consequences
+
+- Team template now documents the execution lead's contract explicitly — no ambiguity about who invokes agents or enforces reviewer gates
+- README is easier to follow for new users; Quick Start + Examples frontload actionable steps
+- Example prompts provide concrete starting points without biasing the template toward specific domains
+- All factual claims (defaults, file paths, phase names) verified against repo content
+
+## Verification
+
+- Added execution lead section preserves template placeholder style (`[PLACEHOLDER]`, `<!-- GENERATED: ... -->`)
+- README example prompts cover all three scenarios with realistic, scenario-agnostic use cases
+- SDD framework defaults match those in SKILL.md and prompts
+- No hardcoded file paths or domain-specific details in examples

@@ -190,3 +190,7 @@ Reviewed 10 scenario-agnostic improvements validated via Angular→React probe b
 - MCP Availability dimension (20%) remains semantically awkward for pure UI migrations with no backend MCP needs. Consider future rubric refinement for UI-only scenarios.
 
 **Learning:** Probe-validated changes must remain scenario-agnostic — use illustrative examples (e.g., "Angular component tests" as throwaway category) without mandating frameworks. Optional sections gated with HTML comment markers (`<!-- UI_MIGRATION ... -->`) prevent template bloat while enabling coverage when applicable.
+
+## 2026-06-09: Orchestration Log + Session Log Consolidation
+
+Scribe created orchestration logs for each agent, session log for execution-handoff-redesign batch, merged decision inbox to decisions.md, updated cross-agent history records. All deliverables staged for git commit.

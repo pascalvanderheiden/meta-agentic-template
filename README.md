@@ -11,47 +11,90 @@ A framework for orchestrating AI-powered development teams using Spec-Driven Dev
 - **Optional**: `gh` CLI for Squad workflows
 - **Optional**: an SDD framework (Spec-Kit / OpenSpec / Superpowers) — only if you choose that path (see [Optional: SDD Frameworks](#optional-sdd-frameworks))
 
-## Three Scenarios
+## Quick Start Guide
 
-| Scenario | Prompt | Use When | Example |
-|----------|--------|----------|---------|
-| **Green-Field** | `.github/prompts/green-field.prompt.md` | Build NEW system from scratch | Customer portal with Next.js + PostgreSQL |
-| **Brown-Field** | `.github/prompts/brown-field.prompt.md` | Extend/modify EXISTING codebase | Add OAuth to legacy Express.js API |
-| **Modernization** | `.github/prompts/modernization.prompt.md` | Migrate platforms or modernize legacy | Oracle ETL pipeline → Microsoft Fabric |
+### 1. Choose Your Scenario
 
-**Invoke:**
-```bash
-# VS Code
-@workspace /green-field [description]
-@workspace /brown-field [description]
-@workspace /modernization [description]
+Pick the scenario that matches your situation:
 
-# Copilot CLI
-gh copilot prompt green-field "[description]"
+| Scenario | Use When | Default SDD Framework |
+|----------|----------|----------------------|
+| **Green-Field** | Building a **new system** from scratch | OpenSpec |
+| **Brown-Field** | Extending or modifying an **existing codebase** | None (native pipeline) |
+| **Modernization** | Migrating platforms or modernizing **legacy systems** | Spec-Kit |
+
+### 2. Run the Scenario Prompt
+
+**In VS Code:**
+```
+@workspace /green-field Build a task management API with Node.js and PostgreSQL
+@workspace /brown-field Add real-time notifications to our Express app
+@workspace /modernization Migrate Oracle ETL pipeline to Microsoft Fabric
 ```
 
-## Two Execution Approaches
+**In Copilot CLI:**
+```bash
+gh copilot prompt green-field "Build a task management API with Node.js and PostgreSQL"
+```
+
+### 3. Answer Intake Questions
+
+The prompt will ask clarifying questions:
+
+- **Execution Approach**: Choose **(A) Custom Agents** for simple workflows or **(B) Squad Team** (default) for complex multi-agent orchestration
+- **SDD Framework**: Choose **(1) None**, **(2) Spec-Kit**, **(3) OpenSpec**, or **(4) Superpowers** — or accept the scenario's recommended default
+- **Scenario-specific details**: Stack preferences, constraints, success criteria, scope boundaries
+
+### 4. Team Formation → Execution
+
+The workflow proceeds through phases:
+1. **Intake** — Clarify requirements
+2. **Discovery/Assessment** (brown-field/modernization only) — Inventory existing system
+3. **Analysis** — Decompose into functional domains
+4. **Capability Mapping** — Find/build required skills, MCP servers, instructions
+5. **Team Formation** — Assign capabilities to agent roles
+6. **Execution** — The execution lead (Orchestrator or Squad coordinator) invokes agents, enforces handoffs and reviewer gates, runs the SDD framework's implement loop (if chosen)
+7. **Verification** — Validate deliverables, calculate confidence score
+8. **Handoff** — Package artifacts and generate progress report
+
+### 5. Review the Progress Report
+
+Open `docs/<scenario>-<slug>/progress-report.html` in your browser for real-time status, confidence scores, team roster, and capability tracking.
+
+## Example Prompts
+
+**Green-Field (new build):**
+```
+@workspace /green-field Build a customer portal with Next.js, Tailwind CSS, and Supabase. 
+Include user authentication, profile management, and a dashboard showing order history. 
+Deploy to Vercel.
+```
+
+**Brown-Field (extend existing):**
+```
+@workspace /brown-field Add OAuth 2.0 authentication to our existing Express.js REST API. 
+Support Google and GitHub providers. Maintain backward compatibility with the current 
+JWT token system. The API is in src/api/ and uses Passport.js.
+```
+
+**Modernization (migrate legacy):**
+```
+@workspace /modernization Modernize our Angular 1.x e-commerce app to React 18 with TypeScript. 
+Consume the existing REST API unchanged. Reuse our Playwright E2E suite as a parity oracle 
+to ensure the React app behaves identically. The legacy app is in legacy/ and uses Grunt.
+```
+
+## Execution Approaches
 
 Both approaches use **identical** agent roles, skills, and MCP servers. Only orchestration differs.
 
 | Aspect | **A. Custom Agents** | **B. Squad Team (Default)** |
 |--------|---------------------|--------------------------|
 | **Setup** | Generate `.agent.md` files in `.github/agents/` | Use pre-installed Squad coordinator |
-| **Orchestration** | Manual agent invocation | Squad spawns agents, enforces handoffs |
-| **Parallelism** | Manual | Built-in parallel fan-out |
+| **Orchestration** | Orchestrator agent invokes roles individually | Squad spawns agents, enforces handoffs |
+| **Parallelism** | Manual via task tool | Built-in parallel fan-out |
+| **Reviewer Gate** | Enforced by Orchestrator | Enforced by Squad |
 | **Best For** | Linear workflows, 2-3 agents | Complex coordination, 4+ agents |
-
-**Example (Custom Agents):**
-```
-@APIBuilder Create REST endpoints
-@DatabaseArchitect Design schema
-```
-
-**Example (Squad Team):**
-```
-@squad Build user authentication system
-# Squad spawns APIBuilder → DatabaseArchitect → Validator in sequence
-```
 
 Squad is **pre-installed** (`.github/agents/squad.agent.md`) and recommended for multi-agent scenarios.
 
@@ -93,18 +136,18 @@ Pulls: 3 scenario prompts, method/report/feedback/repo-wiki skills, authoring in
 
 ## How It Works
 
-The workflow executes a **10-phase SDD pipeline** (methodology: `.github/skills/meta-agentic-method/SKILL.md`):
+The workflow executes a **10-phase SDD pipeline**:
 
-1. **Intake** → Clarify scenario, answer questions
-2. **Discovery** (brown-field) → Inventory existing system
+1. **Intake** → Clarify scenario, choose Execution Approach and optional SDD Framework
+2. **Discovery** (brown-field/modernization) → Inventory existing system, generate repo-wiki
 3. **Assessment** (modernization) → Legacy-to-target gap analysis
 4. **Analysis** → Decompose into functional domains
-5. **Capability Mapping** → Find skills, MCP servers, instructions (sources: `.github/skills/meta-agentic-method/references.md`)
+5. **Capability Mapping** → Find skills, MCP servers, instructions
 6. **Capability Acquisition** → Reuse or build missing capabilities
-7. **Team Formation** → Assign capabilities to agent roles
-8. **Execution** → Agents produce specs + code
+7. **Team Formation** → Assign capabilities to agent roles, designate execution lead and reviewer
+8. **Execution** → Execution lead (Orchestrator or Squad) invokes agents, enforces reviewer gates, runs SDD framework workflow
 9. **Verification** → Validate deliverables, calculate confidence score
-10. **Handoff** → Generate README + real-time HTML report
+10. **Handoff** → Generate README + real-time HTML progress report
 
 **Confidence Score** (0-100):
 - Weighted across 6 dimensions: Capability Coverage (25%), MCP Availability (20%), Skill Coverage (15%), Domain Knowledge (15%), Spec Completeness (15%), Verification (10%)
@@ -112,10 +155,12 @@ The workflow executes a **10-phase SDD pipeline** (methodology: `.github/skills/
 - **Amber (50-79)**: Viable with gaps
 - **Red (0-49)**: Blockers present
 
-**Progress Report** (`docs/<scenario>/progress-report.html`):
+**Progress Report** (`docs/<scenario>-<slug>/progress-report.html`):
 - Real-time updates after each phase
 - Self-contained, no network required
-- Generated from `.github/skills/progress-report/SKILL.md`
+- Open in any browser
+
+Full methodology: `.github/skills/meta-agentic-method/SKILL.md`
 
 ## Status Report
 

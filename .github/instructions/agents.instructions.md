@@ -314,6 +314,10 @@ tools: ['playwright/navigate', 'playwright/screenshot']  # Specific tools
 - **Focus**: Fewer tools = clearer agent purpose and better performance
 - **Documentation**: Comment why specific tools are required for complex configurations
 
+## Orchestrator Pattern for Custom Agents
+
+The **Custom Agents** execution approach (in spec-driven workflows) uses a generic orchestrator agent (`.github/agents/orchestrator.agent.md`) that reads the team roster (`docs/<scenario>-<slug>/06-team.md` or `04-team.md`), invokes role agents as subagents via the `task` tool in the handoff order defined by the DAG, enforces reviewer gates with strict lockout (rejected artifacts must be revised by a different agent, never the original author), and maintains an append-only execution log. This mirrors how the Squad coordinator (`.github/agents/squad.agent.md`) drives the Squad approach, but for explicitly-defined role agents rather than Squad members.
+
 ## Sub-Agent Invocation (Agent Orchestration)
 
 Agents can invoke other agents using the **agent invocation tool** (the `agent` tool) to orchestrate multi-step workflows.

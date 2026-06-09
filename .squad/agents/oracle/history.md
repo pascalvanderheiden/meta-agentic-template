@@ -272,3 +272,25 @@ Added non-mandatory per-scenario framework advice: green-field defaults to OpenS
 
 - **Created:** `.github/skills/repo-wiki/templates/concept-page.template.md` for `concepts/` pages, parallel to module-page. Includes frontmatter tokens, Category (domain term/API/schema/event/job/data-flow/invariant/contract), Related Modules, Evidence (file:line), Notes/Open Questions, Last reviewed.
 - **Extended:** `.github/skills/meta-agentic-method/templates/wiki-index.template.json` entrypoints/type enum: added `Route` and `DeepLink` to existing CLI/API/UI/Worker/Event, for client/web coverage.
+
+## Learnings
+
+### 2026-01-16: Orchestrator Agent Creation for Custom Agents Execution Approach
+
+**Context**: Created execution lead agent for Custom Agents approach to achieve parity with Squad coordinator.
+
+**Key Learnings**:
+- **Orchestrator pattern mirrors Squad coordinator**: Both drive execution via subagent invocation, but orchestrator reads team roster from `docs/<scenario>-<slug>/06-team.md` (or `04-team.md`) and invokes explicitly-defined role agents (`.github/agents/<role>.agent.md`), while Squad spawns agents from universes and manages via `.squad/agents/<agent-name>/`.
+- **Reviewer lockout is portable**: The strict rejection protocol (original author may NOT revise rejected artifacts; a different agent must) applies to both Squad and Custom Agents workflows. This ensures independent revision and prevents self-justification loops.
+- **SDD framework implement loops require explicit orchestration**: When an SDD framework (Spec-Kit, OpenSpec, Superpowers) is chosen, the execution lead must generate framework-native specs (in addition to `docs/` specs) and run the framework's implement loop (e.g., `/speckit.implement`, `/opsx:apply` + `/opsx:verify`, `subagent-driven-development`). This is the execution-native projection; `docs/` specs remain the single source of truth.
+- **Generic agents read scenario artifacts at runtime**: The orchestrator is scenario-agnostic — it extracts scenario/slug from input, reads team roster and plan at runtime, and drives the handoff DAG dynamically. No domain specifics embedded.
+- **Execution log is append-only traceability**: Every agent run logged with timestamps, artifacts, reviewer verdicts, and summaries. Enables auditing and debugging across multi-agent workflows.
+
+**Implications**:
+- The Custom Agents approach now has a dedicated execution lead, completing the dual-path design (Custom Agents + Squad).
+- Scenario prompts can now offer both execution approaches with clear orchestration semantics for each.
+- The orchestrator pattern is documented in `agents.instructions.md` as a reusable architectural pattern for multi-agent workflows.
+
+## 2026-06-09: Orchestration Log + Session Log Consolidation
+
+Scribe created orchestration logs for each agent, session log for execution-handoff-redesign batch, merged decision inbox to decisions.md, updated cross-agent history records. All deliverables staged for git commit.

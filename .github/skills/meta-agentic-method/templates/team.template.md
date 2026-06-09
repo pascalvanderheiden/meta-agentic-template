@@ -120,6 +120,48 @@ Define a custom agent team specialized for this scenario, assign capabilities to
 - Validate outputs against success criteria from `01-analysis.md` (or `04-analysis.md`)
 - Sign off on deliverables before handoff
 
+## Execution Lead
+
+<!-- GENERATED: Execution lead assignment based on chosen Execution Approach -->
+
+**Execution Approach**: [CUSTOM_AGENTS | SQUAD]
+
+**Execution Lead Agent**: [`.github/agents/orchestrator.agent.md` | `.github/agents/squad.agent.md`]
+
+### Lead Responsibilities
+
+The execution lead is responsible for orchestrating the team defined in this document. Responsibilities include:
+
+- **Invoke agents** in the correct order according to the Handoff Protocol (sequential chain or parallel fan-out where dependencies allow)
+- **Enforce the reviewer gate**: Original author of rejected work **cannot** revise their own output — a different agent must revise
+- **Run the SDD implement loop** if an SDD framework (Spec-Kit / OpenSpec / Superpowers) was chosen during Intake — generate framework-native specs and execute the framework's iterative workflow
+- **Maintain execution log**: Write timestamped progress entries to `execution-log.md` documenting agent invocations, handoffs, and decisions
+- **Report completion**: Signal when all agents have completed their handoffs and the final deliverable is ready for verification
+
+### Lead-Specific Contracts
+
+**For Approach A (Custom Agents):**
+- **Lead**: `.github/agents/orchestrator.agent.md` (generic execution orchestrator)
+- **Reads**: This team roster (`04-team.md` or `06-team.md`), Handoff Protocol table, Reviewer Assignment
+- **Invokes**: Each role agent defined in the Agent Roster as a subagent, passing handoff artifacts between them
+- **Enforces**: Reviewer rejection protocol — if the reviewer rejects Agent X's output, the Orchestrator re-assigns revision work to a different agent (never back to Agent X)
+
+**For Approach B (Squad):**
+- **Lead**: `.github/agents/squad.agent.md` (Squad coordinator)
+- **Reads**: This team roster, Squad member charters in `.squad/agents/<agent-name>/charter.md`
+- **Invokes**: Squad members according to the handoff DAG, using Squad's native parallel execution and reviewer-gate enforcement
+- **Enforces**: Same reviewer rejection protocol via Squad's built-in coordination logic
+
+### SDD Framework Integration
+
+If an SDD framework was chosen during Intake (Spec-Kit / OpenSpec / Superpowers), the execution lead also:
+
+1. **Generates framework-native specs** using the framework's commands (e.g., `/speckit.specify`, `/opsx:propose`) based on Analysis and Capability Map artifacts
+2. **Runs the framework's implement loop** (e.g., Spec-Kit: plan → tasks → analyze → implement; OpenSpec: propose → explore → apply → verify)
+3. **Coordinates agents to execute framework workflow steps** (agents produce specs, plans, tasks, code according to the framework's ceremony)
+
+See `.github/skills/meta-agentic-method/references/sdd-frameworks.md` for framework-specific execution mappings.
+
 ## Shared Utilities
 
 <!-- GENERATED: Capabilities not assigned to a specific agent (available to all) -->

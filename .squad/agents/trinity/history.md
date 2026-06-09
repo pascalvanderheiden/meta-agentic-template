@@ -145,3 +145,36 @@ Pre-flight validation for frontend framework migration revealed **UI/behavioral 
 ### 2026-06-XX: Parity Oracle Guidance (Item #1a)
 
 Added generic "reuse existing test suite as parity oracle" guidance to `testing-strategy.md` Modernization section. Covers: behavioral/E2E suite reuse across stacks, durable (E2E/contract) vs throwaway (unit) split, baseline-first principle. Applies to ANY modernization (UI, DB, ETL, services), not scenario-specific.
+
+### 2026-06-09: Execution Lead Documentation + README Rewrite
+
+**Task:** Document the explicit execution-lead contract in `team.template.md` and rewrite README for clarity.
+
+**Changes:**
+1. **`team.template.md`** — Added `## Execution Lead` section after `## Reviewer Assignment`:
+   - Documents Approach A (Custom Agents) lead: `.github/agents/orchestrator.agent.md` (generic Orchestrator)
+   - Documents Approach B (Squad) lead: `.github/agents/squad.agent.md` (Squad coordinator)
+   - Lists lead responsibilities: invoke in handoff order, enforce strict reviewer gate (original author cannot revise own rejected work), run SDD framework implement loop if chosen, maintain execution-log.md, report completion
+   - Defines lead-specific contracts: what each lead reads, how it invokes agents, reviewer-rejection enforcement
+   - Links SDD framework integration to `references/sdd-frameworks.md`
+   - Preserves template placeholder/comment style (`[PLACEHOLDER]`, `<!-- GENERATED: ... -->`)
+
+2. **`README.md`** — Rewrote usage instructions for clarity and conciseness:
+   - Added `## Quick Start Guide` with numbered steps: choose scenario → run prompt → answer Intake → team formation/execution → review report
+   - Added `## Example Prompts` section with concrete green-field, brown-field, and modernization examples (generic/illustrative, not domain-locked)
+   - Restructured `## How It Works` to emphasize the execution lead's role (Phase 8) and clarify execution-lead responsibilities
+   - Simplified execution approach table, removed redundant examples
+   - Verified all factual claims: green-field → OpenSpec default, brown-field → None default, modernization → Spec-Kit default (confirmed in grep results)
+   - Preserved existing content: badges, optional-install section, repo structure, extending guide, conventions
+
+**Key Decision:** Placed `## Execution Lead` after `## Reviewer Assignment` in template because the reviewer is assigned BEFORE execution begins, and the lead enforces the reviewer gate DURING execution — logical sequence.
+
+**Verification:**
+- Example prompts cover all three scenarios with realistic, scenario-agnostic use cases
+- SDD framework defaults match those in `.github/skills/meta-agentic-method/SKILL.md` and prompts
+- README structure is scannable: Quick Start → Examples → Execution Approaches → How It Works → Optional Frameworks
+- No file paths or agent names hardcoded in examples (generic roles only)
+
+## 2026-06-09: Orchestration Log + Session Log Consolidation
+
+Scribe created orchestration logs for each agent, session log for execution-handoff-redesign batch, merged decision inbox to decisions.md, updated cross-agent history records. All deliverables staged for git commit.
