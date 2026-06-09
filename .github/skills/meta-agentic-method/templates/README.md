@@ -9,6 +9,8 @@ Bundled templates for the **Spec-Driven Development (SDD)** methodology. Each te
 | `constitution.template.md` | `constitution.md` | All (optional) | Pre-Phase (project-level) |
 | `00-intake.template.md` | `00-intake.md` | All | 1. Intake & Clarification |
 | `discovery.template.md` | `02-discovery.md` | Brown-field, Modernization | 2. Discovery |
+| `discovery-wiki.template.md` | `wiki/README.md` | Brown-field, Modernization | 2. Discovery repo-wiki |
+| `wiki-index.template.json` | `wiki/wiki-index.json` | Brown-field, Modernization | 2. Retrieval index |
 | `assessment.template.md` | `03-assessment.md` | Modernization only | 3. Assessment |
 | `analysis.template.md` | `01-analysis.md` (base)<br>`04-analysis.md` (modernization) | All | 4. Analysis |
 | `capability-map.template.md` | `03-capability-map.md` (base)<br>`05-capability-map.md` (modernization) | All | 5. Capability Mapping |
@@ -18,6 +20,11 @@ Bundled templates for the **Spec-Driven Development (SDD)** methodology. Each te
 | `verification.template.md` | `verification.md` | All | 9. Verification |
 | `summary.template.md` | `README.md` | All | 10. Handoff (summary) |
 | `checklist.template.md` | `checklist.md` | All | 9. Verification (quality gate) |
+
+### Repo-Wiki Outputs
+
+- `discovery-wiki.template.md` — Distilled, token-mindful source-of-truth wiki for an existing codebase.
+- `wiki-index.template.json` — Machine-readable retrieval index for wiki modules, dependencies, entrypoints, and risks.
 
 ## Scenario Ordered Sets
 

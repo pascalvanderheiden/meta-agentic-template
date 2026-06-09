@@ -115,3 +115,10 @@ Created 13 structured templates for Spec-Driven Development methodology artifact
 
 Templates mirror spec-kit's clean fill-in style (headings, placeholders, gate/checklist sections) but adapted to our SDD phases, artifact numbering, and 6-dimension confidence rubric.
 
+**2026-06-09 — Repo-Wiki Templates**
+
+Created two repo-wiki templates for brown-field Discovery and modernization Assessment/Discovery:
+
+- `.github/skills/meta-agentic-method/templates/discovery-wiki.template.md` — token-mindful distilled source-of-truth wiki for existing source codebases.
+- `.github/skills/meta-agentic-method/templates/wiki-index.template.json` — machine-readable retrieval index for modules, dependencies, entrypoints, integrations, flows, and risk hotspots.
+

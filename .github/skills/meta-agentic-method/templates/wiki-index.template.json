@@ -1,0 +1,72 @@
+{
+  "_usage": "Machine-readable repo-wiki index for on-demand retrieval. Use this to locate relevant wiki chunks and source links; do not treat it as a full code dump.",
+  "repo": "[SOURCE_REPO]",
+  "scenario": "[SCENARIO_TYPE]",
+  "slug": "[SLUG]",
+  "generated_at": "[GENERATED_AT]",
+  "packer": "[PACKER_USED]",
+  "wiki_root": "docs/[SCENARIO_TYPE]-[SLUG]/wiki/",
+  "modules": [
+    {
+      "name": "[MODULE_NAME]",
+      "path": "[MODULE_PATH]",
+      "summary": "[MODULE_SUMMARY]",
+      "key_files": [
+        "[KEY_FILE_PATH]"
+      ],
+      "symbols": [
+        "[SYMBOL_NAME]"
+      ],
+      "depends_on": [
+        "[DEPENDENCY_NAME]"
+      ]
+    }
+  ],
+  "external_dependencies": [
+    {
+      "name": "[DEPENDENCY_NAME]",
+      "type": "[Package/API/Service/Runtime]",
+      "version": "[VERSION_OR_CONSTRAINT]",
+      "used_by": [
+        "[MODULE_NAME]"
+      ],
+      "purpose": "[PURPOSE]"
+    }
+  ],
+  "entrypoints": [
+    {
+      "name": "[ENTRYPOINT_NAME]",
+      "type": "[CLI/API/UI/Worker/Event]",
+      "path": "[ENTRYPOINT_PATH]",
+      "summary": "[ENTRYPOINT_SUMMARY]"
+    }
+  ],
+  "data_flows": [
+    {
+      "name": "[FLOW_NAME]",
+      "input": "[INPUT_SOURCE_AND_FORMAT]",
+      "processing": [
+        "[PROCESSING_MODULE_OR_STEP]"
+      ],
+      "output": "[OUTPUT_DESTINATION_AND_FORMAT]"
+    }
+  ],
+  "integration_points": [
+    {
+      "name": "[INTEGRATION_NAME]",
+      "direction": "[Inbound/Outbound]",
+      "mechanism": "[PROTOCOL_OR_MECHANISM]",
+      "contract": "[CONTRACT_PATH_OR_URL]"
+    }
+  ],
+  "risk_hotspots": [
+    {
+      "area": "[AREA_OR_PATH]",
+      "risk_level": "[High/Medium/Low]",
+      "reason": "[RISK_REASON]",
+      "evidence": [
+        "[EVIDENCE_PATH_OR_SIGNAL]"
+      ]
+    }
+  ]
+}

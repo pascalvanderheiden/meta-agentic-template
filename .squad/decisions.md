@@ -603,3 +603,159 @@ Each prompt records framework independently in `00-intake.md`, adds `#### SDD Fr
 ## Review
 
 ✅ APPROVED by Neo (Reviewer-Gate) on 2026-06-08T21:51:41Z
+
+---
+
+### 2026-06-09: APM Distribution for Existing Repositories
+
+**By:** Tank (Integration Dev)  
+**Date:** 2026-06-09T07:13:52Z  
+**Status:** ✅ COMPLETED
+
+Add root `apm.yml` and README section so template can be installed additively into existing repositories through APM.
+
+**APM Manifest declares:**
+- `name: meta-agentic-template`, `version: 0.1.0`
+- External APM dependency: `github/awesome-copilot/skills/github-issues`
+- MCP dependencies: `io.github.github/github-mcp-server` (http), `microsoft/playwright-mcp`
+
+**README § "Use on an Existing Codebase (APM)":**
+- Install procedure: `apm install pascalvanderheiden/meta-agentic-template`
+- Consumer bundle: prompts, skills, instructions, agents, MCP servers
+- Additive/non-destructive approach
+
+**Verification:** APM manifest valid; dependency forms verified; no link breakage.
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-09T07:13:52Z-tank.md`
+
+---
+
+### 2026-06-09: Existing-Codebase Topology and Source Context Ingestion
+
+**By:** Oracle (Knowledge Architect)  
+**Date:** 2026-06-09T07:13:52Z  
+**Status:** ✅ COMPLETED
+
+Formalized existing-codebase repository topologies and source context ingestion methodology.
+
+**Topology Decisions:**
+- **Green-field:** Template fork (no APM, no repo-wiki)
+- **Brown-field:** In-repo work; install artifacts via APM; generates token-bounded repo-wiki under `docs/<scenario>/wiki/`
+- **Modernization:** Side-car control repo with read-only legacy submodule at `legacy/`; generates legacy + target wikis
+
+**Source Context Ingestion (Repo-Wiki) Pattern:**
+1. **Pack:** Token-bounded repomix/gitingest/code2prompt
+2. **Summarize:** Generate `docs/<scenario>-<slug>/wiki/` via template
+3. **Index:** `wiki-index.template.json` for machine-readable retrieval
+4. **Reference on demand:** Wiki as default context; raw files only for precise checks
+
+**Rationale:** Raw dumps are token-heavy, not indexable. Wiki gives agents compact architecture, module, dependency, flow, and risk context while preserving raw access.
+
+**Confidence Impact:** Missing/incomplete/stale wiki lowers **Data/Domain Knowledge**, **Spec Completeness**, **Verification Status**.
+
+**Methodology Updates:**
+- `.github/skills/meta-agentic-method/SKILL.md` § "Source Context Ingestion (Repo-Wiki)"
+- `.github/skills/meta-agentic-method/SKILL.md` § "Repository Topology by Scenario"
+
+**Verification:** All section links valid; topology clearly differentiated; feedback loop preserved.
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-09T07:13:52Z-oracle.md`
+
+---
+
+### 2026-06-09: Repo-Wiki Templates
+
+**By:** Trinity (Template Engineer)  
+**Date:** 2026-06-09T07:13:52Z  
+**Status:** ✅ COMPLETED
+
+Add two bundled repo-wiki templates under `.github/skills/meta-agentic-method/templates/`.
+
+**`discovery-wiki.template.md`:**
+- Distilled, token-mindful markdown wiki
+- Sections: Architecture, Modules, Dependencies, Entrypoints, Flows, Integrations, Risks, Glossary
+- Link-based (no raw code dumps)
+- Output: `docs/<scenario>-<slug>/wiki/discovery-wiki.md`
+
+**`wiki-index.template.json`:**
+- Machine-readable retrieval index
+- Metadata: modules, dependencies, entrypoints, integrations, flows, hotspots
+- Supports targeted retrieval without loading full wiki
+- Complements markdown with structural queries
+
+**Templates Updated:**
+- `.github/skills/meta-agentic-method/templates/README.md` with both templates and descriptions
+
+**Verification:** Valid markdown + JSON; output paths consistent; named templates match Oracle topology references.
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-09T07:13:52Z-trinity.md`
+
+---
+
+### 2026-06-09: Scenario Prompt Wiring to Repo-Wiki and Topology
+
+**By:** Morpheus (Agent Designer)  
+**Date:** 2026-06-09T07:13:52Z  
+**Status:** ✅ COMPLETED
+
+Wire scenario prompts to existing-codebase repo-wiki and topology without duplicating methodology.
+
+**Brown-field (`brown-field.prompt.md`):**
+- Intake note: "APM install into existing codebase"
+- Discovery phase: "Generate repo-wiki under `docs/<scenario>-<slug>/wiki/` (Pack → Summarize → Index)"
+- Wiki as default downstream context
+- In-repo topology maintained
+
+**Modernization (`modernization.prompt.md`):**
+- Intake note: "Side-car control repo + read-only legacy submodule at `legacy/`"
+- Assessment phase: "Generate/refresh legacy repo-wiki + target repo-wiki"
+- Target ≠ source boundary emphasized
+- Dual-repo topology maintained
+
+**Green-field (`green-field.prompt.md`):**
+- Explicitly excluded repo-wiki ingestion (template fork)
+- Explicitly excluded APM-into-existing (no existing codebase)
+- Template fork topology maintained
+
+**Verification:**
+- Topology explicit at intake
+- Discovery/Assessment wired to wiki generation
+- Cross-references valid (Tank APM, Oracle topology, Trinity templates)
+- No regression to existing phase structure
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-09T07:13:52Z-morpheus.md`
+
+---
+
+### 2026-06-09: Neo Review — Existing-Codebase Feature APPROVED
+
+**By:** Neo (Reviewer-Gate)  
+**Date:** 2026-06-09T07:13:52Z  
+**Status:** ✅ APPROVED FOR PRODUCTION
+
+**Verdict:** All four agents delivered complete, well-integrated contributions on existing-codebase support feature.
+
+**Verification Summary:**
+
+| Component | Criterion | Status | Evidence |
+|-----------|-----------|--------|----------|
+| **APM** | Manifest valid | ✅ PASS | YAML + dependencies verified |
+| **APM** | Link integrity | ✅ PASS | All paths resolve |
+| **Topology** | Three paths distinct | ✅ PASS | Green/Brown/Modernization clearly differentiated |
+| **Topology** | Feedback preserved | ✅ PASS | Upstream loop unchanged; carried via APM |
+| **Templates** | Markdown valid | ✅ PASS | `discovery-wiki.template.md` structure sound |
+| **Templates** | JSON valid | ✅ PASS | `wiki-index.template.json` schema correct |
+| **Prompts** | Wiring complete | ✅ PASS | Brown Discovery, Modernization Assessment both wired |
+| **Prompts** | Regression check | ✅ PASS | Existing phases, numbering, team formation preserved |
+
+**Key Strengths:**
+1. Topology clarity: Green/brown/modernization paths unambiguous
+2. Token efficiency: Indexed wiki prevents raw-dump bloat
+3. Additive install: APM non-destructive for existing codebases
+4. Template consistency: Fixed templates ensure repeatable quality
+5. Prompt integration: Morpheus wiring tight and well-scoped
+
+**Recommendation:** APPROVE for merge. No changes requested. Ready for production.
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-09T07:13:52Z-neo.md`
+

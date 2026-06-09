@@ -197,3 +197,13 @@ Scenario-specific (gated): discovery green(0)/brown(1)/modern(2) ✓; assessment
 ### 2026-06-08: SDD Framework Recommended Defaults Refined
 
 Added non-mandatory per-scenario framework advice: green-field defaults to OpenSpec, brown-field defaults to native None, and modernization defaults to Spec-Kit while preserving user freedom to choose any framework.
+
+### 2026-06-09: Existing-Codebase Context Topology
+
+**Decision Captured:** Existing-codebase scenarios use APM distribution plus repo-wiki ingestion so agents reason over token-bounded, indexed source context instead of raw code dumps.
+
+**Repo-Wiki Loop:** Pack with a token-bounded source snapshotter, summarize into `templates/discovery-wiki.template.md`, index with `templates/wiki-index.template.json`, then reference raw files only on demand. Wiki drift lowers Data/Domain Knowledge, Spec Completeness, and Verification Status.
+
+**Topology:** Green-field remains a template fork. Brown-field installs artifacts in-repo via APM and stores docs/specs/wiki beside the source. Modernization uses a side-car control repo with read-only legacy git submodule at `legacy/` plus generated repo-wiki as primary context.
+
+**Files Updated:** `.github/skills/meta-agentic-method/SKILL.md`, `.github/copilot-instructions.md`, `.squad/decisions/inbox/oracle-existing-codebase-topology.md`.

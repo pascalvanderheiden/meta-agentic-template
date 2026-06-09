@@ -45,3 +45,14 @@ Explicitly encoded: Oracle/Fabric lack first-party MCP servers → locate OpenAP
 ### 2026-06-08: Optional SDD Framework Choice in Scenario Prompts
 
 Prompts now offer an optional, orthogonal SDD-framework choice during Intake. Per-scenario recommended defaults are green-field = OpenSpec, brown-field = None/native, and modernization = Spec-Kit. All three prompts wire the choice to `.github/skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)" while keeping Execution Approach independent.
+
+### 2026-06-09: Repo-Wiki and Topology Wiring in Scenario Prompts
+
+**Deliverables:**
+- `.github/prompts/brown-field.prompt.md`
+- `.github/prompts/modernization.prompt.md`
+- `.github/prompts/green-field.prompt.md`
+- `.squad/decisions/inbox/morpheus-repo-wiki-topology-prompts.md`
+
+**Learning:**
+Existing-codebase prompts must route source understanding through the repo-wiki. Brown-field works in-repo after APM install, while modernization uses a side-car control repo with read-only `legacy/` plus wiki as default context. Green-field remains a template fork and skips repo-wiki/APM-into-existing-repo steps.

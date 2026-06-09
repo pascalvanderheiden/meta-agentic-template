@@ -30,6 +30,10 @@ Execute spec-driven modernization by assessing legacy system capabilities, mappi
 - Access to `.github/skills/progress-report/progress-report.template.html` for report generation
 - Repository authoring instructions at `.github/instructions/`
 
+**Topology:**
+- Modernization uses a **side-car control repo** derived from this template; the legacy source stays read-only and untouched (target ≠ source).
+- Reference legacy source via a git submodule at `legacy/` plus generated repo-wiki. Use the wiki as default context, not raw submodule files. See `../skills/meta-agentic-method/SKILL.md` § "Repository Topology by Scenario".
+
 **Out of Scope:**
 - Building NEW systems from scratch → use `green-field.prompt.md`
 - Extending existing systems on same platform → use `brown-field.prompt.md`
@@ -80,28 +84,32 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 ---
 
-### Phase 2: Discovery (If Brown-Field)
+### Phase 2: Discovery (If Legacy Source Available)
 
-**Objective:** Inventory existing legacy system architecture, components, data flows.
+**Objective:** Inventory existing legacy system architecture, components, data flows, and token-bounded source context.
 
 **Actions:**
-1. **If legacy system code is accessible:**
+1. Read `../skills/meta-agentic-method/SKILL.md` § "Source Context Ingestion (Repo-Wiki)" and § "Repository Topology by Scenario".
+2. **If legacy system code is accessible:**
+   - Add the legacy repository as a read-only git submodule at `legacy/`.
    - Follow brown-field Discovery phase (see `brown-field.prompt.md`)
    - Analyze existing codebase, generate architecture diagram
    - Inventory components, dependencies, integration points
-   - Scaffold `docs/<scenario>-<slug>/02-discovery.md` from `../skills/meta-agentic-method/templates/discovery.template.md`, fill placeholders, generate complete system inventory.
-2. **If legacy system is external/undocumented:**
+   - Generate `docs/<scenario>-<slug>/wiki/` by Pack → Summarize → Index with a fit-for-repo packer (for example, repomix, gitingest, or code2prompt), `../skills/meta-agentic-method/templates/discovery-wiki.template.md`, and `../skills/meta-agentic-method/templates/wiki-index.template.json`.
+   - Use the generated wiki as the token-bounded default context for the legacy system; reference raw `legacy/` files on demand only.
+   - Scaffold `docs/<scenario>-<slug>/02-discovery.md` from `../skills/meta-agentic-method/templates/discovery.template.md`, fill placeholders, link to the wiki directory, and generate complete system inventory.
+3. **If legacy system is external/undocumented:**
    - Gather available documentation (API specs, data schemas, architecture diagrams)
    - Interview stakeholders (if available) or infer from public documentation
    - Document known components and data flows
    - Flag unknowns for validation during migration
    - Scaffold `docs/<scenario>-<slug>/02-discovery.md` from `../skills/meta-agentic-method/templates/discovery.template.md` with "best-effort" label, fill placeholders, generate best-effort discovery.
-3. Use tools:
+4. Use tools:
    - `web_fetch` to retrieve vendor documentation (Oracle docs, Fabric docs)
    - `grep`/`glob` if codebase accessible
    - `bash` to query databases (schema dumps, row counts)
 
-**Exit Gate:** Legacy system capabilities documented (code-level or API-level), architecture understood. Unknowns flagged for validation.
+**Exit Gate:** Legacy system capabilities documented (code-level or API-level), architecture understood, repo-wiki generated when source is accessible, and unknowns flagged for validation.
 
 ---
 
@@ -110,9 +118,10 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 **Objective:** Map legacy capabilities to target platform, identify gaps, assess migration complexity.
 
 **Actions:**
-1. Read `../skills/meta-agentic-method/SKILL.md` § Assessment phase requirements
-2. If an SDD framework was selected in Intake, follow its flow per `../skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)" and feed Assessment outputs into that framework's artifacts.
-3. Scaffold `docs/<scenario>-<slug>/03-assessment.md` from `../skills/meta-agentic-method/templates/assessment.template.md`, fill placeholders, generate:
+1. Read `../skills/meta-agentic-method/SKILL.md` § Assessment phase requirements and § "Source Context Ingestion (Repo-Wiki)".
+2. Confirm `docs/<scenario>-<slug>/wiki/` is current for the legacy system. If Assessment reveals drift or missing modules, patch or regenerate it with `../skills/meta-agentic-method/templates/discovery-wiki.template.md` and `../skills/meta-agentic-method/templates/wiki-index.template.json`; keep the wiki as token-bounded context, not raw `legacy/` files.
+3. If an SDD framework was selected in Intake, follow its flow per `../skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)" and feed Assessment outputs into that framework's artifacts.
+4. Scaffold `docs/<scenario>-<slug>/03-assessment.md` from `../skills/meta-agentic-method/templates/assessment.template.md`, fill placeholders, generate:
    - **Legacy Capability Matrix:** List every capability the legacy system provides (e.g., "Scheduled ETL jobs", "Data validation rules", "Error retry logic")
    - **Technical Debt Inventory:** Version EOL dates, security vulnerabilities, performance bottlenecks, maintainability issues
    - **Target-State Requirements:** What each capability must do post-migration (may differ from legacy)
@@ -126,10 +135,10 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
    - **Migration Risks:** Data loss risk, downtime impact, compatibility breaks, rollback difficulty
    - **Complexity Rating:** Per component (Low/Medium/High)
-4. Research target platform capabilities:
+5. Research target platform capabilities:
    - Use `web_fetch` to consult `../skills/meta-agentic-method/references.md` for target platform docs (e.g., Microsoft Fabric docs)
    - Compare feature sets (source vs. target)
-5. Highlight critical gaps:
+6. Highlight critical gaps:
    - **Missing capabilities:** Features legacy has that target doesn't (document workaround or "not migrating")
    - **New capabilities:** Features target offers that legacy doesn't (opportunity to enhance)
 
@@ -537,7 +546,7 @@ This ensures real-time visibility into migration progress.
 ## Output Expectations
 
 **Primary Deliverables:**
-- `docs/<scenario>-<slug>/` folder with all phase artifacts (includes Discovery + Assessment)
+- `docs/<scenario>-<slug>/` folder with all phase artifacts (includes Discovery, Assessment, and `wiki/` repo-wiki)
 - Custom agent files in `.github/agents/` (migration-specific agents)
 - Skills in `.github/skills/<name>/SKILL.md` (migration/transformation skills)
 - Instructions in `.github/instructions/<name>.instructions.md` (source→target domain knowledge)
@@ -563,6 +572,8 @@ This ensures real-time visibility into migration progress.
 Run this checklist before declaring workflow complete:
 
 - [ ] `00-intake.md` exists with clarifying questions answered (source + target platforms confirmed)
+- [ ] Legacy source is read-only at `legacy/` when source is accessible, and raw files are not default context
+- [ ] `docs/<scenario>-<slug>/wiki/wiki-index.json` exists or `02-discovery.md` records why source-level wiki generation was impossible
 - [ ] `02-discovery.md` has legacy system architecture (or "best-effort" if external system)
 - [ ] `03-assessment.md` has gap analysis table mapping every legacy capability to target equivalent
 - [ ] `04-analysis.md` has ≥2 functional domains with success criteria (including data parity threshold)

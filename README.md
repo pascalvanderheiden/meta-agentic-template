@@ -70,6 +70,26 @@ Each scenario can optionally run on a spec-driven-development framework. This is
 
 Defaults are **recommendations, not mandates** — the scenario prompt asks during Intake and you can pick any option (or None). Details: `.github/skills/meta-agentic-method/SKILL.md` § *SDD Framework Selection (Optional)*.
 
+## Use on an Existing Codebase (APM)
+
+Green-field: fork/use this template. Brown-field or modernization: install the agentic artifacts into your existing repo; no fork required.
+
+```bash
+apm install \
+  pascalvanderheiden/meta-agentic-template/.github/prompts/green-field.prompt.md \
+  pascalvanderheiden/meta-agentic-template/.github/prompts/brown-field.prompt.md \
+  pascalvanderheiden/meta-agentic-template/.github/prompts/modernization.prompt.md \
+  pascalvanderheiden/meta-agentic-template/.github/skills/meta-agentic-method \
+  pascalvanderheiden/meta-agentic-template/.github/skills/progress-report \
+  pascalvanderheiden/meta-agentic-template/.github/skills/github-issues \
+  pascalvanderheiden/meta-agentic-template/.github/instructions \
+  pascalvanderheiden/meta-agentic-template/.github/agents/squad.agent.md
+apm install --mcp io.github.github/github-mcp-server --transport http
+apm install --mcp microsoft/playwright-mcp
+```
+
+Pulls: 3 scenario prompts, method/report/feedback skills, authoring instructions, Squad agent, and GitHub + Playwright MCP servers. If APM cannot auto-detect Copilot, append `--target copilot`. The upstream feedback loop still works: `github-issues` + GitHub MCP travel with the install, issues file to this template repo, and `apm.lock.yaml` pins what you ran. See `.github/skills/meta-agentic-method/SKILL.md` § *Repository Topology by Scenario* for where work happens.
+
 ## How It Works
 
 The workflow executes a **10-phase SDD pipeline** (methodology: `.github/skills/meta-agentic-method/SKILL.md`):

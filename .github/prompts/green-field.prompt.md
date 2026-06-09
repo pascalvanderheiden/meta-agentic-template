@@ -27,6 +27,7 @@ Execute spec-driven green-field development by decomposing user requirements int
 - Access to `.github/skills/meta-agentic-method/references.md` for MCP/skill discovery
 - Access to `.github/skills/progress-report/progress-report.template.html` for report generation
 - Repository authoring instructions at `.github/instructions/`
+- Topology: Green-field uses a template fork; repo-wiki ingestion and APM-into-existing-repo apply only to existing-source scenarios.
 
 **Out of Scope:**
 - Migrating or modernizing existing systems → use `modernization.prompt.md`

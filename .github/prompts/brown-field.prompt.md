@@ -29,6 +29,10 @@ Execute spec-driven brown-field development by discovering existing system archi
 - Access to `.github/skills/progress-report/progress-report.template.html` for report generation
 - Repository authoring instructions at `.github/instructions/`
 
+**Topology:**
+- Brown-field is **in-repo**: install these artifacts into the existing repository via APM (see README § "Use on an Existing Codebase (APM)"), do not fork, and work alongside the source.
+- Store docs, specs, wiki, ADRs, and verification artifacts under `docs/<scenario>-<slug>/` beside source. See `../skills/meta-agentic-method/SKILL.md` § "Repository Topology by Scenario".
+
 **Out of Scope:**
 - Building NEW systems from scratch → use `green-field.prompt.md`
 - Migrating between platforms → use `modernization.prompt.md`
@@ -78,10 +82,10 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 ### Phase 2: Discovery
 
-**Objective:** Inventory existing system architecture, components, data flows, and dependencies.
+**Objective:** Inventory existing system architecture, components, data flows, dependencies, and token-bounded source context.
 
 **Actions:**
-1. Read `../skills/meta-agentic-method/SKILL.md` § Discovery phase requirements
+1. Read `../skills/meta-agentic-method/SKILL.md` § Discovery phase requirements and § "Source Context Ingestion (Repo-Wiki)".
 2. Analyze existing codebase:
    - **System Architecture:** Identify major components (frontend, backend, databases, message queues, storage)
    - **Technology Stack:** Languages, frameworks, versions (check package.json, requirements.txt, pom.xml, etc.)
@@ -89,15 +93,20 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - **Data Flows:** Trace input → processing → output for critical paths
    - **Dependency Graph:** Internal dependencies (module imports) + external (third-party services, libraries)
    - **Integration Points:** API contracts, message formats, database schemas
-3. Generate architecture diagram (Mermaid or ASCII art)
-4. Scaffold `docs/<scenario>-<slug>/02-discovery.md` from `../skills/meta-agentic-method/templates/discovery.template.md`, fill placeholders, generate discovery findings including all components, data flows, dependencies, integration points; highlight areas affected by proposed changes, and document unknowns or areas needing human confirmation.
-5. Use tools to inventory:
+3. Generate `docs/<scenario>-<slug>/wiki/` by Pack → Summarize → Index:
+   - Pick a packer that fits the repo (for example, repomix, gitingest, or code2prompt).
+   - Summarize with `../skills/meta-agentic-method/templates/discovery-wiki.template.md`.
+   - Create `docs/<scenario>-<slug>/wiki/wiki-index.json` with `../skills/meta-agentic-method/templates/wiki-index.template.json`.
+   - Use the wiki as default downstream context; reference raw source on demand only.
+4. Generate architecture diagram (Mermaid or ASCII art)
+5. Scaffold `docs/<scenario>-<slug>/02-discovery.md` from `../skills/meta-agentic-method/templates/discovery.template.md`, fill placeholders, link to the wiki directory, generate discovery findings including all components, data flows, dependencies, integration points; highlight areas affected by proposed changes, and document unknowns or areas needing human confirmation.
+6. Use tools to inventory:
    - `grep` for import/require statements (dependency mapping)
    - `glob` for file structure analysis
    - `view` for configuration files (package.json, docker-compose.yml, etc.)
    - `bash` to run existing tests/build commands (verify baseline)
 
-**Exit Gate:** Complete component inventory, data flows traced, architecture diagram produced. No "unknown" placeholders without follow-up. **Baseline test pass-rate recorded** (if existing test suite present).
+**Exit Gate:** Complete component inventory, data flows traced, architecture diagram produced, repo-wiki generated, and no "unknown" placeholders without follow-up. **Baseline test pass-rate recorded** (if existing test suite present).
 
 ---
 
@@ -454,7 +463,7 @@ This ensures real-time visibility into progress.
 ## Output Expectations
 
 **Primary Deliverables:**
-- `docs/<scenario>-<slug>/` folder with all phase artifacts (includes Discovery artifact)
+- `docs/<scenario>-<slug>/` folder with all phase artifacts (includes Discovery artifact and `wiki/` repo-wiki)
 - Custom agent files in `.github/agents/` (if new agents created)
 - Skills in `.github/skills/<name>/SKILL.md` (if new skills created)
 - Instructions in `.github/instructions/<name>.instructions.md` (if new instructions created)
@@ -479,7 +488,8 @@ This ensures real-time visibility into progress.
 Run this checklist before declaring workflow complete:
 
 - [ ] `00-intake.md` exists with clarifying questions answered
-- [ ] `02-discovery.md` has system architecture diagram and component inventory
+- [ ] `02-discovery.md` has system architecture diagram, component inventory, and link to `wiki/`
+- [ ] `docs/<scenario>-<slug>/wiki/wiki-index.json` exists and downstream phases use wiki context by default
 - [ ] `01-analysis.md` has ≥2 functional domains with success criteria AND preservation requirements
 - [ ] `03-capability-map.md` shows no "Unknown" or "TBD" statuses
 - [ ] All generated `*.agent.md` files follow `.github/instructions/agents.instructions.md`

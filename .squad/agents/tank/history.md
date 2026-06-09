@@ -113,3 +113,25 @@
 ## Learnings
 
 **2026-01-27** — `references.md` = generic discovery catalog, no domain/example entries. Rule: if discovery finds no suitable artifact, BUILD it via mcp-builder/skill-creator rather than abandoning capability. This ties to confidence rubric (gap filled by building scores lower until verified).
+
+### 2026-06-09: APM Distribution Path for Existing Repositories
+
+**Action completed:**
+- Added root `apm.yml` to dogfood APM distribution for this template.
+- Declared only verified external APM dependency: `github/awesome-copilot/skills/github-issues`.
+- Declared MCP servers under `dependencies.mcp`: `io.github.github/github-mcp-server` with `transport: http`, plus verified registry entry `microsoft/playwright-mcp`.
+- Added README section `Use on an Existing Codebase (APM)` after Optional SDD Frameworks.
+
+**Verified APM reference syntax:**
+- Virtual files: `owner/repo/path/to/name.prompt.md` and `owner/repo/path/to/name.agent.md`.
+- Virtual skill directories: `owner/repo/.github/skills/<skill-name>`.
+- Virtual primitive directories: `owner/repo/.github/instructions`.
+- External skill source: `github/awesome-copilot/skills/github-issues`.
+- MCP CLI syntax from docs: `apm install --mcp <server> --transport <transport>`.
+
+**Consumer install bundle documented:**
+- 3 prompts: green-field, brown-field, modernization.
+- 3 skills: meta-agentic-method, progress-report, github-issues.
+- Authoring instructions directory.
+- Squad agent.
+- GitHub + Playwright MCP servers.

@@ -52,50 +52,52 @@ All scenarios flow through these phases (starting at their scenario-specific ent
 
 ---
 
-#### 2. Discovery (Brown-field only)
+#### 2. Discovery (Brown-field & Modernization Existing-Source Scenarios)
 
-**Objective:** Inventory the existing system's architecture, components, data flows, dependencies, and integration points.
+**Objective:** Inventory the existing system's architecture, components, data flows, dependencies, integration points, and generate a token-bounded repo-wiki as the indexed source representation.
 
 **Inputs:**
 - Intake artifact
 - Access to codebase, infrastructure configs, API specs, database schemas
+- Source Context Ingestion loop (Pack → Summarize → Index → Reference on demand)
 
-**Output Artifact:** `docs/<scenario>-<slug>/02-discovery.md`
-- System architecture diagram (ASCII or Mermaid)
-- Component inventory (services, databases, APIs, queues, storage)
-- Data flow maps (input → processing → output)
-- Dependency graph (internal + external)
-- Technology stack & versions
-- Integration points & contracts
+**Output Artifacts:**
+- `docs/<scenario>-<slug>/02-discovery.md`
+- `docs/<scenario>-<slug>/wiki/` generated from `templates/discovery-wiki.template.md` and `templates/wiki-index.template.json`
+
+`02-discovery.md` remains the phase document and MUST link to the generated wiki directory. It summarizes system architecture, components, data flows, dependencies, technology stack, integration points, contracts, and wiki freshness metadata. The wiki is the primary indexed source representation for downstream phases.
 
 **Exit Criteria:**
-- Complete component inventory with no "unknown" placeholders
+- Complete component inventory with no unresolved "unknown" placeholders
 - Data flows traced end-to-end
 - All external dependencies identified
+- Repo-wiki exists at `docs/<scenario>-<slug>/wiki/` with overview, architecture, module/component index, data flows, dependency graph, glossary, risk hotspots, refresh/drift log, and machine-readable index
+- `02-discovery.md` links to the wiki and records packer choice, source revision, and refresh timestamp
 
 ---
 
 #### 3. Assessment (Modernization only)
 
-**Objective:** Evaluate legacy system capabilities, identify technical debt, map target-state requirements, and calculate migration gap.
+**Objective:** Evaluate legacy system capabilities, identify technical debt, map target-state requirements, calculate migration gap, and confirm the repo-wiki is current enough to support target design.
 
 **Inputs:**
 - Intake artifact
-- Discovery artifact (if brown-field modernization)
+- Discovery artifact and generated repo-wiki
 - Legacy system documentation
+- Read-only legacy source reference when topology uses a side-car control repo
 
-**Output Artifact:** `docs/<scenario>-<slug>/03-assessment.md`
-- Legacy capability matrix (what it does today)
-- Technical debt inventory (version EOL, security gaps, performance issues)
-- Target-state requirements (what it must do post-migration)
-- Gap analysis table (legacy vs. target for each capability)
-- Migration complexity rating (Low / Medium / High per component)
-- Risk assessment (data loss, downtime, compatibility)
+**Output Artifacts:**
+- `docs/<scenario>-<slug>/03-assessment.md`
+- `docs/<scenario>-<slug>/wiki/` retained or patched as the indexed source representation when assessment reveals drift or missing modules
+
+`03-assessment.md` remains the phase document and MUST link to the wiki directory. It contains the legacy capability matrix, technical debt inventory, target-state requirements, gap analysis, migration complexity, risk assessment, and source-context confidence notes.
 
 **Exit Criteria:**
 - Every legacy capability mapped to target-state equivalent or marked "deprecated"
 - Migration risks quantified with mitigation strategies
 - Target platform/technology decisions documented
+- Assessment links to the wiki and records whether the wiki is fresh, patched, or stale
+- Stale or incomplete wiki areas are listed as confidence-reducing gaps before downstream planning
 
 ---
 
@@ -105,8 +107,8 @@ All scenarios flow through these phases (starting at their scenario-specific ent
 
 **Inputs:**
 - Intake artifact
-- Discovery artifact (brown-field)
-- Assessment artifact (modernization)
+- Discovery artifact and repo-wiki (brown-field)
+- Assessment artifact and repo-wiki (modernization)
 
 **Output Artifact:** `docs/<scenario>-<slug>/01-analysis.md` (or `04-analysis.md` for modernization)
 - Functional domain breakdown (e.g., ETL Orchestration, Data Transformation, Monitoring)
@@ -268,6 +270,68 @@ When generating any skill, agent, instruction, or prompt, apply the matching `.g
 
 ---
 
+## Source Context Ingestion (Repo-Wiki)
+
+Existing-codebase scenarios MUST distill source context before agents reason over it. Raw source is token-heavy, hard to index, and easy to over-load into context. The repo-wiki is the working source-of-truth for understanding; raw files are pulled only when a specific task requires exact code.
+
+### Ingestion Loop
+
+1. **Pack:** Create a token-bounded repository snapshot with a packer such as repomix, gitingest, or code2prompt. Select the packer that fits repository size, language mix, ignore rules, and available tooling. Exclude generated files, vendored dependencies, build outputs, secrets, and irrelevant binary assets.
+2. **Summarize:** Use the packed snapshot to generate `docs/<scenario>-<slug>/wiki/` from `templates/discovery-wiki.template.md`. Capture overview, architecture, module/component index, data flows, dependency graph, glossary, risk hotspots, and refresh/drift log.
+3. **Index:** Generate `docs/<scenario>-<slug>/wiki/wiki-index.json` from `templates/wiki-index.template.json`. Include concise file/module/symbol mappings, ownership hints, dependencies, and retrieval anchors.
+4. **Reference on demand:** Use the wiki and index as default context. Pull raw source files only for implementation, verification, or ambiguity resolution that names the needed file/module/symbol.
+
+### Token-Mindfulness Rules
+
+- Link to raw files and wiki pages; do not inline large source or long generated content.
+- Keep wiki entries concise, structured, and retrieval-friendly.
+- Chunk large repositories by module, bounded context, service, package, or runtime boundary.
+- Never load the whole tree into agent context. Use the index to select the smallest useful source slice.
+- Prefer stable identifiers: path, module, symbol, endpoint, table, job, event, or contract name.
+
+### Drift Refresh
+
+Regenerate or patch the wiki whenever source changes materially, including architecture moves, dependency changes, API/schema changes, renamed modules, or implementation work that invalidates documented behavior. Record source revision, packer, timestamp, changed areas, and confidence impact in the wiki refresh/drift log. Treat a stale wiki as reduced confidence and verify against raw files before making design or implementation decisions.
+
+### Scenario Timing
+
+- **Green-field:** Skip repo-wiki ingestion; no existing source exists yet.
+- **Brown-field Discovery:** Run ingestion during Discovery after APM installs this template's artifacts into the existing repository.
+- **Modernization Discovery/Assessment:** Run ingestion for the legacy source, then use the wiki throughout Assessment and target-state planning.
+
+### Confidence Impact
+
+Missing, incomplete, or stale repo-wiki lowers these confidence dimensions:
+
+| Dimension | Impact |
+|-----------|--------|
+| **Data/Domain Knowledge** | Source behavior, domain terms, schemas, and module boundaries are incomplete. |
+| **Spec Completeness** | Discovery/Assessment lacks indexed evidence and traceable source references. |
+| **Verification Status** | Tests and implementation checks cannot be confidently tied back to actual source behavior. |
+
+---
+
+## Repository Topology by Scenario
+
+Choose repository topology during Intake because it determines where meta artifacts, docs, wiki, code changes, and feedback-loop files live.
+
+| Scenario | Topology | Where Work Happens | Source Context Rule |
+|----------|----------|--------------------|---------------------|
+| **Green-field** | Template fork | Create a new project from this template. The repository is both scaffold and implementation workspace. | No repo-wiki initially; source emerges from specs and implementation. |
+| **Brown-field** | In-repo | Install this template's artifacts into the existing source repository via APM. Modify the source in that same repo. Store `docs/<scenario>-<slug>/`, specs, wiki, ADRs, and verification artifacts beside the source. | Generate repo-wiki from the installed repository; wiki is default context, raw files on demand. |
+| **Modernization** | Side-car control repo | Create a new repository derived from this template. Leave legacy source untouched and referenced read-only. Build target-state artifacts and new implementation in the control repo. | Add legacy source as a read-only git submodule at `legacy/` and generate repo-wiki as primary context. Use raw submodule files only on demand. |
+
+### Topology Rules
+
+- Use a template fork for green-field scenarios; it carries the methodology, Squad system, skills, prompts, and feedback loop.
+- Use APM for brown-field in-repo installation; the existing codebase receives the meta artifacts needed to run Discovery, safety-net testing, specs, execution, and feedback.
+- Use a side-car control repo for modernization when source and target differ, such as legacy Oracle remaining untouched while a new Fabric repository is built.
+- Pin modernization legacy source with a git submodule at `legacy/` so the raw source revision is versioned and reproducible. Treat the submodule as read-only unless the modernization scope explicitly changes.
+- Use the generated repo-wiki, not raw submodule files, as the default LLM context in modernization. Pull raw files from `legacy/` only when the wiki/index points to a precise need.
+- Keep the upstream template feedback loop available in all topologies.
+
+---
+
 ## SDD Framework Selection (Optional)
 
 Scenario prompts MUST ask for an optional **SDD Framework** during Intake. Default to **None** unless the user explicitly chooses a framework. This choice is **orthogonal** to the existing Execution Approach choice: SDD Framework controls how specs and workflow artifacts are produced; Execution Approach controls who runs the work (Custom Agents or Squad Team). Valid combinations include `None + Custom Agents`, `None + Squad`, `Spec-Kit + Squad`, `OpenSpec + Custom Agents`, and `Superpowers + Squad`.
@@ -420,13 +484,13 @@ Each phase's **Output Artifact** is produced by copying the matching template fr
 | Scenario | Template Files Used (→ output artifact) |
 |----------|----------------------------------------|
 | **Green-field** | `constitution.template.md`(opt), `00-intake.template.md`→00-intake.md, `analysis.template.md`→01-analysis.md, `capability-map.template.md`→03-capability-map.md, `team.template.md`→04-team.md, `plan.template.md`, `tasks.template.md`, `verification.template.md`, `summary.template.md`, `checklist.template.md` |
-| **Brown-field** | `constitution.template.md`(opt), `00-intake.template.md`→00-intake.md, `discovery.template.md`→02-discovery.md, `analysis.template.md`→01-analysis.md, `capability-map.template.md`→03-capability-map.md, `team.template.md`→04-team.md, `plan.template.md`, `tasks.template.md`, `verification.template.md`, `summary.template.md`, `checklist.template.md` |
-| **Modernization** | `constitution.template.md`(opt), `00-intake.template.md`→00-intake.md, `discovery.template.md`→02-discovery.md, `assessment.template.md`→03-assessment.md, `analysis.template.md`→04-analysis.md, `capability-map.template.md`→05-capability-map.md, `team.template.md`→06-team.md, `plan.template.md`, `tasks.template.md`, `verification.template.md`, `summary.template.md`, `checklist.template.md` |
+| **Brown-field** | `constitution.template.md`(opt), `00-intake.template.md`→00-intake.md, `discovery.template.md`→02-discovery.md, `discovery-wiki.template.md`→wiki/, `wiki-index.template.json`→wiki/wiki-index.json, `analysis.template.md`→01-analysis.md, `capability-map.template.md`→03-capability-map.md, `team.template.md`→04-team.md, `plan.template.md`, `tasks.template.md`, `verification.template.md`, `summary.template.md`, `checklist.template.md` |
+| **Modernization** | `constitution.template.md`(opt), `00-intake.template.md`→00-intake.md, `discovery.template.md`→02-discovery.md, `discovery-wiki.template.md`→wiki/, `wiki-index.template.json`→wiki/wiki-index.json, `assessment.template.md`→03-assessment.md, `analysis.template.md`→04-analysis.md, `capability-map.template.md`→05-capability-map.md, `team.template.md`→06-team.md, `plan.template.md`, `tasks.template.md`, `verification.template.md`, `summary.template.md`, `checklist.template.md` |
 
 **Key Rules:**
-- **Green-field SKIPS** `discovery.template` and `assessment.template` (no existing system to inventory or assess)
-- **Brown-field ADDS** `discovery.template` (existing system inventory) but SKIPS `assessment.template`
-- **Modernization ADDS** both `discovery.template` and `assessment.template` (legacy→target gap analysis)
+- **Green-field SKIPS** `discovery.template`, `assessment.template`, `discovery-wiki.template.md`, and `wiki-index.template.json` (no existing system to inventory or assess)
+- **Brown-field ADDS** `discovery.template`, `discovery-wiki.template.md`, and `wiki-index.template.json` (existing system inventory + indexed wiki) but SKIPS `assessment.template`
+- **Modernization ADDS** `discovery.template`, `discovery-wiki.template.md`, `wiki-index.template.json`, and `assessment.template` (legacy source wiki + legacy→target gap analysis)
 
 **Dynamic Content:**
 - Team roster rows: generated from team-formation algorithm per scenario
@@ -452,8 +516,9 @@ Modernization uses an extended sequence because it adds the Assessment artifact:
 |---------------|-------|---------|--------------------------|
 | `00-intake.md` | Intake & Clarification | Captures user scenario and clarifications | `# Scenario`, `## User Request`, `## Clarifications`, `## Assumptions` |
 | `01-analysis.md` (base) / `04-analysis.md` (modernization) | Analysis | Decomposes scenario into domains and capabilities | `# Functional Domains`, `## Success Criteria`, `## Capability Requirements` |
-| `02-discovery.md` | Discovery (brown-field & modernization) | Inventories existing system | `# System Architecture`, `## Components`, `## Data Flows`, `## Dependencies` |
-| `03-assessment.md` (modernization only) | Assessment (modernization) | Legacy-to-target gap analysis | `# Legacy Capabilities`, `## Technical Debt`, `## Target State`, `## Gap Analysis`, `## Migration Risks` |
+| `02-discovery.md` | Discovery (brown-field & modernization) | Inventories existing system and links to repo-wiki | `# System Architecture`, `## Components`, `## Data Flows`, `## Dependencies`, `## Repo-Wiki` |
+| `docs/<scenario>-<slug>/wiki/` | Discovery / Assessment source context | Indexed source representation generated from `discovery-wiki.template.md` + `wiki-index.template.json` | `Overview`, `Architecture`, `Module/Component Index`, `Data Flows`, `Dependency Graph`, `Glossary`, `Risk Hotspots`, `Refresh/Drift Log`, `wiki-index.json` |
+| `03-assessment.md` (modernization only) | Assessment (modernization) | Legacy-to-target gap analysis linked to repo-wiki | `# Legacy Capabilities`, `## Technical Debt`, `## Target State`, `## Gap Analysis`, `## Migration Risks`, `## Source Context Confidence` |
 | `03-capability-map.md` (base) / `05-capability-map.md` (modernization) | Capability Mapping | Maps needed capabilities to artifacts | `# Capability Matrix`, `## Reused Capabilities`, `## New Capabilities` |
 | `04-team.md` (base) / `06-team.md` (modernization) | Team Formation | Defines agent team structure | `# Agent Roster`, `## Handoff Protocol`, `## Reviewer Assignment` |
 | `execution-log.md` | Execution | Timestamped progress entries | `# Execution Log`, `## [Timestamp] Agent: Action` (append-only) |
@@ -605,11 +670,11 @@ Confidence Score =
 
 While the base rubric applies to all scenarios, specific adjustments account for scenario-unique success criteria:
 
-- **Brown-field**: The **Verification Status** dimension MAY penalize the score if the existing test suite's pass-rate regresses after changes. A baseline test pass-rate should be captured during Discovery and verified post-Execution. Any regression indicates integration risk.
+- **Brown-field**: The **Verification Status** dimension MAY penalize the score if the existing test suite's pass-rate regresses after changes. A baseline test pass-rate should be captured during Discovery and verified post-Execution. Any regression indicates integration risk. Missing or stale repo-wiki content also lowers **Data/Domain Knowledge**, **Spec Completeness**, and **Verification Status**.
 
-- **Modernization**: The **Data/Domain Knowledge** dimension SHOULD weight toward data-parity verification. Full domain coverage includes not just schemas and APIs, but also data samples, lineage documentation, and evidence that migrated data matches legacy system output for representative test cases.
+- **Modernization**: The **Data/Domain Knowledge** dimension SHOULD weight toward data-parity verification. Full domain coverage includes not just schemas and APIs, but also data samples, lineage documentation, repo-wiki coverage, and evidence that migrated data matches legacy system output for representative test cases. Stale or incomplete wiki coverage lowers **Data/Domain Knowledge**, **Spec Completeness**, and **Verification Status** until refreshed or verified against raw source.
 
-These adjustments ensure the confidence score reflects scenario-specific risks: preserving existing functionality in brown-field scenarios and ensuring data fidelity in migrations.
+These adjustments ensure the confidence score reflects scenario-specific risks: preserving existing functionality in brown-field scenarios, maintaining indexed source understanding, and ensuring data fidelity in migrations.
 
 ---
 
