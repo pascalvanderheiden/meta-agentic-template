@@ -96,6 +96,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - Analyze existing codebase, generate architecture diagram
    - Inventory components, dependencies, integration points
    - Generate `docs/<scenario>-<slug>/wiki/` by Pack → Summarize → Index with a fit-for-repo packer (for example, repomix, gitingest, or code2prompt), `../skills/meta-agentic-method/templates/discovery-wiki.template.md`, and `../skills/meta-agentic-method/templates/wiki-index.template.json`.
+   - Follow bundled `../skills/repo-wiki/SKILL.md` for the full Ingest → Query → Lint workflow and `index.md`/`log.md` wiki conventions; keep the templates above as produced artifacts.
    - Use the generated wiki as the token-bounded default context for the legacy system; reference raw `legacy/` files on demand only.
    - Scaffold `docs/<scenario>-<slug>/02-discovery.md` from `../skills/meta-agentic-method/templates/discovery.template.md`, fill placeholders, link to the wiki directory, and generate complete system inventory.
 3. **If legacy system is external/undocumented:**
@@ -119,7 +120,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 **Actions:**
 1. Read `../skills/meta-agentic-method/SKILL.md` § Assessment phase requirements and § "Source Context Ingestion (Repo-Wiki)".
-2. Confirm `docs/<scenario>-<slug>/wiki/` is current for the legacy system. If Assessment reveals drift or missing modules, patch or regenerate it with `../skills/meta-agentic-method/templates/discovery-wiki.template.md` and `../skills/meta-agentic-method/templates/wiki-index.template.json`; keep the wiki as token-bounded context, not raw `legacy/` files.
+2. Confirm `docs/<scenario>-<slug>/wiki/` is current for the legacy system. If Assessment reveals drift or missing modules, patch or regenerate it with `../skills/meta-agentic-method/templates/discovery-wiki.template.md` and `../skills/meta-agentic-method/templates/wiki-index.template.json`; follow `../skills/repo-wiki/SKILL.md` for the full Ingest → Query → Lint workflow and `index.md`/`log.md` conventions; keep the wiki as token-bounded context, not raw `legacy/` files.
 3. If an SDD framework was selected in Intake, follow its flow per `../skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)" and feed Assessment outputs into that framework's artifacts.
 4. Scaffold `docs/<scenario>-<slug>/03-assessment.md` from `../skills/meta-agentic-method/templates/assessment.template.md`, fill placeholders, generate:
    - **Legacy Capability Matrix:** List every capability the legacy system provides (e.g., "Scheduled ETL jobs", "Data validation rules", "Error retry logic")

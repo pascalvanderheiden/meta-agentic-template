@@ -47,9 +47,9 @@ All scenarios flow through these phases, starting at their scenario-specific ent
 
 ## Source Context Ingestion (Repo-Wiki)
 
-Existing-codebase scenarios use repo-wiki ingestion so agents reason over token-bounded, indexed source context instead of raw code dumps. The loop is Pack → Summarize → Index → Reference on demand; raw files are pulled only for precise implementation, verification, or ambiguity resolution. Stale, incomplete, or missing wiki content lowers Data/Domain Knowledge, Spec Completeness, and Verification Status.
+Existing-codebase scenarios use a repo-wiki so agents reason over token-bounded, indexed source context instead of raw code dumps. The wiki compiles source understanding into maintained markdown with `index.md`, `log.md`, module pages, concept pages, and a machine index; raw files are pulled only for precise implementation, verification, or ambiguity resolution.
 
-**Full detail:** see [`references/source-context-and-topology.md`](references/source-context-and-topology.md).
+**Authoritative workflow:** use the [`repo-wiki` skill](../repo-wiki/SKILL.md) for ingest, query, lint, index/log conventions, token-mindfulness, and drift handling. See [`references/source-context-and-topology.md`](references/source-context-and-topology.md) for scenario topology only.
 
 ## Repository Topology by Scenario
 
@@ -199,5 +199,6 @@ Compact issue body headings retained for cross-reference compatibility:
 - Skill authoring standards: `.github/instructions/agent-skills.instructions.md`
 - Instruction authoring standards: `.github/instructions/instructions.instructions.md`
 - MCP server catalog: [references.md](./references.md)
+- Repo-wiki source-context workflow: [repo-wiki skill](../repo-wiki/SKILL.md)
 - HTML report template: [progress-report skill](../progress-report/SKILL.md)
 - GitHub issues skill: [github-issues/SKILL.md](../github-issues/SKILL.md)

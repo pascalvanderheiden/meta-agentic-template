@@ -7,6 +7,9 @@ author: Pascal van der Heiden
 license: MIT
 repository: https://github.com/pascalvanderheiden/meta-agentic-template
 
+# Bundled local primitives for APM path installs from this repo:
+# prompts, instructions, squad.agent.md, meta-agentic-method, progress-report, github-issues, repo-wiki.
+# repo-wiki is local; do not declare it as an external dependency.
 dependencies:
   apm:
     # Source for the bundled github-issues skill used by the upstream feedback loop.

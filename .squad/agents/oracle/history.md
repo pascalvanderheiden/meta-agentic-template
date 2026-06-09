@@ -228,3 +228,23 @@ Added non-mandatory per-scenario framework advice: green-field defaults to OpenS
 - Upstream Template Feedback Loop → `references/feedback-loop.md`
 
 **Verification:** `wc -l` confirms `SKILL.md` is 203 lines; unique `##` headings preserved; all `references/<file>.md` links resolve.
+
+### 2026-06-09: Repo-Wiki Skill for Codebase Discovery
+
+**Context:** Created a bundled `repo-wiki` skill implementing Andrej Karpathy's LLM-maintained wiki pattern for existing codebases during brown-field Discovery and modernization Discovery/Assessment.
+
+**Karpathy Mapping:**
+- Raw sources = immutable source repository evidence, read on demand.
+- Wiki = LLM-owned markdown under `docs/<scenario>-<slug>/wiki/`.
+- Schema = `.github/skills/repo-wiki/SKILL.md` with conventions and workflows.
+
+**Skill Contract:**
+- `index.md` is the first-read content catalog and moderate-scale replacement for embedding-RAG.
+- `log.md` is append-only with parseable `## [YYYY-MM-DD] ingest|query|lint | <title>` entries.
+- Core workflows are Ingest, Query, and Lint, with token-mindfulness and file:line source citations.
+- Drift lowers Data/Domain Knowledge, Spec Completeness, and Verification Status.
+
+**Delegation:**
+- `.github/skills/meta-agentic-method/SKILL.md` now delegates repo-wiki details to `../repo-wiki/SKILL.md`.
+- `references/source-context-and-topology.md` now keeps scenario timing/topology only and points to repo-wiki as source of truth.
+- Decision captured in `.squad/decisions/inbox/oracle-repo-wiki-skill.md`.

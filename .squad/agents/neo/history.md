@@ -96,3 +96,55 @@ Reviewed restructure converting loose `.github/prompts/` files into proper skill
 4. **Scenario gating enforcement:** Template README and SKILL.md "Key Rules" section both state the rule: green-field SKIPS discovery/assessment, brown-field ADDS discovery only, modernization ADDS both. Prompts honor this via which templates they reference.
 
 5. **Exit criteria in templates:** Each template ends with exit criteria checklist, enabling quality gates and verification automation.
+
+## 2026-06-09: Repo-Wiki Skill Review (Karpathy LLM-Wiki Pattern)
+
+**VERDICT: APPROVED**
+
+Reviewed new bundled `repo-wiki` skill implementing Karpathy's LLM-wiki pattern for token-bounded codebase indexing in brown-field/modernization Discovery.
+
+**Contributors:** Oracle (SKILL.md, method delegation), Trinity (templates), Tank (references.md/apm.yml/README), Morpheus (prompt integration).
+
+### Findings
+
+1. **Karpathy-pattern fidelity** — ✅ PASS
+   - Three-layer schema present: raw sources → wiki markdown → skill schema (SKILL.md lines 20-27)
+   - `index.md` convention documented as first-read content catalog (lines 53-70)
+   - `log.md` append-only with parseable `## [YYYY-MM-DD] ingest|query|lint` entries (lines 72-90)
+   - Ingest/Query/Lint workflows fully defined (lines 92-133)
+   - Wiki is persistent compounding artifact, NOT re-derived per query (line 105, gotchas line 167)
+   - Optional search (qmd) mentioned, not mandated (lines 137-141)
+
+2. **Skill conventions** — ✅ PASS
+   - Valid frontmatter: `name: repo-wiki`, `description` with WHAT/WHEN/KEYWORDS (10-1024 char)
+   - Follows agent-skills.instructions.md: When to Use, Pattern, Workflows, Token-Mindfulness, Gotchas, References
+   - 177 lines (well under 500 limit, no need for references/ split)
+   - Templates bundled: index.md.template, log.md.template, module-page.template.md, templates/README.md
+
+3. **Delegation correctness** — ✅ PASS
+   - `meta-agentic-method/SKILL.md` § Source Context Ingestion (lines 48-52) delegates to `../repo-wiki/SKILL.md` for full workflow
+   - `references/source-context-and-topology.md` (lines 1-16) delegates repo-wiki workflow, keeps ONLY topology rules
+   - No duplicated ingest/query/lint workflow content in method skill
+   - No contradictions found
+
+4. **Cross-refs resolve** — ✅ PASS (all links verified from their file's location)
+   - From repo-wiki/SKILL.md: `../meta-agentic-method/SKILL.md` ✓, `../meta-agentic-method/templates/discovery-wiki.template.md` ✓
+   - From meta-agentic-method/SKILL.md: `../repo-wiki/SKILL.md` ✓
+   - From references/source-context-and-topology.md: `../../repo-wiki/SKILL.md` ✓
+   - From prompts (brown-field, modernization): `../skills/repo-wiki/SKILL.md` ✓
+
+5. **Additive & non-breaking** — ✅ PASS
+   - Green-field prompt unchanged (only 1 unrelated "wiki" mention)
+   - Brown-field/modernization Discovery phases now reference repo-wiki skill (lines 97, 99 brown-field; lines 99, 123 modernization)
+   - references.md adds Karpathy gist, qmd, codebase-documenter entries — no removals
+   - Existing template discovery-wiki.template.md and wiki-index.template.json remain in meta-agentic-method/templates/
+
+### Notes (non-blocking)
+
+- Consider adding LICENSE.txt to repo-wiki skill folder (Apache 2.0 typical per skill guidelines).
+- `codebase-documenter` referenced in references.md as complementary to repo-wiki — good optional human-readable onboarding docs vs LLM-context wiki distinction.
+
+### Learnings
+
+- Karpathy wiki pattern key invariants: (1) index.md is first-read, (2) log.md is append-only with date-prefixed entries, (3) wiki is the compiled understanding layer that compounds, not raw source.
+- Delegation pattern: when extracting a skill from a larger methodology, keep ONLY topology/timing in the parent; move full workflow to the new skill to avoid duplication and drift.

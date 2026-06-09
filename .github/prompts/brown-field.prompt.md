@@ -94,6 +94,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - **Dependency Graph:** Internal dependencies (module imports) + external (third-party services, libraries)
    - **Integration Points:** API contracts, message formats, database schemas
 3. Generate `docs/<scenario>-<slug>/wiki/` by Pack → Summarize → Index:
+   - Follow bundled `../skills/repo-wiki/SKILL.md` for the full Ingest → Query → Lint workflow and `index.md`/`log.md` wiki conventions; keep the templates below as produced artifacts.
    - Pick a packer that fits the repo (for example, repomix, gitingest, or code2prompt).
    - Summarize with `../skills/meta-agentic-method/templates/discovery-wiki.template.md`.
    - Create `docs/<scenario>-<slug>/wiki/wiki-index.json` with `../skills/meta-agentic-method/templates/wiki-index.template.json`.

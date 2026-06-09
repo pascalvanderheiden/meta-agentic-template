@@ -56,3 +56,13 @@ Prompts now offer an optional, orthogonal SDD-framework choice during Intake. Pe
 
 **Learning:**
 Existing-codebase prompts must route source understanding through the repo-wiki. Brown-field works in-repo after APM install, while modernization uses a side-car control repo with read-only `legacy/` plus wiki as default context. Green-field remains a template fork and skips repo-wiki/APM-into-existing-repo steps.
+
+### 2026-06-09: Repo-Wiki Skill Pointer in Scenario Prompts
+
+**Deliverables:**
+- `.github/prompts/brown-field.prompt.md`
+- `.github/prompts/modernization.prompt.md`
+- `.squad/decisions/inbox/morpheus-repo-wiki-skill-pointer.md`
+
+**Learning:**
+Brown-field Discovery and modernization Discovery/Assessment now point to bundled `../skills/repo-wiki/SKILL.md` as the authoritative Ingest → Query → Lint workflow and `index.md`/`log.md` convention source, while preserving existing meta-agentic-method wiki template artifact references. Green-field remains unchanged because repo-wiki applies only to existing-source scenarios.

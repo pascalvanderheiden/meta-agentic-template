@@ -44,6 +44,17 @@
 
 <!-- Append learnings below -->
 
+### 2026-06-09: Repo Wiki Discoverability and APM Packaging
+
+**Action completed:**
+- Added `repo-wiki` discoverability references to `.github/skills/meta-agentic-method/references.md`.
+- Documented Karpathy's LLM-maintained wiki pattern as the verified basis for the bundled skill.
+- Added optional/complementary sources: `codebase-documenter` for human onboarding docs and `qmd` for local markdown search at scale.
+- Updated `apm.yml` comments to list `repo-wiki` as a bundled local primitive, not an external dependency.
+- Updated README APM install block to pull `.github/skills/repo-wiki` with method/report/feedback skills.
+
+**Technical note:** `.github/skills/repo-wiki/` is expected as an in-repo bundled skill owned by another agent; Tank only handled discoverability and packaging references.
+
 ### 2026-06-08: GitHub MCP Server Configuration for Upstream Feedback Loop
 
 **Action completed:**

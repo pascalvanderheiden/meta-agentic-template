@@ -82,13 +82,14 @@ apm install \
   pascalvanderheiden/meta-agentic-template/.github/skills/meta-agentic-method \
   pascalvanderheiden/meta-agentic-template/.github/skills/progress-report \
   pascalvanderheiden/meta-agentic-template/.github/skills/github-issues \
+  pascalvanderheiden/meta-agentic-template/.github/skills/repo-wiki \
   pascalvanderheiden/meta-agentic-template/.github/instructions \
   pascalvanderheiden/meta-agentic-template/.github/agents/squad.agent.md
 apm install --mcp io.github.github/github-mcp-server --transport http
 apm install --mcp microsoft/playwright-mcp
 ```
 
-Pulls: 3 scenario prompts, method/report/feedback skills, authoring instructions, Squad agent, and GitHub + Playwright MCP servers. If APM cannot auto-detect Copilot, append `--target copilot`. The upstream feedback loop still works: `github-issues` + GitHub MCP travel with the install, issues file to this template repo, and `apm.lock.yaml` pins what you ran. See `.github/skills/meta-agentic-method/SKILL.md` § *Repository Topology by Scenario* for where work happens.
+Pulls: 3 scenario prompts, method/report/feedback/repo-wiki skills, authoring instructions, Squad agent, and GitHub + Playwright MCP servers. If APM cannot auto-detect Copilot, append `--target copilot`. The upstream feedback loop still works: `github-issues` + GitHub MCP travel with the install, issues file to this template repo, and `apm.lock.yaml` pins what you ran. See `.github/skills/meta-agentic-method/SKILL.md` § *Repository Topology by Scenario* for where work happens.
 
 ## How It Works
 

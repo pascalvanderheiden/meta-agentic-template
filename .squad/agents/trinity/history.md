@@ -122,3 +122,14 @@ Created two repo-wiki templates for brown-field Discovery and modernization Asse
 - `.github/skills/meta-agentic-method/templates/discovery-wiki.template.md` — token-mindful distilled source-of-truth wiki for existing source codebases.
 - `.github/skills/meta-agentic-method/templates/wiki-index.template.json` — machine-readable retrieval index for modules, dependencies, entrypoints, integrations, flows, and risk hotspots.
 
+
+### 2026-06-09: Repo-Wiki Page Templates
+
+Created bundled templates for the new `repo-wiki` skill under `.github/skills/repo-wiki/templates/`:
+
+- `index.md.template` — content catalog for overview, modules/components, concepts, risks, and sources.
+- `log.md.template` — append-only chronological log with parseable `## [date] action | title` headings.
+- `module-page.template.md` — token-mindful module/component page with source links, APIs, dependencies, flows, risks, cross-references, and source list.
+- `README.md` — local index for the three templates.
+
+Pattern matched existing meta-agentic templates: top HTML-comment usage notes, `[PLACEHOLDER]` tokens, and `<!-- GENERATED: ... -->` dynamic markers.

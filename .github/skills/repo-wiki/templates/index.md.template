@@ -1,0 +1,45 @@
+<!--
+USAGE: Read this first when answering from the repo wiki. The LLM updates it on every ingest; at moderate scale this replaces embedding-RAG.
+OUTPUT FILENAME: docs/<scenario>-<slug>/wiki/index.md
+DYNAMIC RULES:
+  - Fixed: Catalog sections and entry shape
+  - Generated: Page links, one-line summaries, key files, source counts, dates
+  - Tokens: [REPO_NAME], [SOURCE_REPO], [GENERATED_AT], [UPDATED_AT], [SCENARIO_SLUG]
+-->
+
+# Repo Wiki Index: [REPO_NAME]
+
+**Source repo**: [SOURCE_REPO]  
+**Scenario slug**: [SCENARIO_SLUG]  
+**Generated**: [GENERATED_AT]  
+**Updated**: [UPDATED_AT]
+
+## Overview
+
+<!-- GENERATED: High-level orientation pages. Entry format: - [page](path) — one-line summary (key files / source count / date) -->
+
+- [Overview](overview.md) — [SUMMARY] ([KEY_FILES] / [SOURCE_COUNT] sources / [UPDATED_AT])
+
+## Modules/Components
+
+<!-- GENERATED: Module and component pages, grouped by system area when useful. -->
+
+- [Module Name](modules/module-name.md) — [RESPONSIBILITY_SUMMARY] ([KEY_FILES] / [SOURCE_COUNT] sources / [UPDATED_AT])
+
+## Concepts
+
+<!-- GENERATED: Domain concepts, architecture patterns, contracts, and glossary pages. -->
+
+- [Concept Name](concepts/concept-name.md) — [CONCEPT_SUMMARY] ([KEY_FILES] / [SOURCE_COUNT] sources / [UPDATED_AT])
+
+## Risks
+
+<!-- GENERATED: Risk, gotcha, drift, security, complexity, and migration concern pages. -->
+
+- [Risk Name](risks/risk-name.md) — [RISK_SUMMARY] ([KEY_FILES] / [SOURCE_COUNT] sources / [UPDATED_AT])
+
+## Sources
+
+<!-- GENERATED: Source inventory pages and evidence maps. Link to source paths; do not inline code. -->
+
+- [Source Area](sources/source-area.md) — [SOURCE_SUMMARY] ([KEY_FILES] / [SOURCE_COUNT] sources / [UPDATED_AT])

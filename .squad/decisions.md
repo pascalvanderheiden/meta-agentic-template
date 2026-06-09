@@ -801,3 +801,155 @@ Wire scenario prompts to existing-codebase repo-wiki and topology without duplic
 
 **Orchestration Log:** `.squad/orchestration-log/2026-06-09T07:13:52Z-neo.md`
 
+---
+
+### 2026-06-09: Oracle — Repo-Wiki Skill Implements Karpathy LLM-Wiki for Codebases
+
+**By:** Oracle (Knowledge Architect)  
+**Date:** 2026-06-09  
+**Status:** ✅ APPROVED
+
+**Context:**
+Brown-field and modernization workflows need token-efficient source understanding during Discovery and Assessment. Raw source dumps are costly and do not accumulate durable understanding. Karpathy's LLM-maintained wiki pattern provides a persistent compiled layer between raw sources and agent reasoning.
+
+**Decision:**
+Create `.github/skills/repo-wiki/SKILL.md` as the authoritative schema for codebase repo-wikis implementing:
+- Three layers: immutable raw sources, LLM-owned wiki, and schema-as-skill
+- `docs/<scenario>-<slug>/wiki/` as the wiki root
+- First-class `index.md` content catalog
+- Append-only `log.md` with `## [YYYY-MM-DD] ingest|query|lint | <title>` prefix
+- `wiki-index.json` generated from template
+- Ingest, query, and lint workflows
+- Token-mindfulness rules for linking instead of inlining source
+- Confidence/drift ties to Data/Domain Knowledge, Spec Completeness, and Verification Status
+
+**Delegation:**
+`.github/skills/meta-agentic-method/SKILL.md` and `references/source-context-and-topology.md` now delegate repo-wiki workflow details to `../repo-wiki/SKILL.md`. The method skill keeps only the short summary and scenario topology guidance.
+
+**Consequences:**
+Repo-wiki becomes the source of truth for existing-codebase source ingestion. Future method updates must link to this skill rather than duplicating the ingest/query/lint workflow.
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-09T10:35:00Z-oracle.md`
+
+---
+
+### 2026-06-09: Trinity — Repo-Wiki Page Templates
+
+**By:** Trinity (Template Engineer)  
+**Date:** 2026-06-09  
+**Status:** ✅ APPROVED
+
+**Context:**
+The new bundled `repo-wiki` skill needs template resources for Karpathy-style LLM-maintained codebase wikis. Oracle is authoring the skill entrypoint separately, so this decision only covers bundled templates under `.github/skills/repo-wiki/templates/`.
+
+**Decision:**
+Create three fixed template files plus a local template README:
+- `index.md.template` — Content catalog for wiki navigation and answer-first retrieval
+- `log.md.template` — Append-only chronological activity log with parseable `## [date] action | title` headings
+- `module-page.template.md` — Token-mindful module/component page linking to source and related wiki pages
+- `README.md` — Short index of bundled templates
+
+**Rationale:**
+Templates follow the repository's established placeholder style: top HTML-comment usage notes, `[PLACEHOLDER]` tokens, and `<!-- GENERATED: ... -->` markers. They keep generated wiki content concise and source-linked, avoiding raw code dumps while still preserving evidence with `file:line` citations.
+
+**Constraints:**
+- Only files under `.github/skills/repo-wiki/templates/` created for the skill templates
+- Existing SKILL.md, prompt, reference, root README, APM, and meta-agentic-method template files not edited
+
+**Consequences:**
+Oracle's `repo-wiki` skill can reference stable template filenames. Future wiki generation instantiates index, log, and module pages consistently across brown-field and modernization workflows.
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-09T10:37:00Z-trinity.md`
+
+---
+
+### 2026-06-09: Tank — Repo Wiki Discoverability and APM Packaging
+
+**By:** Tank (Integration Dev)  
+**Date:** 2026-06-09  
+**Status:** ✅ APPROVED
+
+**Context:**
+The template is adding a bundled `.github/skills/repo-wiki/` skill implementing Karpathy's LLM-maintained-wiki pattern for existing-codebase discovery and assessment. Tank's scope was discoverability and packaging only, not authoring the skill.
+
+**Decision:**
+Expose `repo-wiki` as a preferred built-in capability in packaging and discovery surfaces:
+- Add Karpathy's LLM knowledge base / wiki pattern to `.github/skills/meta-agentic-method/references.md` as the verified basis for the bundled skill
+- Add optional complementary references: `codebase-documenter` for human-readable onboarding docs and `qmd` for local markdown search at scale
+- List `repo-wiki` in `apm.yml` comments as a bundled local primitive with no external dependency
+- Add `.github/skills/repo-wiki` to the README APM install command for existing codebases
+
+**Rationale:**
+Existing-codebase workflows need a clear, preferred path for token-efficient context indexing. The repo-wiki skill is built into this template, so consumers should install it by path from this repo rather than adding a bogus external APM dependency.
+
+**Verification:**
+- References preserve the clean catalog style and mark verification status explicitly
+- `apm.yml` declares no new external dependency for `repo-wiki`
+- README APM command now includes the local `repo-wiki` skill path
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-09T10:39:00Z-tank.md`
+
+---
+
+### 2026-06-09: Morpheus — Scenario Prompts Point to Bundled Repo-Wiki Skill
+
+**By:** Morpheus (Agent Designer)  
+**Date:** 2026-06-09  
+**Status:** ✅ APPROVED
+
+**Context:**
+Brown-field and modernization prompts already generate repo-wiki artifacts during existing-source Discovery/Assessment. A bundled `repo-wiki` skill is the authoritative schema and workflow for repo-wiki generation.
+
+**Decision:**
+Add concise pointers in existing repo-wiki generation steps to follow `../skills/repo-wiki/SKILL.md` for the full Ingest → Query → Lint workflow and `index.md`/`log.md` wiki conventions.
+
+**Prompt Updates:**
+- `.github/prompts/brown-field.prompt.md`: Discovery wiki generation step now points to the bundled `repo-wiki` skill
+- `.github/prompts/modernization.prompt.md`: Discovery wiki generation and Assessment wiki refresh steps now point to the bundled `repo-wiki` skill
+- `.github/prompts/green-field.prompt.md`: unchanged; no existing source repo-wiki workflow
+
+**Notes:**
+Existing `discovery-wiki.template.md` and `wiki-index.template.json` references remain intact as produced artifacts. The relative path `../skills/repo-wiki/SKILL.md` resolves from `.github/prompts/` to `.github/skills/repo-wiki/SKILL.md`.
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-09T10:41:00Z-morpheus.md`
+
+---
+
+### 2026-06-09: Neo — Repo-Wiki Skill Review APPROVED
+
+**By:** Neo (Reviewer-Gate)  
+**Date:** 2026-06-09  
+**Status:** ✅ APPROVED FOR PRODUCTION
+
+**Scope Reviewed:**
+- `.github/skills/repo-wiki/SKILL.md`
+- `.github/skills/repo-wiki/templates/{index.md.template, log.md.template, module-page.template.md, README.md}`
+- `.github/skills/meta-agentic-method/SKILL.md` § Source Context Ingestion
+- `.github/skills/meta-agentic-method/references/source-context-and-topology.md`
+- `.github/skills/meta-agentic-method/references.md` (Karpathy/qmd/codebase-documenter entries)
+- `.github/prompts/brown-field.prompt.md` (Discovery wiki step)
+- `.github/prompts/modernization.prompt.md` (Discovery/Assessment wiki steps)
+- `.github/instructions/agent-skills.instructions.md` (authoring standard)
+
+**Contributors:** Oracle (SKILL.md + method delegation), Trinity (templates), Tank (references.md/apm.yml/README), Morpheus (prompt integration)
+
+**Verdict:** ✅ APPROVED
+
+**Findings Summary:**
+
+| Criterion | Status | Notes |
+|-----------|--------|-------|
+| Karpathy-pattern fidelity | ✅ PASS | 3 layers, index.md first-read, log.md append-only w/ date prefix, ingest/query/lint workflows, wiki compounds |
+| Skill conventions | ✅ PASS | Valid frontmatter, 177 lines, templates bundled, follows agent-skills.instructions.md |
+| Delegation correctness | ✅ PASS | Method skill delegates workflow to repo-wiki, keeps only topology; no duplication |
+| Cross-refs resolve | ✅ PASS | All relative links verified from each file's location |
+| Additive & non-breaking | ✅ PASS | Green-field untouched, brown-field/modernization prompts integrate cleanly |
+
+**Notes (non-blocking):**
+- Consider adding `LICENSE.txt` to `.github/skills/repo-wiki/` (Apache 2.0 typical). Repository has root MIT license.
+- `codebase-documenter` skill in references.md noted as complementary for human-readable onboarding docs.
+
+**Blocking Issues:** None.
+
+**Orchestration Log:** `.squad/orchestration-log/2026-06-09T10:43:00Z-neo.md`
+

@@ -1,41 +1,18 @@
 ## Source Context Ingestion (Repo-Wiki)
 
-Existing-codebase scenarios MUST distill source context before agents reason over it. Raw source is token-heavy, hard to index, and easy to over-load into context. The repo-wiki is the working source-of-truth for understanding; raw files are pulled only when a specific task requires exact code.
+Existing-codebase scenarios MUST distill source context before agents reason over it. Use the [`repo-wiki` skill](../../repo-wiki/SKILL.md) as the authoritative workflow for Karpathy-style LLM-maintained codebase wikis, including the three-layer schema, `index.md`, `log.md`, ingest/query/lint procedures, search tooling, token-mindfulness, and confidence/drift handling.
 
-### Ingestion Loop
-
-1. **Pack:** Create a token-bounded repository snapshot with a packer such as repomix, gitingest, or code2prompt. Select the packer that fits repository size, language mix, ignore rules, and available tooling. Exclude generated files, vendored dependencies, build outputs, secrets, and irrelevant binary assets.
-2. **Summarize:** Use the packed snapshot to generate `docs/<scenario>-<slug>/wiki/` from `templates/discovery-wiki.template.md`. Capture overview, architecture, module/component index, data flows, dependency graph, glossary, risk hotspots, and refresh/drift log.
-3. **Index:** Generate `docs/<scenario>-<slug>/wiki/wiki-index.json` from `templates/wiki-index.template.json`. Include concise file/module/symbol mappings, ownership hints, dependencies, and retrieval anchors.
-4. **Reference on demand:** Use the wiki and index as default context. Pull raw source files only for implementation, verification, or ambiguity resolution that names the needed file/module/symbol.
-
-### Token-Mindfulness Rules
-
-- Link to raw files and wiki pages; do not inline large source or long generated content.
-- Keep wiki entries concise, structured, and retrieval-friendly.
-- Chunk large repositories by module, bounded context, service, package, or runtime boundary.
-- Never load the whole tree into agent context. Use the index to select the smallest useful source slice.
-- Prefer stable identifiers: path, module, symbol, endpoint, table, job, event, or contract name.
-
-### Drift Refresh
-
-Regenerate or patch the wiki whenever source changes materially, including architecture moves, dependency changes, API/schema changes, renamed modules, or implementation work that invalidates documented behavior. Record source revision, packer, timestamp, changed areas, and confidence impact in the wiki refresh/drift log. Treat a stale wiki as reduced confidence and verify against raw files before making design or implementation decisions.
+This reference keeps only scenario topology guidance. Do not duplicate the full repo-wiki workflow here.
 
 ### Scenario Timing
 
 - **Green-field:** Skip repo-wiki ingestion; no existing source exists yet.
-- **Brown-field Discovery:** Run ingestion during Discovery after APM installs this template's artifacts into the existing repository.
-- **Modernization Discovery/Assessment:** Run ingestion for the legacy source, then use the wiki throughout Assessment and target-state planning.
+- **Brown-field Discovery:** Run repo-wiki ingestion during Discovery after APM installs this template's artifacts into the existing repository.
+- **Modernization Discovery/Assessment:** Run repo-wiki ingestion for the legacy source, then use the wiki throughout Assessment and target-state planning.
 
-### Confidence Impact
+### Confidence Impact Summary
 
-Missing, incomplete, or stale repo-wiki lowers these confidence dimensions:
-
-| Dimension | Impact |
-|-----------|--------|
-| **Data/Domain Knowledge** | Source behavior, domain terms, schemas, and module boundaries are incomplete. |
-| **Spec Completeness** | Discovery/Assessment lacks indexed evidence and traceable source references. |
-| **Verification Status** | Tests and implementation checks cannot be confidently tied back to actual source behavior. |
+Missing, incomplete, or stale repo-wiki content lowers **Data/Domain Knowledge**, **Spec Completeness**, and **Verification Status**. Apply the detailed drift rules from the [`repo-wiki` skill](../../repo-wiki/SKILL.md) before making design, planning, or implementation decisions.
 
 ---
 

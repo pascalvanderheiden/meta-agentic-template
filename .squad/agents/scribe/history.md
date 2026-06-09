@@ -8,4 +8,6 @@
 
 ## Learnings
 
+- **2026-06-09**: Orchestrated 5-agent spawn for repo-wiki skill (Karpathy LLM-wiki pattern). Oracle/Trinity/Tank/Morpheus authored SKILL.md, templates, packaging, prompts. Neo approved. Merged 5 decisions to decisions.md (deduped). Status: ready for merge.
+
 <!-- Append learnings below -->

@@ -20,7 +20,11 @@ Clean, concise catalog of generic sources for discovering agentic artifacts (ski
 
 **Vercel agent-skills** — https://github.com/vercel-labs/agent-skills (verified: yes)
 
+**codebase-documenter skill** — `ailabs-393/ai-labs-claude-skills@codebase-documenter` via skills.sh (~1.1K installs); optional human-readable onboarding docs, complementary to LLM-context `repo-wiki` (verified: unverified)
+
 **Local:** `.github/skills/find-skills` — search the ecosystem from within this repo
+
+**Local:** `.github/skills/repo-wiki` — preferred built-in implementation of the LLM-maintained codebase wiki pattern (Build to Bridge the Gap)
 
 ---
 
@@ -66,6 +70,8 @@ Clean, concise catalog of generic sources for discovering agentic artifacts (ski
 
 **Playwright MCP** (browser/UI testing) — https://github.com/microsoft/playwright-mcp (verified: yes)
 
+**qmd** — optional local markdown search for wiki/docs at scale, BM25/vector + MCP — https://github.com/tobi/qmd (verified: yes)
+
 **Config:**
 ```json
 {
@@ -103,6 +109,8 @@ Clean, concise catalog of generic sources for discovering agentic artifacts (ski
 **OpenSpec** — https://github.com/Fission-AI/OpenSpec (verified: yes) — spec-driven workflow that aligns humans and agents on specs/change proposals before coding.
 
 **Superpowers** — https://github.com/obra/superpowers (verified: yes) — composable agent skills (brainstorming, writing-plans, TDD) for a spec-first, plan-driven workflow.
+
+**Karpathy LLM knowledge base / wiki pattern** — persistent LLM-maintained wiki for accumulated codebase context; basis for bundled `.github/skills/repo-wiki/` — https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f (verified: yes)
 
 **Architecture Decision Records** — https://adr.github.io/ (verified: unverified)
 

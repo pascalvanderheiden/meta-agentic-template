@@ -1,0 +1,49 @@
+<!--
+USAGE: Append-only; consistent `## [date] action | title` prefix so `grep '^## \[' log.md | tail` works.
+OUTPUT FILENAME: docs/<scenario>-<slug>/wiki/log.md
+DYNAMIC RULES:
+  - Fixed: Parseable heading format and short bullet notes
+  - Generated: Chronological ingest, query, and lint entries
+  - Tokens: [REPO_NAME], [GENERATED_AT]
+-->
+
+# Repo Wiki Log: [REPO_NAME]
+
+**Generated**: [GENERATED_AT]
+
+## Entry Format
+
+```markdown
+## [YYYY-MM-DD] ingest | <area/module>
+- Added or refreshed [PAGE_LINK] from [SOURCE_COUNT] source files.
+- Key evidence: [FILE_PATH:LINE], [FILE_PATH:LINE].
+- Follow-up: [FOLLOW_UP_OR_NONE].
+
+## [YYYY-MM-DD] query | <question>
+- Answered from [PAGE_LINK] and [PAGE_LINK].
+- Missing context: [MISSING_CONTEXT_OR_NONE].
+- Wiki update: [PAGE_UPDATED_OR_NONE].
+
+## [YYYY-MM-DD] lint | <summary>
+- Checked links, stale dates, duplicate pages, and orphaned pages.
+- Fixed: [FIX_SUMMARY].
+- Remaining: [REMAINING_ISSUES_OR_NONE].
+```
+
+## [YYYY-MM-DD] ingest | [AREA_OR_MODULE]
+
+- Added or refreshed [PAGE_LINK] from [SOURCE_COUNT] source files.
+- Key evidence: [FILE_PATH:LINE], [FILE_PATH:LINE].
+- Follow-up: [FOLLOW_UP_OR_NONE].
+
+## [YYYY-MM-DD] query | [QUESTION]
+
+- Answered from [PAGE_LINK] and [PAGE_LINK].
+- Missing context: [MISSING_CONTEXT_OR_NONE].
+- Wiki update: [PAGE_UPDATED_OR_NONE].
+
+## [YYYY-MM-DD] lint | [SUMMARY]
+
+- Checked links, stale dates, duplicate pages, and orphaned pages.
+- Fixed: [FIX_SUMMARY].
+- Remaining: [REMAINING_ISSUES_OR_NONE].
