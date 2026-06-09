@@ -207,3 +207,24 @@ Added non-mandatory per-scenario framework advice: green-field defaults to OpenS
 **Topology:** Green-field remains a template fork. Brown-field installs artifacts in-repo via APM and stores docs/specs/wiki beside the source. Modernization uses a side-car control repo with read-only legacy git submodule at `legacy/` plus generated repo-wiki as primary context.
 
 **Files Updated:** `.github/skills/meta-agentic-method/SKILL.md`, `.github/copilot-instructions.md`, `.squad/decisions/inbox/oracle-existing-codebase-topology.md`.
+
+### 2026-06-09: Meta-Agentic Method Skill Progressive Disclosure Refactor
+
+**Context:** `meta-agentic-method/SKILL.md` had grown to 913 lines, exceeding skill progressive-disclosure guidance while being heavily referenced by section heading from prompts, templates, and instructions.
+
+**New Layout:**
+- `SKILL.md` is now a 203-line navigable spine with all existing `##` headings preserved.
+- Detailed methodology content moved into `.github/skills/meta-agentic-method/references/` with `README.md` as folder index.
+- Each heavy section keeps a concise summary plus `**Full detail:**` pointer.
+
+**Sections Moved:**
+- Phase Pipeline → `references/phase-pipeline.md`
+- Source Context Ingestion + Repository Topology → `references/source-context-and-topology.md`
+- SDD Framework Selection → `references/sdd-frameworks.md`
+- Team Formation Algorithm → `references/team-formation.md`
+- Capability Acquisition Decision Tree → `references/capability-acquisition.md`
+- Confidence Scoring Rubric → `references/confidence-rubric.md`
+- Testing Strategy → `references/testing-strategy.md`
+- Upstream Template Feedback Loop → `references/feedback-loop.md`
+
+**Verification:** `wc -l` confirms `SKILL.md` is 203 lines; unique `##` headings preserved; all `references/<file>.md` links resolve.

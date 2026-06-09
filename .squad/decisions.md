@@ -2,6 +2,48 @@
 
 ## Active Decisions
 
+### 2026-06-09: Refactor Meta-Agentic Method Skill with Progressive Disclosure via References/
+
+**By:** Oracle (Knowledge Architect), Neo (Quality Reviewer)  
+**Requested by:** Pascal van der Heiden
+
+**Context:**
+`.github/skills/meta-agentic-method/SKILL.md` had grown to 913 lines, above the skill-authoring guideline target for progressive disclosure. The file is heavily cross-referenced by prompts, templates, and instructions using `SKILL.md § <Heading>` references, so section headings had to remain stable.
+
+**Decision:**
+Refactor `SKILL.md` into a lean navigable spine and move detailed methodology content into `.github/skills/meta-agentic-method/references/`.
+
+The following detail files now hold the expanded content:
+- `references/phase-pipeline.md` — 10-phase SDD pipeline detailed workflow
+- `references/source-context-and-topology.md` — Codebase topology and context strategies
+- `references/sdd-frameworks.md` — SDD framework options (Spec-Kit, OpenSpec, Superpowers)
+- `references/team-formation.md` — Team assembly algorithm and role mapping
+- `references/capability-acquisition.md` — Capability gap analysis & acquisition decision tree
+- `references/confidence-rubric.md` — 6-dimension confidence scoring
+- `references/testing-strategy.md` — Testing by scenario (green-field TDD/BDD, brown-field safety net, modernization parity)
+- `references/feedback-loop.md` — Upstream template feedback loop workflow
+- `references/README.md` — Index + navigation guide for references/
+
+**Rationale:**
+- Progressive disclosure: agents load a concise spine first, then pull detailed phase/framework/rubric/testing/feedback content only when needed.
+- Improves context efficiency without breaking section-based cross-references from other artifacts.
+- Preserves every `##` heading for existing SKILL.md cross-reference compatibility.
+
+**Constraints Preserved:**
+- Every existing `##` heading remains present in `SKILL.md` for cross-reference compatibility.
+- Existing prompts, templates, and instructions were not edited.
+- Detailed content was moved faithfully into reference files and summarized in place.
+- Each shortened heavy section includes a `**Full detail:**` pointer to the matching reference file.
+
+**Verification:**
+- `SKILL.md` line count reduced from 913 to 203.
+- Unique `##` heading set preserved: 19 old / 19 new, no missing headings.
+- All `references/<file>.md` links in `SKILL.md` resolve to created files.
+- Neo reviewed → APPROVED (content-faithful, no facts lost).
+
+**Consequences:**
+The meta-agentic method skill now follows progressive disclosure: agents load a concise spine first, then pull detailed phase/framework/rubric/testing/feedback content only when needed. This improves context efficiency without breaking section-based references from other artifacts.
+
 ### 2026-06-08: Repository Restructure — Move Methodology & Report Into Skills
 
 **By:** Trinity (Template Engineer), Oracle (Knowledge Architect), Tank (Integration Dev)
