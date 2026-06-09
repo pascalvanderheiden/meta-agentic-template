@@ -399,9 +399,8 @@ The role roster defined above materializes differently based on the approach cho
    - Capture source system metrics (scenario-dependent: data row counts for data migrations, API response signatures for API modernization, rendering snapshots for UI ports, test suite runtime for framework migrations)
    - Document cutover plan: sequence, rollback triggers, success checkpoints
    - Log baseline with scenario-appropriate detail
-5. **🚦 Human Validation Gate (MANDATORY):**
-   - **STOP.** Do NOT invoke the execution lead, materialize/initiate the team for execution, or write any implementation code yet.
-   - Present the user with a concise summary and the following generated planning documents for review in `docs/<scenario>-<slug>/`:
+5. **🚦 Human Validation Gate (MANDATORY — TERMINAL STOP):**
+   - Present the user with a concise summary and the following generated planning documents for in-person review in `docs/<scenario>-<slug>/`:
      - `00-intake.md` (migration request and clarifications)
      - `01-discovery.md` (legacy system architecture and component inventory, if source available)
      - `wiki/` (repo-wiki index and summaries, if source available)
@@ -413,10 +412,22 @@ The role roster defined above materializes differently based on the approach cho
      - `plan.md` (execution plan with migration phases and cutover milestones)
      - `tasks.md` (task breakdown per functional domain)
      - Any SDD-framework-native specs generated if a framework was chosen (e.g., Spec-Kit `spec.md`/`plan.md`/`tasks.md`, OpenSpec change proposal, Superpowers plan)
-   - Ask the user to **review these documents in person and explicitly approve** before execution proceeds.
-   - **Make explicit:** The team/execution lead will be initiated and migration will begin ONLY after approval.
-   - **WAIT** for the user's explicit approval. If the user requests changes, revise the relevant documents and re-present this gate. Proceed to the next step ONLY once the user approves.
-6. **Hand off to execution lead:**
+   - **This is the end of the planning run. END YOUR TURN HERE.**
+   - **Do NOT invoke the execution lead, do NOT select or materialize an execution agent, do NOT perform any subsequent step or phase in this run.**
+   - **▶ Next action (yours):**
+     - If you want changes: re-run or continue this planning prompt to revise the docs, then the gate is re-presented.
+     - If you approve: **in a SEPARATE new request**, select the execution agent yourself:
+       - **Approach A (Custom Agents):** `@orchestrator execute the plan`
+       - **Approach B (Squad):** Select/invoke the Squad coordinator and tell it to execute the plan
+     - **Agent selection is a human action** — the assistant cannot select the custom agent on your behalf.
+
+---
+
+**⛔ EXECUTION BOUNDARY — everything below runs ONLY in the separate, user-initiated execution invocation (after you select the execution agent). The planning run does NOT cross this line.**
+
+---
+
+6. **Hand off to execution lead (execution invocation only):**
    - **Approach A (Orchestrator):** Invoke `.github/agents/orchestrator.agent.md`.
    - **Approach B (Squad):** The Squad coordinator (`.github/agents/squad.agent.md`) drives execution.
    - **BOTH approaches MUST follow** `../skills/meta-agentic-method/references/execution-method.md` (shared execution contract): analyze generated docs → branch on SDD framework choice (None = Plan Mode enrich plan.md/tasks.md in place with writing-plans fallback; framework = strict native loop with docs as source of truth, per `../skills/meta-agentic-method/references/sdd-frameworks.md`) → test-driven every slice → rubber-duck contra-model review (auto-opposite model, additional beat feeding reviewer gate with strict lockout) → realtime HTML progress report updates (progress + testExecution + reviews) → completion + confidence.

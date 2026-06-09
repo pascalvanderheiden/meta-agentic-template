@@ -152,3 +152,60 @@ Scribe created orchestration logs for each agent, session log for execution-hand
 ---
 
 **2026-06-09: Execution-Model Upgrade — Prompts Wired** — Wired all 3 scenario prompts + squad.agent.md to shared execution-method.md contract. See `.squad/orchestration-log/2026-06-09T19:13:41Z-morpheus.md`.
+
+### 2026-06-09: Terminal Human Validation Gate — Hard Stop Before Execution
+
+**Deliverables:**
+- `.github/prompts/green-field.prompt.md` (Phase 7 step 4)
+- `.github/prompts/brown-field.prompt.md` (Phase 8 step 5)
+- `.github/prompts/modernization.prompt.md` (Phase 9 step 5)
+- `.github/skills/meta-agentic-method/references/execution-method.md` (Entry/Invocation note)
+- `.squad/decisions/inbox/morpheus-terminal-gate.md`
+
+**Problem:**
+Live testing revealed 🚦 Human Validation Gate said "WAIT for approval... Proceed to the next step ONLY once the user approves" but agents asked then immediately continued into handoff/execution within the same run. User requires a HARD TERMINAL STOP: planning run must END at gate and return control. Execution is ALWAYS a separate, user-initiated invocation where USER selects custom execution agent (`@orchestrator` or Squad) — assistant cannot select agent (human action in client).
+
+**Changes Made:**
+1. **Rewrote validation gate in all 3 prompts to be TERMINAL:**
+   - Replaced "WAIT then continue" wording with explicit HARD STOP: "This is the end of the planning run. END YOUR TURN HERE. Do NOT invoke execution lead, do NOT select/materialize execution agent, do NOT perform any subsequent step/phase in this run."
+   - Added explicit **"▶ Next action (yours)"** block telling user to start execution in SEPARATE new request by selecting execution agent themselves (`@orchestrator execute the plan` or Squad coordinator)
+   - Made explicit: agent selection is human action, assistant cannot select custom agent on user's behalf
+   - Preserved scenario-appropriate doc review lists
+   - Revision loop still works (user re-runs planning to revise docs → gate re-presented)
+
+2. **Inserted EXECUTION BOUNDARY divider after gate in all 3 prompts:**
+   - `--- ⛔ EXECUTION BOUNDARY — everything below runs ONLY in separate, user-initiated execution invocation (after user selects execution agent). Planning run does NOT cross this line. ---`
+   - Placed immediately after validation gate, before handoff step
+
+3. **Reworded handoff step:**
+   - Changed from "Hand off to execution lead:" to "Hand off to execution lead (execution invocation only):"
+   - Made clear these steps performed by separately-invoked execution lead following `execution-method.md`
+
+4. **Updated `execution-method.md`:**
+   - Added "Entry / Invocation" note near top: contract executed in separate, user-initiated invocation that begins AFTER user reviews planning docs at gate and selects execution lead agent
+   - Agent selection is human action; execution lead does not self-start from planning run
+   - Planning prompt run ends at gate; execution is always distinct, subsequent invocation
+   - Execution lead carries scenario through remaining phases using generated docs + contract
+
+5. **Verified numbering:**
+   - Kept ordered-list numbering strictly sequential in all 3 prompts after edits
+   - Green-field: 1-6, Brown-field: 1-7, Modernization: 1-8
+
+**Learning:**
+There must ALWAYS be a break before execution. Planning = one run (ends at gate). Execution = separate run (starts when user selects agent). Gate is TERMINAL, not a wait-then-continue checkpoint. "▶ Next action (yours)" guidance shifts agency to user for agent selection — assistant presents gate then ends turn, does not assume approval or auto-select execution agent.
+
+**Verification:** Planning prompt runs now cannot cross execution boundary. User must explicitly initiate execution in new request with agent selection.
+
+### 2026-06-09: Terminal Human Validation Gate — Hard Stop Before Execution
+
+**Deliverables:**
+- `.github/prompts/green-field.prompt.md` (Phase 7 Execution, gate step 4)
+- `.github/prompts/brown-field.prompt.md` (Phase 8 Execution, gate step 5)
+- `.github/prompts/modernization.prompt.md` (Phase 9 Execution, gate step 5)
+- `.github/skills/meta-agentic-method/references/execution-method.md` (Entry/Invocation note)
+
+**Problem**: Live testing revealed gate said "WAIT for approval... Proceed" but agents asked then immediately continued into handoff/execution within same run. User requires HARD TERMINAL STOP: planning run must END at gate, return control. Execution ALWAYS separate, user-initiated where USER selects custom execution agent (not assistant-selected — human action in client).
+
+**Solution**: (1) Made gate TERMINAL in all 3 prompts — explicit HARD STOP wording, "▶ Next action (yours)" directing user to start SEPARATE request, select agent themselves. (2) Inserted EXECUTION BOUNDARY divider after gate. (3) Reworded handoff step to "(execution invocation only)". (4) Updated execution-method.md Entry/Invocation note.
+
+**Learnings**: Terminal gate prevents runaway automation. Planning = one run (ends at gate). Execution = separate run (starts when user selects agent). Agent selection is human action, not assistant-programmable. See `.squad/orchestration-log/2026-06-09T21:03:37Z-morpheus.md`.

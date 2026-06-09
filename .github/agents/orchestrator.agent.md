@@ -2,8 +2,9 @@
 name: 'Orchestrator'
 description: 'Execution lead for Custom Agents approach — drives role agents through handoff DAG with strict reviewer lockout'
 tools: ['read', 'search', 'edit', 'agent']
+agents: ['*']
 model: 'Claude Sonnet 4.5'
-user-invocable: false
+user-invocable: true
 ---
 
 # Orchestrator — Custom Agents Execution Lead

@@ -2,6 +2,16 @@
 
 **Applies to both Approach A (Orchestrator) and Approach B (Squad).**
 
+### Entry / Invocation
+
+This contract is executed in a **separate, user-initiated invocation** that begins only AFTER the user has reviewed the planning docs at the validation gate and has **selected the execution lead agent** (`@orchestrator` for Custom Agents, or the Squad coordinator for Squad Team).
+
+**Agent selection is a human action** — the execution lead does not self-start from the planning run. The planning prompt run ends at the 🚦 Human Validation Gate; execution is always a distinct, subsequent invocation.
+
+The execution lead then carries the scenario through the remaining phases (execution → verification → handoff → template feedback) using the generated docs + this contract.
+
+---
+
 After the human validation gate (🚦), the execution lead follows this unified contract regardless of approach. Both the Orchestrator agent (`.github/agents/orchestrator.agent.md`) and the Squad coordinator (`.github/agents/squad.agent.md`) must implement this same algorithm.
 
 ---

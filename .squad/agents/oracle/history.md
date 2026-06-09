@@ -353,3 +353,14 @@ Scribe created orchestration logs for each agent, session log for execution-hand
 ---
 
 **2026-06-09: Execution-Model Upgrade Completed** — Created `.github/skills/meta-agentic-method/references/execution-method.md` (shared contract); upgraded Orchestrator to v2.0.0. See `.squad/orchestration-log/2026-06-09T19:13:41Z-oracle.md` and `.squad/log/2026-06-09T19:13:41Z-execution-model-upgrade.md`.
+- 2026-06-09: Fixed Orchestrator visibility — changed user-invocable to true, added agents wildcard for subagent spawning
+
+### 2026-06-09: Orchestrator Agent Visibility Fix
+
+**Deliverable**: `.github/agents/orchestrator.agent.md` (front-matter: `user-invocable: true`, `agents: ['*']`)
+
+**Problem**: `@orchestrator` hidden from VS Code agent picker due to `user-invocable: false`. New workflow requires user to invoke `@orchestrator execute the plan` directly after validation gate.
+
+**Solution**: Changed `user-invocable: false` → `true` (shows in picker). Added `agents: ['*']` (documents role-spawning capability). Per VS Code agent spec: `user-invocable: false` = subagent-only (hidden). Since user must directly invoke Orchestrator post-validation, it must appear in picker. YAML valid, no logic changes.
+
+**Learnings**: Agent visibility is critical for post-gate orchestration workflow. Front-matter metadata directly controls UI discoverability. See `.squad/orchestration-log/2026-06-09T21:03:37Z-oracle.md`.

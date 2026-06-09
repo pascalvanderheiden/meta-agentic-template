@@ -18,7 +18,7 @@ flowchart TD
     
     S1 --> S2[Step 2: Run Scenario<br/>VS Code slash command or<br/>Copilot CLI natural ask]
     S2 --> S3[Step 3: Answer Intake<br/>Execution approach, SDD framework,<br/>scenario details]
-    S3 --> S4[Step 4: Review & Execute<br/>Review planning docs, then<br/>approve to start execution]
+    S3 --> S4[Step 4: Review & Execute<br/>Planning stops; you select<br/>execution agent to kick off]
     S4 --> OUT[Deliverables + Progress Report]
     
     style MT fill:#e1f5ff
@@ -109,13 +109,16 @@ Defaults are **recommendations, not mandates** — you can pick any option (or N
 
 ### Step 4 — Review & Execute
 
-After intake, the workflow generates the planning artifacts (intake, analysis/discovery, capability map, team roster, execution plan, task breakdown) and **pauses for you to review them**. Nothing is built and the execution lead is not invoked until you approve. Review the generated docs, then issue the execution command below to proceed.
+After intake, the planning run generates the artifacts (intake, analysis/discovery, capability map, team roster, execution plan, task breakdown) and **stops — it returns control to you**. The planning assistant does NOT continue into execution on its own.
 
-**Approve and kick off execution:**
+To execute, **you must start a new request and manually select the execution agent** — this is a user action in the client (Custom Agents dropdown or @-mention):
+
 ```
 @orchestrator execute the plan
 ```
 (or `@squad execute the plan` for the Squad approach)
+
+**Note**: Agent selection cannot be automated by the assistant — the planning run always ends at the validation gate, giving you the chance to review docs and decide when to proceed.
 
 The execution lead (Orchestrator for Custom Agents, or Squad coordinator for Squad Team) drives role agents through the remaining phases (Execution → Verification → Handoff), enforcing handoffs, reviewer gates (original author cannot revise rejected work), and the SDD framework's implement loop (if chosen).
 

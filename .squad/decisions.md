@@ -2148,3 +2148,131 @@ Prompts + Squad now consistently point to the shared execution contract. DRY mai
 - [x] Squad coordinator has Scenario Execution Lead section
 - [x] Handoff report steps include testExecution + reviews blocks
 - [x] No numbering gaps or duplication
+
+---
+
+# Decision: Terminal Human Validation Gate — Hard Stop Before Execution
+
+**Date:** 2026-06-09  
+**By:** Morpheus (Agent Designer)  
+**Requested by:** Pascal van der Heiden  
+**Status:** APPROVED
+
+## Context
+
+The 🚦 Human Validation Gate currently instructs agents to "WAIT for approval... Proceed to the next step ONLY once the user approves." In practice, live testing showed agents ask then immediately continue into handoff/execution within the SAME run.
+
+The user requires a HARD TERMINAL STOP: the planning prompt run must END at the gate and return control to the user. Execution is ALWAYS a SEPARATE, user-initiated invocation in which the USER selects a custom execution agent (this selection CANNOT be done by the assistant itself — it is a human action in their client, e.g., `@orchestrator` / selecting the Squad agent). There must ALWAYS be a break before execution.
+
+## Decision
+
+### Applied to All 3 Prompts
+
+Execution phase = green-field **Phase 7**, brown-field **Phase 8**, modernization **Phase 9**.
+
+**1. Rewrote 🚦 Human Validation Gate step to be TERMINAL:**
+   - Kept scenario-appropriate generated planning docs for in-person review
+   - Replaced "WAIT then continue" wording with explicit HARD STOP: "END YOUR TURN HERE. Do NOT invoke execution lead, do NOT select/materialize execution agent, do NOT perform any subsequent step/phase."
+   - Added **"▶ Next action (yours)"** block: user must start SEPARATE request, select execution agent themselves (`@orchestrator execute the plan` or Squad coordinator)
+   - Made explicit: assistant cannot select custom agent on user's behalf (human action in client)
+   - Preserved revision loop (user can re-run planning to revise)
+
+**2. Inserted EXECUTION BOUNDARY divider after gate in all 3 prompts:**
+   - `--- ⛔ EXECUTION BOUNDARY — everything below runs ONLY in separate, user-initiated execution invocation (after user selects execution agent). Planning run does NOT cross this line. ---`
+   - Reworded handoff step: "Hand off to execution lead (execution invocation only):" — clear these steps performed by separately-invoked execution lead
+
+**3. Updated `execution-method.md`:**
+   - Added "Entry / Invocation" note: contract executed in SEPARATE invocation AFTER user reviews planning docs at gate and selects execution lead agent
+   - Agent selection is human action; execution lead does not self-start from planning run
+   - Planning ends at gate; execution always distinct, subsequent invocation
+
+## Verification
+
+- [x] Gate TERMINAL (ends turn, does not proceed)
+- [x] Boundary divider present after gate in all 3 prompts
+- [x] Numbering sequential in all 3 prompts
+- [x] "▶ Next action (yours)" shifts agency to user for agent selection
+- [x] Revision loop preserved
+- [x] DRY maintained (link to execution-method.md)
+
+---
+
+# Decision: Orchestrator Agent Visibility
+
+**Date**: 2026-06-09  
+**Decided by**: Oracle (Knowledge Architect)  
+**Requested by**: Pascal van der Heiden
+
+## Problem
+`@orchestrator` hidden from VS Code agents dropdown due to `user-invocable: false`. New workflow requires user to invoke `@orchestrator execute the plan` directly after validation gate.
+
+## Decision
+Updated `.github/agents/orchestrator.agent.md` front-matter:
+- `user-invocable: false` → `user-invocable: true` (shows in picker)
+- Added `agents: ['*']` (documents spawning role agents)
+
+## Rationale
+Per VS Code agent spec: `user-invocable: false` prevents visibility (subagent-only mode). User must directly invoke Orchestrator post-validation, so it must appear in picker. `agents: ['*']` documents core job.
+
+## Impact
+- ✅ `@orchestrator` now visible in VS Code agent dropdown
+- ✅ User can select and invoke directly
+- ✅ No change to orchestration logic or body
+- ✅ YAML valid
+
+---
+
+# Decision: Terminal Validation Gate — README Step 4 Clarification
+
+**Date**: 2026-06-10  
+**Author**: Trinity (Template Engineer)  
+**Status**: Implemented  
+
+## Context
+
+Validation gate is now TERMINAL: planning run stops at gate and returns control. Execution ALWAYS separate, user-initiated step where user must SELECT execution agent (not automated by assistant).
+
+README Step 4 previously implied execution begins automatically after review without making explicit:
+1. Planning run ENDS (stops its turn)
+2. User must start NEW request
+3. User must manually SELECT execution agent (dropdown or @-mention)
+4. This is client-level action, cannot be automated by assistant
+
+## Decision
+
+Updated README.md Step 4 ("### Step 4 — Review & Execute") and Mermaid Step 4 node:
+
+1. **Mermaid node:** "Planning stops; you select execution agent to kick off"
+2. **Step 4 section:**
+   - Planning "generates artifacts and **stops — returns control to you**"
+   - Assistant does NOT continue into execution on its own
+   - User must "start a new request and manually select the execution agent"
+   - Agent selection is user action in client, cannot be automated by assistant
+   - Preserved execution command examples
+   - Kept progress-report paragraph concise
+
+## Rationale
+
+- **Prevents runaway automation** — user retains control
+- **Allows artifact review** before committing to execution
+- **Technical constraint** — assistant cannot programmatically select Custom Agents in UI
+- **Reduces user confusion** at critical handoff point
+
+## Impact
+
+**User-facing:**
+- Clearer expectation: planning ends, user starts execution
+- Reduced confusion at validation gate
+- Explicit agent selection instructions prevent "what now?" questions
+
+**Technical:**
+- No code changes (prompts already implement terminal gate)
+- Documentation consistency: README matches actual behavior
+
+## Verification
+
+- [x] Mermaid Step 4 node updated
+- [x] Step 4 section rewritten with explicit stop
+- [x] Execution examples preserved
+- [x] No broken internal anchors
+- [x] Tone matches README style

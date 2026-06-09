@@ -28,3 +28,15 @@
 ---
 
 **2026-06-09: Execution-Model Upgrade — Review Cycle Complete** — Added `testExecution` + `reviews` panels; fixed duplicate Phase 8 in green-field.prompt.md after Neo rejection. See `.squad/orchestration-log/2026-06-09T19:13:41Z-trinity.md`.
+
+---
+
+## 2026-06-10: Terminal Validation Gate — README Step 4 Clarification
+
+**Context**: Validation gate made TERMINAL — planning run stops at gate and returns control. Execution ALWAYS separate user-initiated step (user must SELECT execution agent manually in client).
+
+**Work**: Updated Mermaid Step 4 node + README Step 4 section to clarify terminal gate. Planning "generates artifacts and **stops — returns control to you**". Execution begins in NEW request with manual agent selection. User action in client, cannot be automated by assistant. Added note explaining this constraint.
+
+**Files**: `README.md` (Mermaid line 21, Step 4 section lines 110-124)
+
+**Learnings**: Terminal gate is critical control point — explicit break in README prevents confusion. Agent selection manual (client UI action) — key constraint driving stop design. Execution examples remain valid (orthogonal to terminal gate). See `.squad/orchestration-log/2026-06-09T21:03:37Z-trinity.md`.
