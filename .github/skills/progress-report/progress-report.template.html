@@ -396,6 +396,80 @@
             color: #24292e;
         }
         
+        .test-summary {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .test-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #f6f8fa;
+            border: 1px solid #e1e4e8;
+        }
+        
+        .test-badge-passed { background: #dcffe4; color: #22863a; border-color: #28a745; }
+        .test-badge-failed { background: #ffeef0; color: #b31d28; border-color: #d73a49; }
+        .test-badge-notrun { background: #fff5e8; color: #e36209; border-color: #e36209; }
+        .test-badge-skipped { background: #f6f8fa; color: #586069; border-color: #959da5; }
+        .test-badge-total { background: #dbedff; color: #0366d6; border-color: #0366d6; }
+        
+        .test-suites-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .test-suites-table th {
+            background: #f6f8fa;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        
+        .test-suites-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        
+        .suite-status-passed { color: #22863a; font-weight: 600; }
+        .suite-status-failed { color: #b31d28; font-weight: 600; }
+        .suite-status-not-run { color: #e36209; font-weight: 600; }
+        .suite-status-skipped { color: #586069; font-weight: 600; }
+        
+        .reviews-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .reviews-table th {
+            background: #f6f8fa;
+            padding: 10px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #e1e4e8;
+        }
+        
+        .reviews-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        
+        .verdict-approved { color: #22863a; font-weight: 600; }
+        .verdict-changes-requested { color: #e36209; font-weight: 600; }
+        .verdict-rejected { color: #b31d28; font-weight: 600; }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -499,6 +573,42 @@
         <section id="risks">
             <h2>Risks & Gaps</h2>
             <div class="risks-list" id="risks-list"></div>
+        </section>
+
+        <section id="test-execution">
+            <h2>Test Execution</h2>
+            <div class="test-summary" id="test-summary"></div>
+            <table class="test-suites-table">
+                <thead>
+                    <tr>
+                        <th>Suite</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Passed</th>
+                        <th>Failed</th>
+                        <th>Total</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="test-suites-tbody"></tbody>
+            </table>
+        </section>
+
+        <section id="reviews">
+            <h2>Code Reviews</h2>
+            <table class="reviews-table">
+                <thead>
+                    <tr>
+                        <th>Slice</th>
+                        <th>Author</th>
+                        <th>Reviewer Model</th>
+                        <th>Verdict</th>
+                        <th>Findings</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="reviews-tbody"></tbody>
+            </table>
         </section>
     </div>
 
@@ -623,6 +733,89 @@
                 "severity": "low",
                 "description": "Performance testing capability gaps - manual validation needed."
             }
+        ],
+        "testExecution": {
+            "summary": {
+                "passed": 24,
+                "failed": 2,
+                "notRun": 5,
+                "skipped": 1,
+                "total": 32,
+                "coverage": 78.5
+            },
+            "suites": [
+                {
+                    "name": "ETL Pipeline Unit Tests",
+                    "type": "unit",
+                    "status": "passed",
+                    "passed": 12,
+                    "failed": 0,
+                    "total": 12,
+                    "notes": "All transformation logic validated"
+                },
+                {
+                    "name": "Oracle Schema Integration",
+                    "type": "integration",
+                    "status": "failed",
+                    "passed": 8,
+                    "failed": 2,
+                    "total": 10,
+                    "notes": "2 failures in CDC event handling"
+                },
+                {
+                    "name": "Fabric Lakehouse E2E",
+                    "type": "e2e",
+                    "status": "passed",
+                    "passed": 4,
+                    "failed": 0,
+                    "total": 4,
+                    "notes": "End-to-end data flow verified"
+                },
+                {
+                    "name": "Performance Benchmarks",
+                    "type": "integration",
+                    "status": "not-run",
+                    "passed": 0,
+                    "failed": 0,
+                    "total": 5,
+                    "notes": "Waiting for production-scale dataset"
+                },
+                {
+                    "name": "Backward Compatibility",
+                    "type": "bdd",
+                    "status": "skipped",
+                    "passed": 0,
+                    "failed": 0,
+                    "total": 1,
+                    "notes": "Not applicable for greenfield migration"
+                }
+            ]
+        },
+        "reviews": [
+            {
+                "slice": "ETL Pipeline Core",
+                "author": "etl-architect",
+                "reviewerModel": "gpt-5.4",
+                "verdict": "approved",
+                "findings": 0,
+                "notes": "Clean implementation, well-tested"
+            },
+            {
+                "slice": "Oracle Connector",
+                "author": "oracle-expert",
+                "reviewerModel": "claude-opus-4.6",
+                "verdict": "changes-requested",
+                "findings": 3,
+                "notes": "Missing error handling for network timeouts"
+            },
+            {
+                "slice": "Fabric Lakehouse Setup",
+                "author": "fabric-specialist",
+                "reviewerModel": "gpt-5.4",
+                "verdict": "approved",
+                "findings": 1,
+                "notes": "Minor: Add retry logic for transient failures"
+            }
         ]
     }
     </script>
@@ -659,6 +852,12 @@
 
             // Risks
             renderRisks(data.risks);
+
+            // Test execution
+            renderTestExecution(data.testExecution);
+
+            // Code reviews
+            renderReviews(data.reviews);
         }
 
         function renderConfidenceGauge(confidence) {
@@ -887,6 +1086,111 @@
                 item.appendChild(header);
                 item.appendChild(description);
                 container.appendChild(item);
+            });
+        }
+
+        function renderTestExecution(testExecution) {
+            if (!testExecution) return;
+
+            // Render summary badges
+            const summaryContainer = document.getElementById('test-summary');
+            summaryContainer.innerHTML = '';
+
+            const summary = testExecution.summary;
+            const badges = [
+                { label: 'Passed', value: summary.passed, className: 'test-badge-passed' },
+                { label: 'Failed', value: summary.failed, className: 'test-badge-failed' },
+                { label: 'Not Run', value: summary.notRun, className: 'test-badge-notrun' },
+                { label: 'Skipped', value: summary.skipped, className: 'test-badge-skipped' },
+                { label: 'Total', value: summary.total, className: 'test-badge-total' }
+            ];
+
+            if (summary.coverage !== null) {
+                badges.push({ label: 'Coverage', value: `${summary.coverage}%`, className: 'test-badge-total' });
+            }
+
+            badges.forEach(badge => {
+                const div = document.createElement('div');
+                div.className = `test-badge ${badge.className}`;
+                div.innerHTML = `<strong>${badge.label}:</strong> ${badge.value}`;
+                summaryContainer.appendChild(div);
+            });
+
+            // Render suites table
+            const tbody = document.getElementById('test-suites-tbody');
+            tbody.innerHTML = '';
+
+            testExecution.suites.forEach(suite => {
+                const row = document.createElement('tr');
+
+                const nameCell = document.createElement('td');
+                nameCell.textContent = suite.name;
+
+                const typeCell = document.createElement('td');
+                typeCell.textContent = suite.type;
+
+                const statusCell = document.createElement('td');
+                statusCell.className = `suite-status-${suite.status}`;
+                statusCell.textContent = suite.status;
+
+                const passedCell = document.createElement('td');
+                passedCell.textContent = suite.passed;
+
+                const failedCell = document.createElement('td');
+                failedCell.textContent = suite.failed;
+
+                const totalCell = document.createElement('td');
+                totalCell.textContent = suite.total;
+
+                const notesCell = document.createElement('td');
+                notesCell.textContent = suite.notes;
+
+                row.appendChild(nameCell);
+                row.appendChild(typeCell);
+                row.appendChild(statusCell);
+                row.appendChild(passedCell);
+                row.appendChild(failedCell);
+                row.appendChild(totalCell);
+                row.appendChild(notesCell);
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderReviews(reviews) {
+            if (!reviews) return;
+
+            const tbody = document.getElementById('reviews-tbody');
+            tbody.innerHTML = '';
+
+            reviews.forEach(review => {
+                const row = document.createElement('tr');
+
+                const sliceCell = document.createElement('td');
+                sliceCell.textContent = review.slice;
+
+                const authorCell = document.createElement('td');
+                authorCell.textContent = review.author;
+
+                const reviewerCell = document.createElement('td');
+                reviewerCell.textContent = review.reviewerModel;
+
+                const verdictCell = document.createElement('td');
+                verdictCell.className = `verdict-${review.verdict}`;
+                verdictCell.textContent = review.verdict;
+
+                const findingsCell = document.createElement('td');
+                findingsCell.textContent = review.findings;
+
+                const notesCell = document.createElement('td');
+                notesCell.textContent = review.notes;
+
+                row.appendChild(sliceCell);
+                row.appendChild(authorCell);
+                row.appendChild(reviewerCell);
+                row.appendChild(verdictCell);
+                row.appendChild(findingsCell);
+                row.appendChild(notesCell);
+                tbody.appendChild(row);
             });
         }
 

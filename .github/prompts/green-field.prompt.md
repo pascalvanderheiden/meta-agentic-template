@@ -275,12 +275,10 @@ The role roster defined above materializes differently based on the approach cho
    - **Make explicit:** The team/execution lead will be initiated and building will begin ONLY after approval.
    - **WAIT** for the user's explicit approval. If the user requests changes, revise the relevant documents and re-present this gate. Proceed to the next step ONLY once the user approves.
 5. **Hand off to execution lead:**
-   - **Approach A:** Invoke the **Orchestrator** (`.github/agents/orchestrator.agent.md`). It reads the roster and plan/tasks from `docs/<scenario>-<slug>/`, invokes role agents as subagents in handoff/parallel order, enforces the reviewer gate (strict lockout — author can't fix own rejected work), maintains `execution-log.md`, and reports back when done.
-   - **Approach B:** The **Squad coordinator** (`.github/agents/squad.agent.md`) drives execution — fan-out to members, reviewer gates, Scribe logging — per its charter.
-6. **If an SDD framework was selected at Intake:**
-   - The execution lead must (a) **generate the framework's native specs** in addition to the `docs/<scenario>-<slug>/` specs already created (Spec-Kit: `spec.md`/`plan.md`/`tasks.md`; OpenSpec: change proposal under `openspec/changes/<id>/`; Superpowers: plan via `writing-plans`), keeping them derived from / consistent with the `docs/` specs, and (b) **explicitly run that framework's implement loop** (Spec-Kit: `/speckit.implement`; OpenSpec: `/opsx:apply` + `/opsx:verify`; Superpowers: `subagent-driven-development` or `executing-plans`).
-   - Reference `../skills/meta-agentic-method/references/sdd-frameworks.md` for per-framework detail.
-7. Record architecture decisions in `docs/<scenario>-<slug>/adr/*.md`:
+   - **Approach A (Orchestrator):** Invoke `.github/agents/orchestrator.agent.md`.
+   - **Approach B (Squad):** The Squad coordinator (`.github/agents/squad.agent.md`) drives execution.
+   - **BOTH approaches MUST follow** `../skills/meta-agentic-method/references/execution-method.md` (shared execution contract): analyze generated docs → branch on SDD framework choice (None = Plan Mode enrich plan.md/tasks.md in place with writing-plans fallback; framework = strict native loop with docs as source of truth, per `../skills/meta-agentic-method/references/sdd-frameworks.md`) → test-driven every slice → rubber-duck contra-model review (auto-opposite model, additional beat feeding reviewer gate with strict lockout) → realtime HTML progress report updates (progress + testExecution + reviews) → completion + confidence.
+6. Record architecture decisions in `docs/<scenario>-<slug>/adr/*.md`:
    - Use standard ADR format: Status, Context, Decision, Consequences
    - Examples: framework choice, database schema design, API versioning strategy
 
@@ -309,7 +307,7 @@ The role roster defined above materializes differently based on the approach cho
 
 ---
 
-### Phase 8: Handoff
+### Phase 9: Handoff
 
 **Objective:** Package deliverables for user handoff.
 
@@ -322,7 +320,8 @@ The role roster defined above materializes differently based on the approach cho
    - **Known Gaps:** Documented limitations and recommended follow-up
 2. **Generate HTML Report:**
    - Copy `../skills/progress-report/progress-report.template.html` → `docs/<scenario>-<slug>/progress-report.html`
-   - Update `<script id="report-data">` JSON block with:
+   - The report is **updated in realtime during execution** (progress timeline, testExecution summary + suites, contra-model reviews) per `../skills/progress-report/SKILL.md`.
+   - At handoff, finalize `<script id="report-data">` JSON block with:
      ```json
      {
        "scenario": "<project name>",
@@ -362,16 +361,24 @@ The role roster defined above materializes differently based on the approach cho
        ],
        "risks": [
          {"severity": "critical|high|medium|low", "description": "<risk detail>"}
+       ],
+       "testExecution": {
+         "summary": {"passed": <n>, "failed": <n>, "notRun": <n>, "skipped": <n>, "total": <n>, "coverage": <0-100 or null>},
+         "suites": [{"name": "<domain>", "type": "unit|integration|e2e|bdd", "status": "passed|failed|not-run|skipped", "passed": <n>, "failed": <n>, "total": <n>, "notes": "<summary>"}]
+       },
+       "reviews": [
+         {"slice": "<domain>", "author": "<agent or model>", "reviewerModel": "gpt-5.x|claude-opus-4.x", "verdict": "approved|changes-requested|rejected", "findings": <n>, "notes": "<summary>"}
        ]
      }
      ```
+   - See `../skills/progress-report/SKILL.md` for full schema (testExecution and reviews added by Trinity).
    - Verify report renders correctly in browser
 
 **Exit Gate:** README self-contained, HTML report renders with live confidence score.
 
 ---
 
-### Phase 9: Template Feedback (If Applicable)
+### Phase 10: Template Feedback (If Applicable)
 
 **Objective:** Report template-level gaps back to upstream for continuous improvement.
 

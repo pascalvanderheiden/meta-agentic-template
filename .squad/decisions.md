@@ -1911,3 +1911,240 @@ Insert a **🚦 Human Validation Gate (MANDATORY)** step in the Execution phase 
 - `.github/prompts/brown-field.prompt.md` Phase 8 Execution step 5
 - `.github/prompts/modernization.prompt.md` Phase 9 Execution step 5
 - User feedback: "I want to review the docs before it starts building"
+
+---
+
+# Decision: Unified Execution Method Contract + Orchestrator Upgrade
+
+**Date:** 2026-06-09  
+**By:** Oracle (Knowledge Architect)  
+**Requested by:** Pascal van der Heiden
+
+## Context
+
+User upgraded the execution model. After the existing 🚦 Human Validation Gate, the execution lead (Approach A = Orchestrator; Approach B = Squad) must follow ONE shared, explicit, test-driven, contra-reviewed execution method. Both leads must obey the SAME contract.
+
+Trinity added `testExecution` and `reviews` blocks to the HTML report's JSON data island. Morpheus will later wire the 3 prompts + squad.agent.md pointer.
+
+## Decision
+
+Created `.github/skills/meta-agentic-method/references/execution-method.md` as the shared execution contract consumed by BOTH the Orchestrator and Squad. Updated the Orchestrator agent (v2.0.0) to follow this contract and the Confidence Rubric to reflect test pass rate + contra-model review execution in Verification Status.
+
+### Execution Method Structure (execution-method.md)
+
+**Step 0: Analyze Generated Artifacts**
+- Read ALL `docs/<scenario>-<slug>/` artifacts: intake, discovery, assessment, analysis, capability-map, team, testing-strategy, plan, tasks, ADRs
+- Extract SDD Framework choice, testing strategy, team roster, exit criteria
+
+**Step 1: Branch on SDD Framework Choice**
+- **Path A (None):** Analyze docs → Use **GitHub Copilot Plan Mode** to enrich existing `plan.md` and `tasks.md` IN PLACE (NOT separate file). Graceful degradation: fallback to `writing-plans` skill if Plan Mode unavailable.
+- **Path B (Spec-Kit/OpenSpec/Superpowers):** Follow framework's STRICT native loop using framework's OWN prompts/skills. `docs/` specs lead, framework specs derived (both kept). Link to sdd-frameworks.md for command detail.
+
+**Step 2: Per-Slice Execution Loop**
+1. Implement (assign implementer agent)
+2. **Mandatory tests** (write+run; TDD/BDD/safety-net/parity per testing-strategy.md; tests must pass before proceeding)
+3. **Rubber-duck contra-model review** (automatic opposite model pairing: Claude ↔ GPT; findings feed Reviewer gate)
+4. **Reviewer gate** (strict lockout on rejection; only different agent may revise)
+5. **Record results** (append execution-log.md; update HTML report `testExecution` + `reviews` arrays)
+6. Repeat for next slice
+
+**Step 3: Completion**
+- Map deliverables to exit criteria (MET/PARTIAL/BLOCKED)
+- Compute confidence score (Verification reflects test pass rate + whether contra-model review ran per slice)
+- Final HTML report update (progress + testExecution + reviews + confidence)
+- Append completion summary to execution-log.md
+
+**Model-Pairing Table (Rubber-Duck Review):**
+
+| Author Model Family | Rubber-Duck Reviewer Model |
+|---------------------|----------------------------|
+| Claude (Sonnet, Opus, Haiku) | `gpt-5.x-codex` or `gpt-5.5` |
+| GPT (GPT-4, GPT-5.x) | `claude-opus-4.8` or `claude-opus-4.7` |
+| Gemini | `claude-opus-4.8` (default to Claude for non-Claude/GPT) |
+
+### Orchestrator Agent Updates (v2.0.0)
+
+**Added:**
+- § 1: Follow the Shared Execution Method (references execution-method.md)
+- § 3: Analyze Artifacts and Enrich Plan (None path: Plan Mode enriches plan.md/tasks.md IN PLACE, writing-plans fallback)
+- § 5: Run Mandatory Testing Per Slice (TDD/BDD/safety-net/parity; capture results; tests must pass)
+- § 6: Run Rubber-Duck Contra-Model Review Per Slice (auto-opposite pairing; findings feed Reviewer)
+- § 9: Maintain Execution Log and Update HTML Report (testExecution + reviews arrays)
+
+**Updated:**
+- § 10: Report Completion Summary (Verification reflects test pass rate + contra-model review execution)
+- Constraints: Added "Execution Method Compliance" constraint
+- Workflow: Rewrote to reference execution-method.md phases (Step 1 = initialize + analyze; Step 2 = branch on framework; Step 3 = per-slice loop; Step 4 = completion)
+
+**Version:** 1.0.0 → 2.0.0
+
+### Confidence Rubric Update (SKILL.md)
+
+**Verification Status Dimension:**
+- Added note: "reflects (a) **test pass rate** (percentage of tests passing across all slices) and (b) **rubber-duck contra-model review execution** (whether the automated contra-model review ran for each slice)"
+- Score 100 = automated tests pass (100% pass rate), requirements traced, rubber-duck review ran for all slices
+- Score 50 = manual verification OR partial test pass rate OR rubber-duck review skipped for some slices
+- Score 0 = no testing, deliverables unvalidated, rubber-duck review skipped entirely
+- Links to execution-method.md § Step 3.2 for full scoring guidance
+
+## Rationale
+
+**Single source of truth:** Both Orchestrator and Squad consume the same execution-method.md contract, ensuring consistent behavior across approaches.
+
+**Plan Mode enrichment in-place:** Preserves file continuity (no separate plan-v2.md); Plan Mode or writing-plans skill enriches existing plan.md/tasks.md with implementation detail.
+
+**Mandatory testing every slice:** No artifact is "done" until tests are written AND run. This prevents technical debt and ensures verifiable progress.
+
+**Rubber-duck contra-model review:** Automatic opposite model pairing (Claude ↔ GPT) provides an ADDITIONAL automated review beat that FEEDS the existing Reviewer gate. This is a process beat, not a permanent team member.
+
+**Strict lockout enforcement:** Original author locked out on rejection; only different agent may revise. This prevents author bias and enforces true peer review.
+
+**Realtime HTML report updates:** testExecution and reviews arrays provide traceability and transparency. Execution lead updates these after each slice.
+
+**DRY framework references:** Execution method links to sdd-frameworks.md for per-framework command detail rather than duplicating steps.
+
+## Consequences
+
+**Positive:**
+- Unified execution contract ensures consistency across Custom Agents and Squad approaches
+- Plan Mode / writing-plans enrichment produces detailed, execution-ready plans without creating duplicate artifacts
+- Mandatory testing + contra-model review raise quality floor (Verification dimension now dual-factor)
+- Realtime HTML report updates provide live progress visibility
+
+**Neutral:**
+- Execution lead must enforce rubber-duck review per slice (additional step but automated pairing)
+- Verification Status scoring now requires tracking both test pass rate and review execution
+
+## Files Created
+
+- `.github/skills/meta-agentic-method/references/execution-method.md`
+
+## Files Modified
+
+- `.github/agents/orchestrator.agent.md` (v2.0.0)
+- `.github/skills/meta-agentic-method/SKILL.md`
+
+## Verification
+
+- [x] execution-method.md created with Step 0, 1 (Path A/B), 2 (per-slice loop), 3 (completion)
+- [x] Orchestrator agent wired to execution-method.md
+- [x] Plan Mode enrich plan.md/tasks.md in place
+- [x] Mandatory testing per slice
+- [x] Rubber-duck contra-model review per slice with model-pairing table
+- [x] Realtime HTML report updates
+- [x] Verification Status scoring note added to SKILL.md
+- [x] Version bumped: orchestrator.agent.md v1.0.0 → v2.0.0
+
+---
+
+# Decision: Test Execution and Code Review Panels in Progress Report
+
+**Date:** 2026-06-09  
+**Author:** Trinity (Template Engineer)  
+**Status:** Implemented
+
+## Context
+
+Execution model was upgraded so testing is mandatory every slice and a contra-model "rubber-duck" code review runs per slice. Progress report must surface BOTH outcomes, updated in realtime as phases execute.
+
+## Decision
+
+Added two new JSON data blocks and corresponding render panels to `.github/skills/progress-report/progress-report.template.html`:
+
+1. **`testExecution` block**: 
+   - Summary: `passed`, `failed`, `notRun`, `skipped`, `total`, `coverage` (nullable)
+   - Suites array: `name`, `type` (unit|integration|e2e|bdd), `status` (passed|failed|not-run|skipped), `passed`, `failed`, `total`, `notes`
+   - Rendered as summary badges (color-coded) + suites table
+
+2. **`reviews` block**:
+   - Array: `slice`, `author`, `reviewerModel`, `verdict` (approved|changes-requested|rejected), `findings`, `notes`
+   - Rendered as compact table with color-coded verdict (green approved, amber changes-requested, red rejected)
+
+Both wired into `renderReport()` main flow. Report updates in **real-time** on each executed phase/slice.
+
+## Rationale
+
+- Testing is first-class in the methodology (TDD, safety nets, parity tests) — deserves dedicated visibility
+- Contra-model reviews surface quality checks — traceable per slice
+- Real-time updates provide immediate feedback during execution
+- Color coding reuses existing conventions
+- Schema is generic (scenario-agnostic)
+
+## Implementation
+
+- CSS: `.test-badge-*`, `.suite-status-*`, `.verdict-*` classes for color-coding
+- HTML: `<section id="test-execution">` with summary div + suites table, `<section id="reviews">` with reviews table
+- JS: `renderTestExecution(data.testExecution)` and `renderReviews(data.reviews)` functions
+- JSON: `testExecution` and `reviews` blocks added to data island
+- SKILL.md: Documented both blocks, clarified real-time update pattern
+
+## Files Modified
+
+- `.github/skills/progress-report/progress-report.template.html`
+- `.github/skills/progress-report/SKILL.md`
+
+## Verification
+
+- [x] JSON parse check passed
+- [x] Render functions integrated into renderReport()
+- [x] Real-time update pattern documented
+
+---
+
+# Decision: Execution Contract Wiring to Prompts and Squad Coordinator
+
+**Date:** 2026-06-09  
+**By:** Morpheus (Agent Designer)  
+**Status:** Implemented
+
+## Context
+
+Oracle created a shared execution method contract (`.github/skills/meta-agentic-method/references/execution-method.md`) that BOTH execution leads (Orchestrator + Squad) must follow. Trinity added `testExecution` + `reviews` blocks to the HTML report template. The 3 scenario prompts needed updating to point to the contract instead of restating it.
+
+## Decision
+
+Wire all scenario prompts and Squad coordinator to the shared execution contract.
+
+## Implementation
+
+1. Updated Execution phase in all 3 prompts:
+   - Rewrote handoff step: BOTH approaches (Orchestrator + Squad) MUST follow `execution-method.md`
+   - Collapsed SDD-framework step into concise pointer to `execution-method.md` + `sdd-frameworks.md`
+   - Added explicit mention: test-driven every slice, rubber-duck contra-model review, realtime HTML progress updates
+   - Fixed list numbering (all sequential)
+
+2. Updated Handoff phase HTML report step in all 3 prompts:
+   - Noted report updated in realtime during execution
+   - Added `testExecution` + `reviews` blocks to JSON example
+   - Pointed to `progress-report/SKILL.md` for full schema
+
+3. Added "Scenario Execution Lead (Meta-Template)" section to `squad.agent.md`:
+   - ~12 lines, link-based, no algorithm duplication
+   - States: when Squad is execution lead, follow `execution-method.md`
+   - Points to `execution-method.md`, `sdd-frameworks.md`, `progress-report/SKILL.md`
+
+## Approved Design
+
+- None path → Plan Mode enriches existing plan.md/tasks.md IN PLACE, fallback writing-plans
+- SDD framework path → follow framework's own strict stepped prompts/skills
+- Testing mandatory every slice
+- Rubber-duck contra-model review per slice (Claude↔GPT opposite family)
+- Realtime HTML report updates
+
+## Files Modified
+
+- `.github/prompts/green-field.prompt.md` (Phase 7 Execution, Phase 8 Handoff)
+- `.github/prompts/brown-field.prompt.md` (Phase 8 Execution, Phase 10 Handoff)
+- `.github/prompts/modernization.prompt.md` (Phase 9 Execution, Phase 11 Handoff)
+- `.github/agents/squad.agent.md` (new "Scenario Execution Lead" section)
+
+## Outcome
+
+Prompts + Squad now consistently point to the shared execution contract. DRY maintained. All Execution-phase numbering sequential.
+
+## Verification
+
+- [x] All 3 prompts wired to execution-method.md
+- [x] Squad coordinator has Scenario Execution Lead section
+- [x] Handoff report steps include testExecution + reviews blocks
+- [x] No numbering gaps or duplication

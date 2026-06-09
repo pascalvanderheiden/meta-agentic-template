@@ -119,3 +119,36 @@ Live testing revealed workflows scaffolded planning docs (plan.md, tasks.md, exe
 ### 2026-06-09: Orchestration Log + Session Log Consolidation
 
 Scribe created orchestration logs for each agent, session log for execution-handoff-redesign batch, merged decision inbox to decisions.md, staged all for git commit.
+
+## 2025-01-16T21:30:00Z — Wired scenario prompts + Squad to shared execution contract
+
+**Task:** Update 3 scenario prompts and Squad coordinator to reference the shared execution method contract created by Oracle.
+
+**Actions taken:**
+- Updated Execution phases in `green-field.prompt.md` (Phase 7), `brown-field.prompt.md` (Phase 8), `modernization.prompt.md` (Phase 9):
+  - Rewrote handoff step to point BOTH approaches (Orchestrator + Squad) to `execution-method.md`
+  - Collapsed SDD-framework bullet into concise pointer to `execution-method.md` + `sdd-frameworks.md`
+  - Added explicit mention of test-driven every slice, rubber-duck contra-model review, realtime HTML updates
+  - Verified Execution-phase list numbering sequential (no gaps/duplicates)
+- Updated Handoff phase HTML report step in all 3 prompts:
+  - Noted report updated in realtime during execution
+  - Added `testExecution` + `reviews` blocks to JSON example
+  - Pointed to `progress-report/SKILL.md` for full schema
+- Added "Scenario Execution Lead (Meta-Template)" section to `squad.agent.md` (placed before "Source of Truth Hierarchy"):
+  - ~12 lines, link-based
+  - Points to `execution-method.md` and `sdd-frameworks.md`
+  - States None→Plan Mode (enrich in place) vs framework→strict loop (docs as source of truth)
+  - Test-driven, rubber-duck contra-model (auto-opposite, additional beat, strict lockout), realtime HTML updates
+  - Kept concise per instructions (no algorithm duplication)
+
+**Decisions made:**
+- Keep all wording consistent with execution-method.md terminology ("analyze docs", "branch on SDD framework", "None=Plan Mode enrich plan/tasks in place", "framework=strict native loop", "rubber-duck contra-model review", "realtime HTML progress report updates")
+- Fixed list numbering after edits (green 5→6, brown 6→7, modernization 6→7→8)
+- Squad section placed logically after Team Mode content, before internal governance sections
+
+**Result:** All 3 prompts + Squad now consistently reference the shared execution contract. DRY maintained — details in `execution-method.md`, prompts/squad point to it.
+
+
+---
+
+**2026-06-09: Execution-Model Upgrade — Prompts Wired** — Wired all 3 scenario prompts + squad.agent.md to shared execution-method.md contract. See `.squad/orchestration-log/2026-06-09T19:13:41Z-morpheus.md`.

@@ -139,6 +139,8 @@ The confidence score is a weighted aggregate of 6 dimensions, each scored 0–10
 | **Spec Completeness** | 15% | Missing ≥2 phase artifacts | All artifacts present, some incomplete | All artifacts complete with verification |
 | **Verification Status** | 10% | No testing; deliverables unvalidated | Manual verification performed | Automated tests pass; requirements traced |
 
+**Verification Status Scoring:** This dimension reflects (a) **test pass rate** (percentage of tests passing across all slices) and (b) **rubber-duck contra-model review execution** (whether the automated contra-model review ran for each slice). Score 100 = automated tests pass (100% pass rate), requirements traced, and rubber-duck review ran for all slices. Score 50 = manual verification OR partial test pass rate OR rubber-duck review skipped for some slices. Score 0 = no testing, deliverables unvalidated, rubber-duck review skipped entirely. See [execution-method.md](references/execution-method.md) § Step 3.2 for full scoring guidance.
+
 **Bands:** 80–100 High/Green; 50–79 Medium/Amber; 0–49 Low/Red. Brown-field and modernization adjust scoring for regression safety, repo-wiki freshness, and parity evidence.
 
 **Full detail:** see [`references/confidence-rubric.md`](references/confidence-rubric.md).

@@ -23,7 +23,7 @@ The progress report uses a **data island pattern** — a self-contained HTML fil
 1. **Initial Generation**: Copy the bundled `progress-report.template.html` to `docs/<scenario>-<slug>/progress-report.html`
 2. **Data Embedding**: Replace the JSON block inside `<script id="report-data" type="application/json">` with actual project data
 3. **Rendering**: Open the HTML file in any browser — JavaScript reads the JSON and renders all sections
-4. **Updates**: After each SDD phase completion, rewrite only the JSON block + `generatedAt` timestamp; HTML/CSS/JS remain static
+4. **Real-Time Updates**: After each executed phase/slice, rewrite only the JSON block + `generatedAt` timestamp; HTML/CSS/JS remain static. Progress timeline, test execution, and code reviews update in real-time on each phase.
 
 **Key advantage**: No network required, works offline, single file contains everything.
 
@@ -103,6 +103,39 @@ After each phase completion:
     }
   ],
   
+  "testExecution": {
+    "summary": {
+      "passed": "number",                    // Passed tests count
+      "failed": "number",                    // Failed tests count
+      "notRun": "number",                    // Not run tests count
+      "skipped": "number",                   // Skipped tests count
+      "total": "number",                     // Total tests count
+      "coverage": "number | null"            // Code coverage percentage (0-100) or null
+    },
+    "suites": [
+      {
+        "name": "string",                    // Suite or domain name
+        "type": "string",                    // "unit" | "integration" | "e2e" | "bdd"
+        "status": "string",                  // "passed" | "failed" | "not-run" | "skipped"
+        "passed": "number",                  // Passed tests in this suite
+        "failed": "number",                  // Failed tests in this suite
+        "total": "number",                   // Total tests in this suite
+        "notes": "string"                    // Additional notes
+      }
+    ]
+  },
+  
+  "reviews": [
+    {
+      "slice": "string",                     // Domain/slice name
+      "author": "string",                    // Agent or author name
+      "reviewerModel": "string",             // Contra-model reviewer (e.g., "gpt-5.4", "claude-opus-4.6")
+      "verdict": "string",                   // "approved" | "changes-requested" | "rejected"
+      "findings": "number",                  // Number of issues found
+      "notes": "string"                      // Review summary
+    }
+  ],
+  
   "testResults": {
     "total": "number",                       // Total test count
     "passed": "number",                      // Passed test count
@@ -178,7 +211,42 @@ Identified gaps and blockers:
 - **severity**: `critical` | `high` | `medium` | `low`
 - **description**: Plain-text explanation
 
-#### Test Results (Optional)
+#### Test Execution
+
+Real-time test execution status across slices. Updated on each executed phase/slice:
+
+- **summary**: Aggregate test counts
+  - **passed**: Number of passed tests
+  - **failed**: Number of failed tests
+  - **notRun**: Number of tests not yet run
+  - **skipped**: Number of skipped tests
+  - **total**: Total test count
+  - **coverage**: Code coverage percentage (0–100) or `null` if not available
+- **suites**: Array of test suite results
+  - **name**: Suite or domain name
+  - **type**: `unit` | `integration` | `e2e` | `bdd`
+  - **status**: `passed` | `failed` | `not-run` | `skipped`
+  - **passed**: Passed tests in this suite
+  - **failed**: Failed tests in this suite
+  - **total**: Total tests in this suite
+  - **notes**: Additional context
+
+**Rendering**: Summary badges (passed/failed/not-run/skipped/total + coverage if present) and a table of suites with color-coded status (green pass, red fail, amber/grey not-run/skipped). Makes testing traceable: clear what was tested vs not.
+
+#### Code Reviews
+
+Rubber-duck contra-model code review outcomes per slice:
+
+- **slice**: Domain/slice name
+- **author**: Agent or author who wrote the code
+- **reviewerModel**: Contra-model reviewer (e.g., `gpt-5.4`, `claude-opus-4.6`)
+- **verdict**: `approved` | `changes-requested` | `rejected`
+- **findings**: Number of issues found
+- **notes**: Review summary
+
+**Rendering**: Compact table with slice, author, contra-model reviewer, verdict (color-coded: green approved, amber changes-requested, red rejected), and findings count.
+
+#### Test Results (Optional - Legacy)
 
 Test and parity status across scenarios:
 
@@ -188,6 +256,8 @@ Test and parity status across scenarios:
 - **parityPercent**: Parity percentage (0–100) for modernization scenarios, or `null` if not applicable
 
 **Rendering**: Display as a badge or progress bar near the confidence gauge. For green-field, shows TDD pass rate. For brown-field, shows safety net coverage. For modernization, shows backward compatibility parity percentage.
+
+**Note**: The newer `testExecution` block provides more granular test tracking. Use `testExecution` for real-time slice-by-slice visibility; use `testResults` for legacy aggregate metrics if needed.
 
 ## Examples
 
@@ -241,8 +311,12 @@ On page load, the template:
    - **Capability table** with color-coded status
    - **MCP server list** with connection state
    - **Risk list** with severity colors
+   - **Test execution summary** with badges (passed/failed/not-run/skipped/total/coverage) and suites table
+   - **Code reviews table** with verdict color-coding (green approved, amber changes-requested, red rejected)
 
 All styling is inline. No runtime network requests.
+
+Report updates in **real-time** as phases execute — progress timeline, test execution, and code reviews refresh on each executed phase/slice, not only at handoff.
 
 ## Gotchas
 

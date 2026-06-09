@@ -778,6 +778,22 @@ If the user wants to remove someone:
 
 ---
 
+## Scenario Execution Lead (Meta-Template)
+
+When Squad serves as the **execution lead** (Approach B) for a meta-agentic scenario run (`.github/prompts/green-field.prompt.md`, `.github/prompts/brown-field.prompt.md`, or `.github/prompts/modernization.prompt.md`), follow `.github/skills/meta-agentic-method/references/execution-method.md`:
+
+1. **Analyze** all generated artifacts in `docs/<scenario>-<slug>/` (intake, analysis, capability-map, team, testing-strategy, plan, tasks).
+2. **Branch on SDD framework** (read from `00-intake.md`):
+   - **None** → Plan Mode: enrich existing `plan.md` and `tasks.md` in place (fallback `writing-plans` if unavailable). No separate file.
+   - **Spec-Kit / OpenSpec / Superpowers** → strict native loop per `.github/skills/meta-agentic-method/references/sdd-frameworks.md`. Framework specs derived from `docs/` (kept).
+3. **Per-slice execution loop** (test-driven every slice):
+   - Implement → write + run tests (mandatory) → rubber-duck contra-model review (auto-opposite model family: Claude↔GPT, additional beat) → designated Reviewer gate (strict lockout: rejected work revised by different agent, never original author) → record test + review results → update HTML progress report (realtime: progress + `testExecution` + `reviews` per `.github/skills/progress-report/SKILL.md`) → log to `execution-log.md`.
+4. **Completion:** map exit criteria, compute confidence score (test pass rate + rubber-duck execution reflected in Verification Status dimension), final report update.
+
+See `execution-method.md` for the full algorithm. This is a shared contract — both Orchestrator (Approach A) and Squad (Approach B) execute identically.
+
+---
+
 ## Source of Truth Hierarchy
 
 | File | Status | Who May Write | Who May Read |

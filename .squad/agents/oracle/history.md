@@ -294,3 +294,62 @@ Added non-mandatory per-scenario framework advice: green-field defaults to OpenS
 ## 2026-06-09: Orchestration Log + Session Log Consolidation
 
 Scribe created orchestration logs for each agent, session log for execution-handoff-redesign batch, merged decision inbox to decisions.md, updated cross-agent history records. All deliverables staged for git commit.
+
+## 2026-01-16: Execution Method Contract + Orchestrator Upgrade
+
+**Context:** User upgraded execution model after human validation gate. Both Orchestrator (Custom Agents) and Squad must follow ONE shared, test-driven, contra-reviewed execution method.
+
+**Tasks Completed:**
+1. Created `.github/skills/meta-agentic-method/references/execution-method.md` — shared execution contract consumed by BOTH approaches:
+   - Step 0: Analyze all generated docs (intake, analysis, discovery, assessment, capability-map, team, testing-strategy, plan, tasks, ADRs)
+   - Step 1: Branch on SDD Framework (None → Plan Mode enrich plan.md/tasks.md in place, fallback writing-plans; Spec-Kit/OpenSpec/Superpowers → strict native loop)
+   - Step 2: Per-slice loop — implement → mandatory tests (write+run) → rubber-duck contra-model review (auto-opposite pairing) → feed Reviewer gate (strict lockout) → record test + review results → update HTML report (progress + testExecution + reviews) → append execution-log.md
+   - Step 3: Completion — map exit criteria, compute confidence (Verification reflects test pass rate + contra-model review ran), final report update
+   - Includes model-pairing table (Claude ↔ GPT opposite for rubber-duck)
+   - Scenario-agnostic, approach-agnostic, framework-agnostic
+
+2. Updated `.github/agents/orchestrator.agent.md` (v1.0.0 → v2.0.0):
+   - Wired to execution-method.md as governing contract
+   - Added § 3: Analyze artifacts + Plan Mode enrich plan.md/tasks.md IN PLACE (None path), writing-plans fallback
+   - Added § 5: Mandatory testing per slice (TDD/BDD/safety-net/parity per testing-strategy.md)
+   - Added § 6: Rubber-duck contra-model review per slice (automatic opposite model pairing, findings feed Reviewer)
+   - Added § 9: Realtime HTML report updates (testExecution + reviews arrays from Trinity)
+   - Renumbered sections to maintain logical flow
+   - Updated workflow steps to reference execution-method.md phases
+
+3. Updated `.github/skills/meta-agentic-method/SKILL.md`:
+   - Added Verification Status scoring note: reflects (a) test pass rate and (b) whether rubber-duck contra-model review ran per slice
+   - Links to execution-method.md § Step 3.2 for full scoring guidance
+
+**Design Decisions Encoded:**
+- Two execution paths based on SDD Framework (None vs Spec-Kit/OpenSpec/Superpowers)
+- Plan Mode enriches existing plan.md/tasks.md IN PLACE (not separate file)
+- Testing mandatory every slice (no artifact "done" until tests written AND run)
+- Rubber-duck contra-model review is ADDITIONAL beat that FEEDS existing reviewer gate (not replacement)
+- Strict lockout on rejection (original author may NOT fix; different agent revises)
+- Realtime HTML report updates with testExecution + reviews JSON keys (Trinity's work)
+- docs/ specs lead, framework specs derived (both kept)
+- Linked to sdd-frameworks.md rather than duplicating framework steps
+
+**Files Created:**
+- `.github/skills/meta-agentic-method/references/execution-method.md`
+
+**Files Modified:**
+- `.github/agents/orchestrator.agent.md` (v2.0.0)
+- `.github/skills/meta-agentic-method/SKILL.md`
+
+**Cross-References:**
+- Links to sdd-frameworks.md for per-framework command detail
+- Links to testing-strategy.md for TDD/BDD/safety-net/parity
+- Links to confidence-rubric.md for Verification dimension scoring
+- Report JSON keys: testExecution, reviews (Trinity added)
+
+**Learnings:**
+- Execution method must be DRY — single source, two consumers (Orchestrator + Squad)
+- Contra-model review is process beat (rubber-duck agent type), not permanent team member
+- Plan Mode enrichment is in-place edit (preserves file continuity), not separate artifact
+- Verification dimension now dual-factor: test pass rate + review execution (both mandatory for 100 score)
+
+---
+
+**2026-06-09: Execution-Model Upgrade Completed** — Created `.github/skills/meta-agentic-method/references/execution-method.md` (shared contract); upgraded Orchestrator to v2.0.0. See `.squad/orchestration-log/2026-06-09T19:13:41Z-oracle.md` and `.squad/log/2026-06-09T19:13:41Z-execution-model-upgrade.md`.
