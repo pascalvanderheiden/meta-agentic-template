@@ -17,8 +17,9 @@ flowchart TD
     MOD --> S1
     
     S1 --> S2[Step 2: Run Scenario<br/>VS Code slash command or<br/>Copilot CLI natural ask]
-    S2 --> S3[Step 3: Execute by Team<br/>Orchestrator/Squad drives<br/>role agents through phases]
-    S3 --> OUT[Deliverables + Progress Report]
+    S2 --> S3[Step 3: Answer Intake<br/>Execution approach, SDD framework,<br/>scenario details]
+    S3 --> S4[Step 4: Execute by Team<br/>Orchestrator/Squad drives<br/>role agents through phases]
+    S4 --> OUT[Deliverables + Progress Report]
     
     style MT fill:#e1f5ff
     style GF fill:#d4edda
@@ -75,45 +76,11 @@ Start `copilot` and ask naturally. Examples:
 
 The agent will trigger the matching scenario skill, which delegates to the authoritative `.github/prompts/<scenario>.prompt.md` workflow.
 
-**Intake questions:**
-- **Execution Approach**: Choose **(A) Custom Agents** for simple workflows or **(B) Squad Team** (default) for complex multi-agent orchestration
-- **SDD Framework**: Choose **(1) None**, **(2) Spec-Kit**, **(3) OpenSpec**, or **(4) Superpowers** — or accept the scenario's recommended default
-- **Scenario-specific details**: Stack preferences, constraints, success criteria, scope boundaries
+### Step 3 — Answer Intake Questions
 
-### Step 3 — Execute by Team
+Once you run the scenario (Step 2), the scenario prompt/skill **automatically asks** these intake questions in the chat before it begins forming the team. Answer them to proceed:
 
-The workflow proceeds through 10 phases (Intake → Discovery/Assessment → Analysis → Capability Mapping → Capability Acquisition → Team Formation → Execution → Verification → Handoff).
-
-**The execution lead** (Orchestrator for Custom Agents, or Squad coordinator for Squad Team) invokes role agents in handoff order, enforces strict reviewer gates (original author cannot revise rejected work), runs the SDD framework's implement loop (if chosen), and reports back.
-
-**Review the progress report**: Open `docs/<scenario>-<slug>/progress-report.html` in your browser for real-time status, confidence scores, team roster, and capability tracking.
-
-## Example Prompts
-
-**Green-Field (new build):**
-```
-@workspace /green-field Build a customer portal with Next.js, Tailwind CSS, and Supabase. 
-Include user authentication, profile management, and a dashboard showing order history. 
-Deploy to Vercel.
-```
-
-**Brown-Field (extend existing):**
-```
-@workspace /brown-field Add OAuth 2.0 authentication to our existing Express.js REST API. 
-Support Google and GitHub providers. Maintain backward compatibility with the current 
-JWT token system. The API is in src/api/ and uses Passport.js.
-```
-
-**Modernization (migrate legacy):**
-```
-@workspace /modernization Modernize our Angular 1.x e-commerce app to React 18 with TypeScript. 
-Consume the existing REST API unchanged. Reuse our Playwright E2E suite as a parity oracle 
-to ensure the React app behaves identically. The legacy app is in legacy/ and uses Grunt.
-```
-
-## Execution Approaches
-
-Both approaches use **identical** agent roles, skills, and MCP servers. Only orchestration differs.
+**1. Execution Approach** — Choose how agents are orchestrated:
 
 | Aspect | **A. Custom Agents** | **B. Squad Team (Default)** |
 |--------|---------------------|--------------------------|
@@ -125,20 +92,44 @@ Both approaches use **identical** agent roles, skills, and MCP servers. Only orc
 
 Squad is **pre-installed** (`.github/agents/squad.agent.md`) and recommended for multi-agent scenarios.
 
+**2. SDD Framework** — Choose spec-driven workflow (or None):
+
+| Framework | Recommended for | Install (if chosen) |
+|-----------|-----------------|---------------------|
+| **None** (native) | Brown-field | Nothing — runs out of the box |
+| **OpenSpec** | Green-field | See [Optional: SDD Frameworks](#optional-sdd-frameworks) below |
+| **Spec-Kit** | Modernization | See [Optional: SDD Frameworks](#optional-sdd-frameworks) below |
+| **Superpowers** | Any (quality/TDD overlay) | See [Optional: SDD Frameworks](#optional-sdd-frameworks) below |
+
+Defaults are **recommendations, not mandates** — you can pick any option (or None) during intake.
+
+**3. Scenario-specific details** — Stack preferences, constraints, success criteria, scope boundaries.
+
+**Shortcut**: Pre-answer these choices in your initial request (e.g., "...using Custom Agents and OpenSpec") to skip the back-and-forth.
+
+### Step 4 — Execute by Team
+
+The execution lead (Orchestrator for Custom Agents, or Squad coordinator for Squad Team) drives role agents through the 10-phase workflow (Intake → Discovery/Assessment → Analysis → Capability Mapping → Capability Acquisition → Team Formation → Execution → Verification → Handoff), enforcing handoffs, reviewer gates (original author cannot revise rejected work), and the SDD framework's implement loop (if chosen).
+
+**Kick off execution:**
+```
+@orchestrator execute the plan
+```
+(or `@squad execute the plan` for the Squad approach)
+
+**Review the progress report**: Open `docs/<scenario>-<slug>/progress-report.html` in your browser for real-time status, confidence scores, team roster, and capability tracking.
+
 ## Optional: SDD Frameworks
 
-Each scenario can optionally run on a spec-driven-development framework. This is **orthogonal** to the execution approach above (you can combine any framework with Custom Agents *or* Squad). The default is **None** — the native pipeline, which needs no extra install.
+If you choose a framework in Step 3, install it before execution:
 
-**If (and only if) you choose a framework, install it first:**
+| Framework | Install Command |
+|-----------|----------------|
+| **OpenSpec** | `npm install -g @fission-ai/openspec@latest && openspec init` |
+| **GitHub Spec-Kit** | `uvx --from git+https://github.com/github/spec-kit.git specify init . --integration copilot` (needs [uv](https://docs.astral.sh/uv/)/Python) |
+| **Superpowers** | Install the Superpowers skills plugin — see [github.com/obra/superpowers](https://github.com/obra/superpowers) |
 
-| Framework | Install | Recommended default for |
-|-----------|---------|-------------------------|
-| **None** (native) | Nothing — runs out of the box | Brown-field |
-| **OpenSpec** | `npm install -g @fission-ai/openspec@latest && openspec init` | Green-field |
-| **GitHub Spec-Kit** | `uvx --from git+https://github.com/github/spec-kit.git specify init . --integration copilot` (needs [uv](https://docs.astral.sh/uv/)/Python) | Modernization |
-| **Superpowers** | Install the Superpowers skills plugin — see [github.com/obra/superpowers](https://github.com/obra/superpowers) | Any (quality/TDD overlay) |
-
-Defaults are **recommendations, not mandates** — the scenario prompt asks during Intake and you can pick any option (or None). Details: `.github/skills/meta-agentic-method/SKILL.md` § *SDD Framework Selection (Optional)*.
+Details: `.github/skills/meta-agentic-method/SKILL.md` § *SDD Framework Selection (Optional)*.
 
 ## Use on an Existing Codebase (APM)
 
