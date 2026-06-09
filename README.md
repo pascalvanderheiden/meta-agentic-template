@@ -44,7 +44,9 @@ flowchart TD
 
 **For green-field (building new):** Fork or clone this template repository.
 
-**For brown-field or modernization (working with existing code):** Install the agentic artifacts into your existing repository using APM (see [Use on an Existing Codebase (APM)](#use-on-an-existing-codebase-apm) below).
+**For brown-field (evolve existing in-place):** Install the agentic artifacts INTO your existing repository using APM — work happens in the same repo (see [Use on an Existing Codebase (APM)](#use-on-an-existing-codebase-apm) below).
+
+**For modernization (migrate legacy):** Create a NEW side-car repo and install the agentic artifacts there using APM. The side-car REFERENCES the existing/legacy project read-only (submodule + generated repo-wiki) — legacy source stays untouched (see [Use on an Existing Codebase (APM)](#use-on-an-existing-codebase-apm) below).
 
 ### Step 2 — Run the Scenario
 
@@ -140,7 +142,7 @@ Defaults are **recommendations, not mandates** — the scenario prompt asks duri
 
 ## Use on an Existing Codebase (APM)
 
-Green-field: fork/use this template. Brown-field or modernization: install the agentic artifacts into your existing repo; no fork required.
+Green-field: fork/use this template. Brown-field: APM-install into your existing repo (in-place). Modernization: APM-install into a NEW side-car repo that references the legacy source read-only (submodule + repo-wiki). No fork required for brown-field or modernization.
 
 ```bash
 apm install \
