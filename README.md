@@ -9,6 +9,7 @@ A framework for orchestrating AI-powered development teams using Spec-Driven Dev
 - **Node.js v18+** (for MCP server generation)
 - **Git**
 - **Optional**: `gh` CLI for Squad workflows
+- **Optional**: an SDD framework (Spec-Kit / OpenSpec / Superpowers) — only if you choose that path (see [Optional: SDD Frameworks](#optional-sdd-frameworks))
 
 ## Three Scenarios
 
@@ -53,6 +54,21 @@ Both approaches use **identical** agent roles, skills, and MCP servers. Only orc
 ```
 
 Squad is **pre-installed** (`.github/agents/squad.agent.md`) and recommended for multi-agent scenarios.
+
+## Optional: SDD Frameworks
+
+Each scenario can optionally run on a spec-driven-development framework. This is **orthogonal** to the execution approach above (you can combine any framework with Custom Agents *or* Squad). The default is **None** — the native pipeline, which needs no extra install.
+
+**If (and only if) you choose a framework, install it first:**
+
+| Framework | Install | Recommended default for |
+|-----------|---------|-------------------------|
+| **None** (native) | Nothing — runs out of the box | Brown-field |
+| **OpenSpec** | `npm install -g @fission-ai/openspec@latest && openspec init` | Green-field |
+| **GitHub Spec-Kit** | `uvx --from git+https://github.com/github/spec-kit.git specify init . --integration copilot` (needs [uv](https://docs.astral.sh/uv/)/Python) | Modernization |
+| **Superpowers** | Install the Superpowers skills plugin — see [github.com/obra/superpowers](https://github.com/obra/superpowers) | Any (quality/TDD overlay) |
+
+Defaults are **recommendations, not mandates** — the scenario prompt asks during Intake and you can pick any option (or None). Details: `.github/skills/meta-agentic-method/SKILL.md` § *SDD Framework Selection (Optional)*.
 
 ## How It Works
 
