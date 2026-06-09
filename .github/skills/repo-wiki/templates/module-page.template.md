@@ -27,7 +27,7 @@ DYNAMIC RULES:
 
 ## Public API / Entry Points
 
-<!-- GENERATED: Exported functions, commands, routes, events, jobs, components, or user-facing entry points. -->
+<!-- GENERATED: Exported functions, commands, routes, events, jobs, components, or user-facing entry points. For UI/client modules, include component selectors/identifiers, public inputs/outputs (props), injectable/shared services, and upstream APIs consumed. -->
 
 | Entry Point | Type | Purpose | Evidence |
 |-------------|------|---------|----------|

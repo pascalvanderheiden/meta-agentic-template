@@ -47,6 +47,7 @@ Use these templates when available:
 - `templates/index.md.template` — starter for `index.md`.
 - `templates/log.md.template` — starter for `log.md`.
 - `templates/module-page.template.md` — starter for module/component pages.
+- `templates/concept-page.template.md` — starter for `concepts/` pages.
 - `../meta-agentic-method/templates/discovery-wiki.template.md` — starter for `overview.md` synthesis.
 - `../meta-agentic-method/templates/wiki-index.template.json` — starter for `wiki-index.json` machine index.
 
@@ -93,8 +94,8 @@ The heading format enables simple navigation: `grep "^## \[" docs/<scenario>-<sl
 
 Use ingest to compile source knowledge incrementally.
 
-1. **Select scope.** Choose one module, package, service, bounded context, runtime boundary, schema area, API surface, or risk hotspot.
-2. **Pack token-bounded source.** Use a repository packer such as `repomix`, `gitingest`, or `code2prompt`. Exclude generated files, vendored dependencies, build outputs, secrets, and irrelevant binaries.
+1. **Select scope.** Choose one module, package, service, bounded context, runtime boundary, schema area, API surface, component tree, presentation layer, client-state boundary, cross-cutting middleware (interceptors, guards, filters, pipes, decorators), upstream/consumed API surface, or risk hotspot.
+2. **Pack token-bounded source.** Use a repository packer such as `repomix`, `gitingest`, or `code2prompt`. Exclude common generated/build outputs (`dist/`, `build/`, `target/`, `.next/`, `.angular/`, `out/`), dependencies/vendor (`node_modules/`, `vendor/`, `.venv/`, `__pycache__/`, `*.egg-info/`), caches/coverage (`.cache/`, `coverage/`), lock files, nested git submodules, large fixtures/snapshots, secrets, and binaries. These are ecosystem-agnostic examples — adapt per stack.
 3. **Read the area.** Inspect packed context plus targeted raw files only as needed.
 4. **Write or update pages.** For module pages, capture responsibilities, key files with paths, public API, dependencies, data flows, invariants, tests, operational notes, and risks.
 5. **Update cross-links.** Patch related module, concept, overview, and risk pages when the new area changes the synthesis.

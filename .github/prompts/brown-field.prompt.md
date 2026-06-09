@@ -156,13 +156,14 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 **Actions:**
 1. Read `../skills/meta-agentic-method/SKILL.md` § Analysis phase requirements
 2. If an SDD framework was selected in Intake, follow its flow per `../skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)" and reconcile framework specs with native analysis artifacts.
-3. Scaffold `docs/<scenario>-<slug>/01-analysis.md` from `../skills/meta-agentic-method/templates/analysis.template.md`, fill placeholders, generate:
+3. Read `docs/<scenario>-<slug>/wiki/index.md` (produced in Discovery); derive functional domains from module responsibilities; map capability requirements to wiki evidence (cite page/source paths); flag wiki gaps for follow-up ingest.
+4. Scaffold `docs/<scenario>-<slug>/01-analysis.md` from `../skills/meta-agentic-method/templates/analysis.template.md`, fill placeholders, generate:
    - **Functional Domains:** Break change request into domains (e.g., "Authentication Extension", "API Integration", "Data Migration")
    - **Success Criteria:** Measurable outcomes per domain (e.g., "OAuth flow completes in <2s", "Zero breaking changes to existing /api/v1 endpoints")
    - **Non-Functional Requirements:** Performance (no degradation), security (maintain existing posture), observability
    - **Preservation Requirements:** Explicitly list what MUST NOT change (backward compatibility constraints)
    - **Capability Requirements:** List needed agents, skills, instructions, MCP servers
-4. Cross-reference Analysis with Discovery:
+5. Cross-reference Analysis with Discovery:
    - Map new domains to existing components (integration points)
    - Identify refactoring candidates vs. untouchable legacy code
 

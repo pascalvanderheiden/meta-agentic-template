@@ -36,7 +36,7 @@
   "entrypoints": [
     {
       "name": "[ENTRYPOINT_NAME]",
-      "type": "[CLI/API/UI/Worker/Event]",
+      "type": "[CLI/API/UI/Worker/Event/Route/DeepLink]",
       "path": "[ENTRYPOINT_PATH]",
       "summary": "[ENTRYPOINT_SUMMARY]"
     }

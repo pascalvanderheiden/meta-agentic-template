@@ -1,0 +1,26 @@
+Generalize template: parity oracle, runtime build-skill path, repo-wiki & topology, UI/role/report (scenario-agnostic)
+
+Tier-1 generic improvements (validated via Angular→React probe):
+- Parity oracle: reuse legacy behavioral/E2E test suites as cross-stack validation net
+- Discovery→Analysis handoff: explicit wiki consumption in phase 4, cite evidence
+- De-biased discovery tooling: cover full software-development spectrum, not data/ETL-only
+- Runtime bespoke-skill build path: added BUILD [C] decision + guardrail (local skills stay local)
+- Generic packer exclusions: ecosystem-agnostic, no vendor CD-CDK bias
+- Codebase topology & submodule handling: read-only side-car pattern, nested exclusions
+
+Tier-2 generic improvements:
+- Optional UI migration tables: gated, framework-agnostic assessment enhancements
+- Generic role archetypes: execution-approach-agnostic (custom agents vs squad)
+- Optional testResults field: surface test/parity status in progress dashboard
+- Concept-page template & wiki-index enum: extended entrypoint types (Route, DeepLink)
+
+All edits validated scenario-agnostic; no fixed stack/framework/domain content.
+Neo review: ✅ APPROVED. Non-blocking note: MCP-rubric refinement deferred per user.
+
+Deliverables:
+- Orchestration logs (trinity, morpheus, tank, oracle, neo)
+- Session log: tier-1 + tier-2 summary
+- Decisions merged: inbox → decisions.md, inbox cleaned
+- Git commit + push
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>

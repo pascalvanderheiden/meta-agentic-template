@@ -31,7 +31,7 @@ Choose repository topology during Intake because it determines where meta artifa
 - Use a template fork for green-field scenarios; it carries the methodology, Squad system, skills, prompts, and feedback loop.
 - Use APM for brown-field in-repo installation; the existing codebase receives the meta artifacts needed to run Discovery, safety-net testing, specs, execution, and feedback.
 - Use a side-car control repo for modernization when source and target differ, such as legacy Oracle remaining untouched while a new Fabric repository is built.
-- Pin modernization legacy source with a git submodule at `legacy/` so the raw source revision is versioned and reproducible. Treat the submodule as read-only unless the modernization scope explicitly changes.
+- Pin modernization legacy source with a git submodule at `legacy/` so the raw source revision is versioned and reproducible. Treat the submodule as read-only unless the modernization scope explicitly changes. If the legacy source itself contains git submodules, exclude nested submodules from repo-wiki packing (they are dependencies, not the migration subject).
 - Use the generated repo-wiki, not raw submodule files, as the default LLM context in modernization. Pull raw files from `legacy/` only when the wiki/index points to a precise need.
 - Keep the upstream template feedback loop available in all topologies.
 

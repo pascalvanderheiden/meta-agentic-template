@@ -101,7 +101,14 @@ After each phase completion:
       "severity": "string",                  // "critical" | "high" | "medium" | "low"
       "description": "string"                // Risk description
     }
-  ]
+  ],
+  
+  "testResults": {
+    "total": "number",                       // Total test count
+    "passed": "number",                      // Passed test count
+    "failed": "number",                      // Failed test count
+    "parityPercent": "number | null"         // Parity percentage (0-100) or null if not applicable
+  }
 }
 ```
 
@@ -171,6 +178,17 @@ Identified gaps and blockers:
 - **severity**: `critical` | `high` | `medium` | `low`
 - **description**: Plain-text explanation
 
+#### Test Results (Optional)
+
+Test and parity status across scenarios:
+
+- **total**: Total test count (green-field TDD, brown-field safety net, modernization parity)
+- **passed**: Number of passing tests
+- **failed**: Number of failing tests
+- **parityPercent**: Parity percentage (0–100) for modernization scenarios, or `null` if not applicable
+
+**Rendering**: Display as a badge or progress bar near the confidence gauge. For green-field, shows TDD pass rate. For brown-field, shows safety net coverage. For modernization, shows backward compatibility parity percentage.
+
 ## Examples
 
 ### Minimal Payload
@@ -195,7 +213,13 @@ Identified gaps and blockers:
   "team": [],
   "capabilities": [],
   "mcpServers": [],
-  "risks": []
+  "risks": [],
+  "testResults": {
+    "total": 0,
+    "passed": 0,
+    "failed": 0,
+    "parityPercent": null
+  }
 }
 ```
 

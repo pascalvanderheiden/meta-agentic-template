@@ -10,6 +10,8 @@
 
 <!-- Append learnings below -->
 - 2026-06-08: Reviewed green-field/brown-field/modernization prompts. Found 1 blocking issue: modernization artifact numbering contradicts method doc (uses 04-analysis vs. canonical 01-analysis). Recommended Trinity/Oracle patch.
+- 2026-01-16: Pre-flight validation for Angular→React modernization revealed template bias toward data/ETL scenarios. Three key gaps: (1) assessment.template.md lacks UI-specific sections (component mapping, route parity, DI→hook strategy); (2) MCP Availability dimension (20%) is semantically awkward for UI-only migrations (trivially 100 or misleadingly 0); (3) highest-value parity test strategy—reusing existing Playwright E2E suite as cross-framework oracle—is undocumented despite being framework-agnostic. Template shines for phase pipeline, repo-wiki ingestion, target-framework skill ecosystem, and feedback loop.
+- 2026-01-16: Topology gap identified: modernization prescribes side-car + `legacy/` submodule, but OWNED frontend repos with existing submodules (like `realworld/` backend) create submodule-in-submodule ambiguity. Workaround: treat as in-repo branch migration with repo-wiki.
 
 ## 2026-01-16: RE-REVIEW — Three Scenario Prompts (green/brown/modernization)
 
@@ -148,3 +150,43 @@ Reviewed new bundled `repo-wiki` skill implementing Karpathy's LLM-wiki pattern 
 
 - Karpathy wiki pattern key invariants: (1) index.md is first-read, (2) log.md is append-only with date-prefixed entries, (3) wiki is the compiled understanding layer that compounds, not raw source.
 - Delegation pattern: when extracting a skill from a larger methodology, keep ONLY topology/timing in the parent; move full workflow to the new skill to avoid duplication and drift.
+
+## 2026-01-17: Tier-1 + Tier-2 Generic Improvements Review (Angular→React Probe-Validated)
+
+**VERDICT: ✅ APPROVED**
+
+Reviewed 10 scenario-agnostic improvements validated via Angular→React probe but containing no scenario-fixed content.
+
+**Files Reviewed:**
+- `testing-strategy.md` — Parity oracle + durable/throwaway split
+- `modernization.prompt.md` (Phases 2, 4, 7) — Discovery→Analysis handoff, de-biased tool list, parity testing
+- `brown-field.prompt.md` (Analysis handoff) — Wiki/index.md citation
+- `capability-acquisition.md` — BUILD path [C] + GUARDRAIL
+- `repo-wiki/SKILL.md` — Ecosystem-agnostic packer exclusions, UI/client scope vocab
+- `module-page.template.md` — UI/client Public API note
+- `source-context-and-topology.md` — Nested submodule exclusion, side-car read-only stance
+- `assessment.template.md` — Optional UI migration tables (gated)
+- `team-formation.md` — Generic role archetypes + execution-approach-agnostic note
+- `progress-report/SKILL.md` — Optional testResults field
+- `concept-page.template.md` (new) — Concepts/ page template
+- `wiki-index.template.json` — Route/DeepLink entrypoint enum
+
+**Criteria Check:**
+
+| Criterion | Status | Evidence |
+|-----------|--------|----------|
+| Scenario-agnostic | ✅ PASS | No Angular/React/Oracle/Fabric mandates; examples illustrative only |
+| Additive & non-breaking | ✅ PASS | No required sections removed; testResults/UI tables optional; JSON valid |
+| Honors stored decisions | ✅ PASS | Side-car read-only preserved; GUARDRAIL enforces scenario-local artifacts |
+| #8 fits BOTH approaches | ✅ PASS | team-formation.md explicitly states Custom Agents + Squad parity |
+| Consistency | ✅ PASS | testing-strategy.md ↔ Phase 7 agree on parity oracle wording |
+| Quality | ✅ PASS | Concise, retrieval-friendly, no placeholder cruft |
+
+**Key Decisions Verified:**
+1. **Meta-template stays scenario-agnostic:** capability-acquisition.md GUARDRAIL enforces bespoke artifacts stay in scenario repo, only generic improvements flow upstream.
+2. **Topology:** brown-field = in-repo; modernization = side-car read-only (no branching). Nested submodules excluded from packing.
+
+**Notes (non-blocking):**
+- MCP Availability dimension (20%) remains semantically awkward for pure UI migrations with no backend MCP needs. Consider future rubric refinement for UI-only scenarios.
+
+**Learning:** Probe-validated changes must remain scenario-agnostic — use illustrative examples (e.g., "Angular component tests" as throwaway category) without mandating frameworks. Optional sections gated with HTML comment markers (`<!-- UI_MIGRATION ... -->`) prevent template bloat while enabling coverage when applicable.

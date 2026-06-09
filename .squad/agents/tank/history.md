@@ -125,6 +125,8 @@
 
 **2026-01-27** — `references.md` = generic discovery catalog, no domain/example entries. Rule: if discovery finds no suitable artifact, BUILD it via mcp-builder/skill-creator rather than abandoning capability. This ties to confidence rubric (gap filled by building scores lower until verified).
 
+**2026-01-27** — Generalized capability-acquisition BUILD path (C): bespoke skills/MCPs/instructions/agents created AT RUNTIME in scenario repo, NOT in meta-template. Emphasized LLM-native work (e.g., Angular→React) needs bespoke skill with patterns/gotchas, not MCP. Added GUARDRAIL: scenario-specific artifacts stay local; only generic improvements proposed upstream via template-feedback.
+
 ### 2026-06-09: APM Distribution Path for Existing Repositories
 
 **Action completed:**
@@ -146,3 +148,16 @@
 - Authoring instructions directory.
 - Squad agent.
 - GitHub + Playwright MCP servers.
+
+### 2026-06-09: Angular→React Migration Capability Validation
+
+**Validation scope:** Dry-run capability acquisition check for migrating Angular 21 SPA (RealWorld Conduit) to ReactJS+TS.
+
+**Key findings:**
+- **No Angular→React migration skill/MCP exists** — `wshobson/agents@angular-migration` (7.2K installs) covers AngularJS→Angular, NOT Angular→React. No published skill addresses cross-framework frontend migration.
+- **Code transformation is LLM-native** — Angular template→JSX, RxJS Observable→React hooks, Angular DI→context/modules are semantic translation tasks. No MCP or external tool automates this; the LLM performs transformation directly using target-framework skills as guidance.
+- **Target-framework skills are abundant** — Vite (25.7K), TanStack Query (2.9K), React Router (2.5K), react-hook-form (1.3K), Zustand (2.4K), TypeScript (46.1K). These provide patterns/gotchas, not automation.
+- **repo-wiki skill provides source comprehension** — template's bundled repo-wiki indexes Angular codebase without domain MCP.
+- **RealWorld API spec available** — Hurl test suites in `realworld-apps/realworld` repo; no OpenAPI YAML found, but mcp-builder could potentially scaffold from documented endpoints if Swagger exists elsewhere.
+
+**2026-01-27** — De-biased team-formation role archetypes from data/ETL-only to generic software development. Added 10 illustrative archetypes (Discovery/Knowledge-Architect, Domain/Architecture Lead, Implementation/Component Migrator, Data/Schema Migrator, Integration/API, UI/Presentation, Test/Parity Engineer, Reviewer/Quality, DevOps/Release, Accessibility/Compliance) mapped to Analysis/Assessment domains. Added execution-approach-agnostic note: Custom Agents approach creates `.github/agents/<role>.agent.md`; Squad approach creates Squad member/cast roles. Domain→role mapping identical; only instantiation differs.

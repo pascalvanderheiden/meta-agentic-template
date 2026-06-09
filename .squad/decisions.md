@@ -953,3 +953,570 @@ Existing `discovery-wiki.template.md` and `wiki-index.template.json` references 
 
 **Orchestration Log:** `.squad/orchestration-log/2026-06-09T10:43:00Z-neo.md`
 
+### 2026-06-09: morpheus prompt generic edits
+
+# Generic Parity Testing, Discovery→Analysis Handoff, Stack-Agnostic Discovery Tooling
+
+**Date:** 2026-06-09  
+**Agent:** Morpheus  
+**Requested by:** Pascal van der Heiden
+
+## Context
+
+Validation probe was Angular→React, but ALL edits must be GENERIC / scenario-agnostic — never scenario-fixed. Three Tier-1 edits to prompt files to improve generic parity testing guidance, explicit wiki handoff, and de-bias discovery tooling.
+
+## Decision
+
+### Edit #1b: Phase 7 Parity Testing Strategy (modernization.prompt.md)
+
+Added generic guidance in Phase 7 (Parity Testing Strategy Definition):
+
+- **Parity Scope:** Parity is not limited to data-output matching
+- When legacy system ships automated behavioral/E2E/acceptance test suite (Playwright, Cypress, Selenium, contract suites), REUSE as cross-stack parity oracle
+- Run SAME test suite against legacy baseline and modernized target; pass/fail delta = quantifiable parity
+- Behavioral/E2E tests assert observable behavior and are largely stack-agnostic
+- End-to-end/contract tests are durable parity net; stack-specific unit tests usually don't port 1:1, are re-authored
+- Framed for ANY modernization: UI reskin, DB/ETL migration, service rewrite (NOT only frontends)
+- Added existing test suite reuse plan to Parity Test Plan deliverable
+
+**Mirrors:** Wording added to `references/testing-strategy.md` by Trinity.
+
+### Edit #5: Discovery→Analysis Handoff (modernization.prompt.md + brown-field.prompt.md)
+
+Added explicit wiki-consuming action in Phase 4 (Analysis) for both prompts:
+
+- **Action 3 (new):** "Read `docs/<scenario>-<slug>/wiki/index.md` (produced in Discovery); derive functional domains from module responsibilities; map capability requirements to wiki evidence (cite page/source paths); flag wiki gaps for follow-up ingest."
+- Makes Discovery→Analysis handoff explicit via repo-wiki artifact
+- Renumbered subsequent actions (scaffold analysis → becomes action 4)
+
+### Edit #6: De-bias Discovery Tooling (modernization.prompt.md Phase 2 Action 4)
+
+Generalized tool list in Phase 2 Action 4 from data/ETL-biased to any software-development modernization:
+
+**Before:**
+```markdown
+4. Use tools:
+   - `web_fetch` to retrieve vendor documentation (Oracle docs, Fabric docs)
+   - `grep`/`glob` if codebase accessible
+   - `bash` to query databases (schema dumps, row counts)
+```
+
+**After:**
+```markdown
+4. Use tools:
+   - `grep`/`glob` to inventory source files and dependencies
+   - `bash` to gather stack-appropriate system metadata: dependency/build manifests, configs, API/IDL specs, and (when relevant) database schemas or row counts
+   - `web_fetch` to retrieve vendor/platform documentation
+```
+
+**Rationale:** Database migration IS software development — do NOT frame as "source-code vs database". Tool list now covers ANY software modernization scenario.
+
+## Constraints
+
+- **GENERIC ONLY:** No Angular/React/Oracle/Fabric-specific lock-in
+- Existing Worked Example section left as-is (not edited)
+- Additive changes; no removal of existing behavior
+
+## Artifacts
+
+- `.github/prompts/modernization.prompt.md` (Items #1b, #5, #6)
+- `.github/prompts/brown-field.prompt.md` (Item #5 only)
+- `.squad/agents/morpheus/history.md` (2-line learning appended)
+- `.squad/decisions/inbox/morpheus-prompt-generic-edits.md` (this file)
+
+## Impact
+
+- Phase 7 now frames behavioral test suite reuse as the parity oracle for ANY modernization
+- Phase 4 explicitly consumes repo-wiki from Discovery with cite-to-wiki-evidence requirement
+- Phase 2 tool list covers full software-development spectrum (not just data/ETL)
+- All three edits remain scenario-agnostic and portable
+
+
+### 2026-06-09: neo tier12 review
+
+# Neo Review: Tier-1 + Tier-2 Generic Improvements
+
+**Reviewer:** Neo (Lead/Architect)  
+**Date:** 2026-01-17  
+**Status:** ✅ **APPROVED**
+
+## Scope
+
+10 scenario-agnostic improvements validated via Angular→React probe but containing NO scenario-fixed content.
+
+## Files Reviewed
+
+| # | File | Change Summary |
+|---|------|----------------|
+| 1 | `testing-strategy.md` | Parity oracle reuse + durable/throwaway split |
+| 2 | `modernization.prompt.md` (Phases 2, 4, 7) | Discovery→Analysis handoff, de-biased tool list, parity testing |
+| 3 | `brown-field.prompt.md` (Phase 4) | Wiki/index.md citation in Analysis |
+| 4 | `capability-acquisition.md` | BUILD path [C] + GUARDRAIL (bespoke stays local) |
+| 5 | `repo-wiki/SKILL.md` | Ecosystem-agnostic packer exclusions, UI/client scope vocab |
+| 6 | `module-page.template.md` | UI/client Public API note |
+| 7 | `source-context-and-topology.md` | Nested submodule exclusion, side-car read-only stance |
+| 8 | `assessment.template.md` | Optional UI migration tables (gated markers) |
+| 9 | `team-formation.md` | Generic role archetypes + execution-approach-agnostic note |
+| 10 | `progress-report/SKILL.md` | Optional testResults field |
+| 11 | `concept-page.template.md` (new) | Concepts/ page template with Category field |
+| 12 | `wiki-index.template.json` | Route/DeepLink entrypoint enum extension |
+
+## Review Criteria
+
+### 1. Scenario-Agnostic ✅ PASS
+
+- **No Angular/React/Oracle/Fabric mandates found.**
+- Examples are clearly illustrative:
+  - `testing-strategy.md` line 47: "Angular component tests, Oracle PL/SQL unit tests" listed as throwaway examples — not mandates
+  - `assessment.template.md` lines 83-112: UI migration tables wrapped in `<!-- UI_MIGRATION ... -->` markers — optional, generic across frameworks
+- Packer exclusions in `repo-wiki/SKILL.md` are ecosystem-agnostic (node_modules, .angular, .next, .venv, target, etc.)
+
+### 2. Additive & Non-Breaking ✅ PASS
+
+- No required sections/fields removed
+- `testResults` is optional (null allowed for parityPercent)
+- UI migration tables gated — delete when not applicable
+- Cross-references resolve:
+  - `wiki-index.template.json` entrypoints enum includes Route, DeepLink
+  - `concept-page.template.md` cross-refs modules/ and concepts/
+- JSON well-formed (validated wiki-index.template.json structure)
+
+### 3. Honors Stored Decisions ✅ PASS
+
+**Decision 1: Meta-template stays scenario-agnostic / no scenario-fixed skills**
+- `capability-acquisition.md` lines 60-66: GUARDRAIL enforces bespoke artifacts stay in scenario repo
+- Quote: "Bespoke, scenario-specific skills/MCPs/instructions/agents STAY in the scenario repository. They are NOT added to this meta-template"
+
+**Decision 2: Topology = brown-field in-repo, modernization side-car read-only (no branching)**
+- `source-context-and-topology.md` lines 26-27: Topology table shows brown-field = in-repo, modernization = side-car
+- Line 34: "Pin modernization legacy source with a git submodule at `legacy/` ... Treat the submodule as read-only"
+- No in-repo branching introduced for modernization
+
+### 4. #8 Fits BOTH Execution Approaches ✅ PASS
+
+`team-formation.md` lines 26-29 explicitly state:
+> "The above archetypes are **execution-approach-agnostic**:
+> - **Custom Agents approach**: Each archetype becomes a dedicated agent file (`.github/agents/<role-name>.agent.md`)
+> - **Squad approach**: Each archetype maps to a Squad member/cast role on the team
+> - Either way, the domain→role mapping is the same; only instantiation differs"
+
+### 5. Consistency ✅ PASS
+
+- **testing-strategy.md** (lines 40-43) and **modernization.prompt.md Phase 7** (lines 255-260) agree:
+  - Both: "reuse it as the parity oracle"
+  - Both: "Run the SAME suite against both legacy baseline and modernized target"
+  - Both: "Behavioral/E2E tests assert observable behavior and are largely stack-agnostic"
+  - Both: Durable (E2E/contract) vs throwaway (unit) test split
+
+- No contradictions found between Trinity's testing-strategy.md wording and Morpheus's Phase 7 wording.
+
+### 6. Quality ✅ PASS
+
+- Concise, retrieval-friendly prose
+- No placeholder cruft (all [PLACEHOLDER] tokens are template markers, not incomplete content)
+- Valid markdown structure
+- Valid JSON (wiki-index.template.json)
+
+## Stored Decisions Verified
+
+1. **2026-01-27 Tank/Oracle:** capability-acquisition BUILD path GUARDRAIL — bespoke artifacts stay local, only generic improvements flow upstream via template-feedback.
+2. **2026-06-09 Oracle:** Topology rules — brown-field = in-repo, modernization = side-car read-only with `legacy/` submodule.
+
+## Notes (Non-Blocking)
+
+- **MCP Availability dimension (20%)** remains semantically awkward for pure UI migrations with no backend MCP needs. Consider future rubric refinement for UI-only scenarios.
+- **LICENSE.txt** still missing from `repo-wiki/` skill folder (Apache 2.0 recommended per skill guidelines).
+
+## Verdict
+
+**✅ APPROVED FOR PRODUCTION**
+
+All 10 improvements are scenario-agnostic, additive, consistent, and honor stored decisions. No blocking issues. Ready for merge.
+
+---
+
+**Cross-references:**
+- History: `.squad/agents/neo/history.md` (2026-01-17 entry)
+- Stored decisions: `.squad/decisions.md` (2026-01-27 references.md cleanup, 2026-06-09 topology)
+
+
+### 2026-06-09: oracle concept template
+
+# Decision: Repo-Wiki Concept-Page Template and Entrypoint Enum Extension
+
+**Date:** 2026-01-17  
+**Agent:** Oracle (Knowledge-Architect)  
+**Status:** Implemented  
+**Scope:** Generic repo-wiki capability improvements
+
+## Context
+
+Tier-2 item #10 addresses two small gaps in repo-wiki templates and one cross-reference:
+
+1. **Missing concept-page template:** Repo-wiki has templates for module pages, index, and log, but no starter for `concepts/` pages (domain terms, APIs, schemas, events, jobs, data flows, invariants, contracts).
+2. **Backend-centric entrypoint enum:** `wiki-index.template.json` entrypoints/type enum (`CLI/API/UI/Worker/Event`) lacks client/web-specific entry points like `Route` and `DeepLink`.
+3. **SKILL.md reference gap:** The template list in `repo-wiki/SKILL.md` mentions module-page but not concept-page.
+
+## Decision
+
+### 1. Created `concept-page.template.md`
+
+**Path:** `.github/skills/repo-wiki/templates/concept-page.template.md`
+
+**Structure:**
+- Frontmatter: `[CONCEPT_NAME]`, `[CONCEPT_SLUG]`, `[UPDATED_AT]`, `[CATEGORY]`, `[EVIDENCE_FILES]`
+- **Definition:** Clear, concise explanation of the concept/term
+- **Category:** One of: domain term / API / schema / event / job / data-flow / invariant / contract
+- **Related Modules:** Wiki links to modules implementing/consuming this concept
+- **Evidence:** Source `file:line` links demonstrating/defining the concept
+- **Notes / Open Questions:** Ambiguities, assumptions, migration concerns
+- **Cross-References:** Links to related concept/risk/overview pages
+- **Last Updated / Sources:** Evidence inventory
+
+**Conventions match existing templates:**
+- Token-mindful comments
+- Link, don't inline code
+- Cite `file:line` for claims
+- Evidence-first style
+- Parallel structure to module-page.template.md
+
+### 2. Extended Wiki-Index Entrypoint Enum
+
+**File:** `.github/skills/meta-agentic-method/templates/wiki-index.template.json`
+
+**Change:**
+```diff
+- "type": "[CLI/API/UI/Worker/Event]",
++ "type": "[CLI/API/UI/Worker/Event/Route/DeepLink]",
+```
+
+**Rationale:**
+- `Route`: Client-side/web routes (e.g., React Router paths, Next.js pages, Angular routes)
+- `DeepLink`: Mobile/app deep links and universal links
+
+Maintains backward compatibility (existing values unchanged), extends generically for client/web/mobile entry points.
+
+### 3. Added SKILL.md Reference
+
+**File:** `.github/skills/repo-wiki/SKILL.md`
+
+**Change:** Added bullet to template list (Wiki Directory Layout § "Use these templates when available"):
+```markdown
+- `templates/concept-page.template.md` — starter for `concepts/` pages.
+```
+
+Positioned parallel to module-page reference for discoverability.
+
+## Impact
+
+- **Completeness:** Concept pages now have a consistent starter template, reducing friction for agents creating domain glossaries, API references, schema docs, event catalogs, and invariant/contract pages.
+- **Coverage:** Entrypoint enum now covers client/web/mobile entry points alongside backend (CLI/API/Worker/Event) and UI.
+- **Discoverability:** SKILL.md template list is complete; agents know all available starters.
+
+## Implementation
+
+All changes additive, generic, and consistent with existing style:
+- Concept-page template matches module-page frontmatter/heading/section conventions
+- Entrypoint enum extended without breaking JSON validity
+- SKILL.md edit is one line, parallel to existing structure
+
+## Files Modified
+
+1. **Created:** `.github/skills/repo-wiki/templates/concept-page.template.md`
+2. **Edited:** `.github/skills/meta-agentic-method/templates/wiki-index.template.json` (line 39)
+3. **Edited:** `.github/skills/repo-wiki/SKILL.md` (line 49)
+4. **Appended:** `.squad/agents/oracle/history.md` (Learnings § 2026-01-17)
+5. **Created:** `.squad/decisions/inbox/oracle-concept-template.md` (this file)
+
+## Related
+
+- `.squad/decisions.md` § Tier-2 improvements (item #10)
+- `.github/skills/repo-wiki/SKILL.md` § Wiki Directory Layout
+- `.github/skills/repo-wiki/templates/module-page.template.md` (parallel structure)
+- `.github/skills/meta-agentic-method/templates/wiki-index.template.json` (entrypoint schema)
+
+
+### 2026-06-09: oracle repo wiki generic edits
+
+# Decision: Repo-Wiki Generic Edits — Scope Vocabulary, Packer Exclusions, Submodule Handling
+
+**Date:** 2026-06-09  
+**By:** Oracle (Knowledge-Architect)  
+**Requested by:** Pascal van der Heiden
+
+## Context
+
+Validation probe was Angular→React modernization, but ALL edits must be GENERIC and scenario-agnostic. Oracle validated the repo-wiki knowledge-base prep and identified three Tier-1 gaps that needed additive fixes to generalize repo-wiki across backend AND frontend codebases.
+
+## Decision
+
+Implemented three additive edits to `.github/skills/repo-wiki/` and `.github/skills/meta-agentic-method/references/source-context-and-topology.md`:
+
+### Item #3 — Packer Exclusion Guidance (repo-wiki Ingest)
+
+**FILE:** `.github/skills/repo-wiki/SKILL.md`, Workflow: Ingest, step 2 ("Pack token-bounded source").
+
+**Change:** Replaced vague "Exclude generated files, vendored dependencies, build outputs, secrets, and irrelevant binaries." with concise ecosystem-agnostic examples:
+
+- Generated/build outputs: `dist/`, `build/`, `target/`, `.next/`, `.angular/`, `out/`
+- Dependencies/vendor: `node_modules/`, `vendor/`, `.venv/`, `__pycache__/`, `*.egg-info/`
+- Caches/coverage: `.cache/`, `coverage/`
+- Lock files
+- **Nested git submodules**
+- Large fixtures/snapshots
+- Secrets and binaries
+
+Framed as "examples, adapt per stack" — not a fixed list.
+
+### Item #4 — Scoping Vocabulary + Module-Page Public API Field
+
+**FILE 1:** `.github/skills/repo-wiki/SKILL.md`, Workflow: Ingest step 1 ("Select scope").
+
+**Change:** Broadened scope vocabulary to include client/UI and cross-cutting primitives that generalize across backends AND frontends:
+
+- **Added:** component tree, presentation layer, client-state boundary, cross-cutting middleware (interceptors, guards, filters, pipes, decorators), upstream/consumed API surface.
+- **Kept:** existing terms (module, package, service, bounded context, runtime boundary, schema area, API surface, risk hotspot).
+
+**FILE 2:** `.github/skills/repo-wiki/templates/module-page.template.md`.
+
+**Change:** Wherever it lists the "Public API / Entry Points" surface, added a generic note that for UI/client modules this includes:
+
+- Component selectors/identifiers
+- Public inputs/outputs (props)
+- Injectable/shared services
+- Upstream APIs consumed
+
+Note is generic and applies to Angular/React/Vue/Svelte/mobile/etc.
+
+### Topology Submodule Note (folded from dropped branching item)
+
+**FILE:** `.github/skills/meta-agentic-method/references/source-context-and-topology.md`.
+
+**Change:** Added ONE generic line in the Modernization side-car topology guidance: if the legacy source itself contains git submodules, mount the legacy repo read-only as before and EXCLUDE nested submodules from repo-wiki packing (they are dependencies, not the migration subject).
+
+**Rationale:** Does NOT introduce any in-repo branching for modernization — modernization stays side-car with read-only legacy (this is a stored team decision); brown-field remains in-repo.
+
+## Rationale
+
+All three edits address friction in generalizing repo-wiki from backend-only to backend + frontend codebases:
+
+1. **Packer exclusions** were vague; agents would guess and inconsistently exclude modern frontend artifacts like `.angular/` or `.next/`.
+2. **Scoping vocabulary** biased toward backend (module/package/service); UI/client constructs (component trees, presentation layers, client-state boundaries, middleware/interceptors) had no explicit terminology.
+3. **Module-page Public API field** listed `[Function/Class/Route/Event/CLI/Component]` but missed component-specific details: selectors, props, injectable services, consumed APIs.
+4. **Git submodules** are common in legacy monorepo modernizations; repo-wiki packer should exclude nested submodules (they are dependencies, not the migration subject).
+
+## Files Changed
+
+- `.github/skills/repo-wiki/SKILL.md` — Ingest steps 1 + 2
+- `.github/skills/repo-wiki/templates/module-page.template.md` — Public API section
+- `.github/skills/meta-agentic-method/references/source-context-and-topology.md` — Modernization topology
+
+## Verification
+
+- All edits are additive (no removals).
+- All edits are generic and scenario-agnostic (no Angular-specific or React-specific content).
+- Consistent with existing repo-wiki style and conventions.
+- `.squad/agents/oracle/history.md` updated with 2-line learning note.
+
+## Consequences
+
+Repo-wiki skill now generalizes across backend and frontend codebases without requiring agents to infer missing vocabulary or exclusion patterns. UI/client modules, presentation layers, and cross-cutting middleware are first-class scoping constructs. Packer exclusions are concrete and ecosystem-agnostic.
+
+
+### 2026-06-09: tank build path runtime skill
+
+# Decision: Capability-Acquisition BUILD Path — Runtime Bespoke Skill Creation
+
+**Date**: 2026-01-27  
+**Agent**: Tank (Integration-Developer)  
+**Requested by**: Pascal van der Heiden  
+**Status**: Implemented
+
+## Context
+
+Validation probe (Angular→React migration) surfaced that no reusable skill/MCP exists for cross-framework frontend transformations. User constraint: the meta-template must stay **scenario-agnostic** — never ship scenario-fixed skills (e.g., `angular-react-migration`). Instead, the *process* must create **bespoke, per-run skills** at execution time.
+
+## Decision
+
+**Generalized capability-acquisition BUILD path (C)** in `.github/skills/meta-agentic-method/references/capability-acquisition.md`:
+
+1. **Runtime Creation**: When no reusable repo artifact (A) or external MCP/skill (B) exists, the team BUILDS the missing capability **AT RUNTIME** in the scenario's working repository — NOT in this meta-template.
+2. **Options**: Generate MCP server (via `mcp-builder` from OpenAPI spec), author bespoke scenario-specific skill (via `skill-creator`), add instruction file, or define custom-agent role.
+3. **LLM-Native Work**: Much transformation/translation work (e.g., Angular→React, Oracle→Fabric data mappings) is inherently LLM-native and requires NO tool/MCP. A bespoke skill capturing project-specific patterns/gotchas is often the right artifact.
+4. **Compounding Knowledge**: Bespoke skills are created once, then refined across the run as agents learn (new gotchas, proven patterns captured back into the skill).
+5. **GUARDRAIL**: Bespoke, scenario-specific skills/MCPs/instructions/agents STAY in the scenario repository. They are NOT added to this meta-template. Only **generic, reusable improvements** (broken reference fixes, new MCP discovery sources, prompt friction fixes) may be proposed upstream via `github-issues` with label `template-feedback`.
+
+## Rationale
+
+- **Scenario-Agnostic**: Template ships generic *process* (capability-acquisition decision tree) but NO domain-specific skills (Angular, React, Oracle, Fabric).
+- **Flexibility**: Every scenario builds exactly the capabilities it needs, at the time it needs them, in the working repo.
+- **Knowledge Capture**: Bespoke skills compound — agents refine them mid-run, making later phases faster/higher-confidence.
+- **Clean Separation**: Template provides discovery/authoring tools (`find-skills`, `mcp-builder`, `skill-creator`); scenarios provide domain expertise.
+
+## Implementation
+
+**Edited**: `.github/skills/meta-agentic-method/references/capability-acquisition.md`  
+**Changes**:
+- Renamed path C header to `[C] BUILD NEW ARTIFACT AT RUNTIME`
+- Added "General Principle" and "LLM-Native Work" guidance paragraphs
+- Updated all C1/C2/C3/C4 sub-paths to clarify "Artifact Location: Scenario repository (not meta-template)"
+- Added C2 refinement note: "Update skill with learnings throughout run"
+- Added GUARDRAIL section distinguishing bespoke (scenario-local) vs. generic (template-feedback) artifacts
+
+**Also Updated**:
+- `.squad/agents/tank/history.md` § Learnings (2-line note)
+- `.squad/decisions/inbox/tank-build-path-runtime-skill.md` (this file)
+
+## Verification
+
+- [ ] Capability-acquisition.md retains paths A/B/C structure
+- [ ] No scenario-specific skills added to meta-template (e.g., no `angular-react-migration`)
+- [ ] GUARDRAIL clearly separates bespoke (local) vs. generic (upstream feedback) artifacts
+- [ ] LLM-native work explicitly called out as often needing bespoke skill, not MCP
+
+## Impact
+
+- **Tier-1 Item #2**: ✅ Completed
+- **Template Flexibility**: Scenarios can now build custom skills/MCPs at runtime without polluting meta-template
+- **Angular→React Probe**: Validated pattern — bespoke skill with Angular patterns → React patterns mappings
+- **Feedback Loop**: Generic improvements flow upstream via template-feedback; scenario-specific stay local
+
+
+### 2026-06-09: tank role archetypes
+
+# Decision: De-bias Team-Formation Role Archetypes
+
+**By:** Tank (Integration-Developer)  
+**Date:** 2026-01-27  
+**Requested by:** Pascal van der Heiden
+
+## Context
+
+The team-formation algorithm in `.github/skills/meta-agentic-method/references/team-formation.md` previously provided only data/ETL-biased role heuristics (Extractor, Transformer, Provisioner, Validator, Monitor, Documenter). This created a bias toward data migration scenarios, despite the template supporting green-field, brown-field, and modernization scenarios across all software development domains.
+
+## Decision
+
+**Added generic role archetypes** to step 2 "Candidate Agent Role Assignment" that span software development broadly:
+
+- **Discovery/Knowledge-Architect** — Analyze existing systems, document architecture, extract domain knowledge
+- **Domain/Architecture Lead** — Design system structure, define module boundaries, establish patterns
+- **Implementation/Component Migrator** — Build/migrate application logic, business rules, core functionality
+- **Data/Schema Migrator** — Handle data models, schema transformations, data migration pipelines
+- **Integration/API** — Connect systems, implement APIs, orchestrate service communication
+- **UI/Presentation** — Build user interfaces, implement accessibility, handle client-side rendering
+- **Test/Parity Engineer** — Ensure correctness, backward compatibility, establish safety nets
+- **Reviewer/Quality** — Verify outputs, enforce standards, validate completeness
+- **DevOps/Release** — Provision infrastructure, configure CI/CD, manage deployments
+- **Accessibility/Compliance** — Ensure WCAG/regulatory compliance, validate audit requirements
+
+These archetypes are **illustrative examples** the team picks from based on Analysis/Assessment domains, not a fixed mandatory list. Actual roles derive dynamically from the scenario.
+
+**Added execution-approach-agnostic note** clarifying that these archetypes work identically under both execution approaches (this was a stored team decision from prompts):
+
+- **Custom Agents approach**: Each archetype becomes a dedicated agent file (`.github/agents/<role-name>.agent.md`)
+- **Squad approach**: Each archetype maps to a Squad member/cast role on the team
+- The domain→role mapping is the same; only the instantiation differs
+
+**Preserved legacy ETL heuristics** for backward compatibility, but moved them below the generic archetypes and labeled them as legacy.
+
+## Rationale
+
+1. **Eliminates bias**: The methodology now supports all software development scenarios (web apps, APIs, mobile, infrastructure, frontend migrations, backend modernizations) with equal coverage
+2. **Aligns with execution approaches**: The prompts offer "Execution Approach: Custom Agents vs Squad" — the archetypes now explicitly support both paths
+3. **Maintains backward compatibility**: Legacy ETL heuristics remain available for data migration scenarios
+4. **Keeps scenario-agnostic**: No fixed roles; teams derive roles from domain analysis dynamically
+5. **Follows additive constraint**: No content removed; only generic guidance added
+
+## Implementation
+
+**File modified:**
+- `.github/skills/meta-agentic-method/references/team-formation.md` — step 2 "Candidate Agent Role Assignment"
+
+**Changes:**
+- Added 10 generic role archetypes with descriptions
+- Added execution-approach-agnostic note (Custom Agents vs Squad)
+- Relabeled legacy ETL heuristics as backward-compatible examples
+- Preserved merge/split rules (>70% overlap merge, >5 responsibilities split)
+
+## Verification
+
+- [ ] Generic archetypes cover software development broadly (not data/ETL-only)
+- [ ] Execution-approach note clarifies Custom Agents vs Squad instantiation
+- [ ] Legacy ETL heuristics preserved for backward compatibility
+- [ ] No scenario-fixed content (roles derive dynamically from domains)
+- [ ] Consistent with existing file style and algorithm structure
+
+## Consequences
+
+- Team formation now produces roles aligned with ANY software development scenario
+- Prompts can reference these archetypes when scaffolding team rosters
+- No breaking changes to existing workflows (additive only)
+- Template bias toward data migration removed
+
+
+### 2026-06-09: trinity tier2 ui report
+
+# Trinity Tier-2: UI Migration Tables + Test Results Field
+
+**Date:** 2026-06-09  
+**Agent:** Trinity (Template Engineer)  
+**Requested by:** Pascal van der Heiden
+
+## Context
+
+Generic, scenario-agnostic template improvements for UI/client migrations and test/parity visibility.
+
+## Changes
+
+### Item #7: Optional UI Migration Mapping Tables
+
+**File:** `.github/skills/meta-agentic-method/templates/assessment.template.md`
+
+Added optional section gated by `<!-- UI_MIGRATION: ... -->` HTML comment markers for client-layer modernizations. Includes four generic tables:
+
+1. **Component Mapping**: Legacy → Target component parity
+2. **Route Parity**: Legacy → Target route + guard/redirect mappings
+3. **State / Service Strategy**: Observable/store/service → hook/store/context/query mappings
+4. **Cross-cutting Middleware Mapping**: Interceptor/guard/filter/pipe → target equivalents
+
+**Generic across frameworks**: Angular, React, Vue, Svelte, mobile. Use when applicable; delete otherwise.
+
+### Item #9: Test Results Field
+
+**File:** `.github/skills/progress-report/SKILL.md`
+
+Added `testResults` field to JSON data contract:
+
+```json
+"testResults": {
+  "total": 0,
+  "passed": 0,
+  "failed": 0,
+  "parityPercent": null
+}
+```
+
+**Applies to all scenarios:**
+- Green-field: TDD pass rate
+- Brown-field: Safety net coverage
+- Modernization: Backward compatibility parity percentage
+
+**Rendering:** Badge or progress bar near confidence gauge. Field documented in schema, field descriptions section, and minimal example JSON.
+
+## Rationale
+
+Both additions support testing-first methodology guidance from Tier-1. UI tables enable client-layer gap analysis without framework lock-in. Test results field surfaces verification status (6th confidence dimension) in progress dashboard.
+
+## Verification
+
+- [x] Assessment template: UI tables gated, generic, additive
+- [x] Progress report: testResults in schema, field descriptions, minimal example
+- [x] No schema breaks (field optional, defaults safe)
+- [x] Generic across scenarios and tech stacks
+- [x] History + decision files updated
+
+## Consequences
+
+Template now supports UI/client modernization gap analysis and real-time test/parity tracking across all three scenarios. No breaking changes to existing consumers.
+
+

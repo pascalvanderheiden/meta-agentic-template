@@ -8,6 +8,10 @@
 
 ## Learnings
 
+### 2026-06-09: Tier-2 UI Migration Tables & Test Results Field
+
+Added optional UI migration mapping tables (component, route, state/service, middleware) to `assessment.template.md` for client-layer modernizations. Added `testResults` field to progress-report JSON contract for TDD pass rate, safety net coverage, and parity tracking across scenarios. Both additions generic and additive (no schema breaks).
+
 ### Screenshot Generation (2024-06-08)
 Successfully generated status report screenshot using:
 - **Tool**: Playwright for Node.js
@@ -133,3 +137,11 @@ Created bundled templates for the new `repo-wiki` skill under `.github/skills/re
 - `README.md` — local index for the three templates.
 
 Pattern matched existing meta-agentic templates: top HTML-comment usage notes, `[PLACEHOLDER]` tokens, and `<!-- GENERATED: ... -->` dynamic markers.
+
+### 2026-06-09: Angular→React Modernization Testing Gap Analysis
+
+Pre-flight validation for frontend framework migration revealed **UI/behavioral parity gap** in template. Testing strategy is data/API-centric — no guidance for reusing existing Playwright E2E suites as cross-framework parity oracle (highest-value insight). Progress report lacks `testResults` field for parity score visualization. Unit tests aren't acknowledged as non-portable (must re-author) while E2E is the durable parity harness.
+
+### 2026-06-XX: Parity Oracle Guidance (Item #1a)
+
+Added generic "reuse existing test suite as parity oracle" guidance to `testing-strategy.md` Modernization section. Covers: behavioral/E2E suite reuse across stacks, durable (E2E/contract) vs throwaway (unit) split, baseline-first principle. Applies to ANY modernization (UI, DB, ETL, services), not scenario-specific.

@@ -11,7 +11,23 @@
    - Example: "ETL Orchestration" domain → responsibilities: [schedule jobs, monitor execution, handle retries]
 
 2. **Candidate Agent Role Assignment**
-   - Map each domain to a candidate agent role using domain-to-role heuristics:
+   - Map each domain to a candidate agent role using domain-to-role heuristics
+   - **Role Archetype Examples** (illustrative, not mandatory — roles derive dynamically from scenario domains):
+     - **Discovery/Knowledge-Architect** — Analyze existing systems, document architecture, extract domain knowledge
+     - **Domain/Architecture Lead** — Design system structure, define module boundaries, establish patterns
+     - **Implementation/Component Migrator** — Build/migrate application logic, business rules, core functionality
+     - **Data/Schema Migrator** — Handle data models, schema transformations, data migration pipelines
+     - **Integration/API** — Connect systems, implement APIs, orchestrate service communication
+     - **UI/Presentation** — Build user interfaces, implement accessibility, handle client-side rendering
+     - **Test/Parity Engineer** — Ensure correctness, backward compatibility, establish safety nets
+     - **Reviewer/Quality** — Verify outputs, enforce standards, validate completeness
+     - **DevOps/Release** — Provision infrastructure, configure CI/CD, manage deployments
+     - **Accessibility/Compliance** — Ensure WCAG/regulatory compliance, validate audit requirements
+   - The above archetypes are **execution-approach-agnostic**:
+     - **Custom Agents approach**: Each archetype becomes a dedicated agent file (`.github/agents/<role-name>.agent.md`)
+     - **Squad approach**: Each archetype maps to a Squad member/cast role on the team
+     - Either way, the domain→role mapping is the same; only instantiation differs
+   - Legacy data/ETL heuristics (shown below for backward compatibility):
      - **Data extraction** → `Extractor` agent
      - **Data transformation** → `Transformer` agent
      - **Infrastructure provisioning** → `Provisioner` agent

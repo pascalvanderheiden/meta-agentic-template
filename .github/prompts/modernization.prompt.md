@@ -106,9 +106,9 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
    - Flag unknowns for validation during migration
    - Scaffold `docs/<scenario>-<slug>/02-discovery.md` from `../skills/meta-agentic-method/templates/discovery.template.md` with "best-effort" label, fill placeholders, generate best-effort discovery.
 4. Use tools:
-   - `web_fetch` to retrieve vendor documentation (Oracle docs, Fabric docs)
-   - `grep`/`glob` if codebase accessible
-   - `bash` to query databases (schema dumps, row counts)
+  - `grep`/`glob` to inventory source files and dependencies
+  - `bash` to gather stack-appropriate system metadata: dependency/build manifests, configs, API/IDL specs, and (when relevant) database schemas or row counts
+  - `web_fetch` to retrieve vendor/platform documentation
 
 **Exit Gate:** Legacy system capabilities documented (code-level or API-level), architecture understood, repo-wiki generated when source is accessible, and unknowns flagged for validation.
 
@@ -154,7 +154,8 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 **Actions:**
 1. Read `../skills/meta-agentic-method/SKILL.md` § Analysis phase requirements
 2. If an SDD framework was selected in Intake, follow its flow per `../skills/meta-agentic-method/SKILL.md` § "SDD Framework Selection (Optional)" and reconcile framework specs with native analysis artifacts.
-3. Scaffold `docs/<scenario>-<slug>/04-analysis.md` from `../skills/meta-agentic-method/templates/analysis.template.md`, fill placeholders, generate (numbering adjusted for modernization path):
+3. Read `docs/<scenario>-<slug>/wiki/index.md` (produced in Discovery); derive functional domains from module responsibilities; map capability requirements to wiki evidence (cite page/source paths); flag wiki gaps for follow-up ingest.
+4. Scaffold `docs/<scenario>-<slug>/04-analysis.md` from `../skills/meta-agentic-method/templates/analysis.template.md`, fill placeholders, generate (numbering adjusted for modernization path):
    - **Functional Domains:** Break migration into domains based on Assessment (e.g., "Data Extraction", "Schema Transformation", "Target Provisioning", "Data Validation", "Cutover Orchestration")
    - **Success Criteria:** Measurable outcomes per domain:
      - "100% of Oracle tables migrated with <0.01% data loss"
@@ -167,7 +168,7 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
      - Define golden datasets (representative inputs + expected legacy outputs)
      - Specify parity success criteria (e.g., "100% match on golden dataset", "performance within 10% of legacy")
      - Identify APIs/endpoints requiring contract testing
-4. Prioritize domains by dependency and risk
+5. Prioritize domains by dependency and risk
 
 **Exit Gate:** ≥2 functional domains defined, each with success criteria. Migration sequence (domain execution order) documented.
 
@@ -251,24 +252,31 @@ Execute these SDD phases in sequence. After EACH phase, update the HTML progress
 
 **Actions:**
 1. Read `../skills/meta-agentic-method/SKILL.md` § Testing Strategy (Modernization)
-2. **Golden Datasets:**
+2. **Parity Scope:** Parity is not limited to data-output matching. When the legacy system ships an automated behavioral/E2E/acceptance test suite (Playwright, Cypress, Selenium, contract suites, etc.), REUSE it as the cross-stack parity oracle:
+   - Run the SAME test suite against legacy baseline and modernized target
+   - Pass/fail delta = quantifiable parity
+   - Behavioral/E2E tests assert observable behavior and are largely stack-agnostic
+   - End-to-end/contract tests are the durable parity net; stack-specific unit tests usually don't port 1:1 and are re-authored
+   - Applicable to ANY modernization: UI reskin, DB/ETL migration, service rewrite
+3. **Golden Datasets:**
    - Extract representative inputs from legacy system (sample queries, API requests, data files)
    - Capture expected outputs from legacy system (responses, processed data, generated files)
    - Store as golden dataset in `docs/<scenario>-<slug>/golden-data/`
    - Document dataset provenance (what it represents, coverage %)
-3. **API Contract Tests:**
+4. **API Contract Tests:**
    - For each API/interface to migrate, author contract tests:
      - Send identical inputs to legacy vs. modernized system
      - Assert byte-for-byte equality (or semantic equality with documented deviations)
      - Test error handling parity (same errors for same invalid inputs)
    - Frameworks: Pact (consumer-driven), Spring Cloud Contract, Postman/Newman
-4. **Parity Test Plan:**
+5. **Parity Test Plan:**
    - Create `docs/<scenario>-<slug>/07-parity-testing.md`:
      - Golden dataset inventory (inputs + expected outputs)
      - Contract test inventory (API endpoints, data transformations tested)
      - Parity success criteria (100% match? 99.9%? Acceptable deviations documented?)
      - Performance parity thresholds (legacy baseline + acceptable degradation)
-5. **Continuous Parity Validation:**
+     - Existing test suite reuse plan (if applicable): which suites run against both stacks, baseline pass rate, delta tolerance
+6. **Continuous Parity Validation:**
    - Run parity tests continuously during migration (legacy system operational)
    - Track parity score over time (% of golden dataset passing)
    - Document divergences (intended vs. bugs)

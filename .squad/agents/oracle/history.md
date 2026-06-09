@@ -233,6 +233,12 @@ Added non-mandatory per-scenario framework advice: green-field defaults to OpenS
 
 **Context:** Created a bundled `repo-wiki` skill implementing Andrej Karpathy's LLM-maintained wiki pattern for existing codebases during brown-field Discovery and modernization Discovery/Assessment.
 
+### 2026-06-09: Angular→React Methodology Validation (Dry-Run)
+
+**Validation Scope:** Assessed modernization prompt/templates against hypothetical Angular→ReactJS frontend migration (pascalvanderheiden/angular-realworld-example-app).
+
+**Key Gaps Identified:** (1) Topology friction: side-car control repo + legacy submodule assumes target ≠ source location, but nested submodules (legacy contains backend submodule) require guidance. (2) Assessment/capability-map templates are ETL/data-biased; no sections for component-mapping tables, route parity, or state-management strategy for UI framework migrations. (3) Worked example is Oracle→Fabric ETL—no frontend migration example creates comprehension gap. (4) Spec-Kit default may over-prescribe for UI refactors; native or OpenSpec may fit better. (5) MCP Availability dimension (20%) is awkward for pure UI migrations with no backend MCP needs.
+
 **Karpathy Mapping:**
 - Raw sources = immutable source repository evidence, read on demand.
 - Wiki = LLM-owned markdown under `docs/<scenario>-<slug>/wiki/`.
@@ -248,3 +254,21 @@ Added non-mandatory per-scenario framework advice: green-field defaults to OpenS
 - `.github/skills/meta-agentic-method/SKILL.md` now delegates repo-wiki details to `../repo-wiki/SKILL.md`.
 - `references/source-context-and-topology.md` now keeps scenario timing/topology only and points to repo-wiki as source of truth.
 - Decision captured in `.squad/decisions/inbox/oracle-repo-wiki-skill.md`.
+
+### 2026-06-09: Repo-Wiki Knowledge-Base Prep Validation (Source-Code Focus)
+
+- **Validated:** SKILL.md Ingest workflow, index.md/log.md conventions, module-page.template.md, discovery-wiki.template.md, wiki-index.template.json, and modernization.prompt.md Phase 2/4.
+- **Key Gaps:** (1) Packer guidance lacks frontend-specific exclusion rules (node_modules, .angular, dist, test fixtures, submodules). (2) Scoping model says "module/package/service/component" but gives no examples for frontend constructs (directives, pipes, guards, interceptors—these map awkwardly to modules/). (3) Template fields like "Public API / Entry Points" have `[Function/Class/Route/Event/CLI/Component]` but miss @Input/@Output, selectors, NG services, observable streams. (4) Phase 2 Action 4 references "bash to query databases (schema dumps)"—a data/ETL bias that doesn't apply to source-code-only Discovery. (5) Confidence drift table is generic but "Data/Domain Knowledge" and "Spec Completeness" dimensions still apply meaningfully.
+- **Verdict:** Repo-wiki prep works for source-code Discovery with caveats: agents will infer frontend mappings, but missing concrete examples and packer exclusions increase friction and potential inconsistency.
+
+## Learnings
+
+### 2026-06-09: Repo-Wiki Generic Edits — Scope Vocabulary, Packer Exclusions, Submodule Handling
+
+- **Implemented Tier-1 items:** (3) Replaced vague packer exclusion text in `.github/skills/repo-wiki/SKILL.md` Ingest step 2 with ecosystem-agnostic examples (dist/, build/, target/, .next/, .angular/, out/, node_modules/, vendor/, .venv/, __pycache__, *.egg-info, .cache/, coverage/, lock files, nested git submodules, large fixtures/snapshots, secrets, binaries). (4a) Broadened Ingest step 1 scope vocabulary to include UI/client/frontend constructs: component tree, presentation layer, client-state boundary, cross-cutting middleware (interceptors, guards, filters, pipes, decorators), upstream/consumed API surface. (4b) Added UI/client note to module-page.template.md Public API section: for UI modules, includes component selectors/identifiers, public inputs/outputs (props), injectable/shared services, and upstream APIs consumed.
+- **Added topology note:** Folded git submodule exclusion guidance into `references/source-context-and-topology.md` modernization topology rules: if legacy source itself contains git submodules, exclude nested submodules from repo-wiki packing (they are dependencies, not the migration subject). Maintains side-car read-only stance; no in-repo branching for modernization.
+
+### 2026-01-17: Tier-2 Item #10 — Concept-Page Template + Wiki-Index Entrypoint Enum
+
+- **Created:** `.github/skills/repo-wiki/templates/concept-page.template.md` for `concepts/` pages, parallel to module-page. Includes frontmatter tokens, Category (domain term/API/schema/event/job/data-flow/invariant/contract), Related Modules, Evidence (file:line), Notes/Open Questions, Last reviewed.
+- **Extended:** `.github/skills/meta-agentic-method/templates/wiki-index.template.json` entrypoints/type enum: added `Route` and `DeepLink` to existing CLI/API/UI/Worker/Event, for client/web coverage.

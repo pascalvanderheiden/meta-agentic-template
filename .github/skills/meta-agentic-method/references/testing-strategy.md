@@ -34,13 +34,32 @@ Testing is **not** a final phase — it is woven into the pipeline at scenario-s
 4. **Verification Phase:** Safety net must remain green (no regressions); new tests for new functionality
 
 #### Modernization (Parity + Contract Testing)
-1. **Assessment Phase:** Identify legacy system outputs to preserve (API responses, data formats, business logic results)
-2. **Analysis Phase:** Define parity success criteria (e.g., "Fabric output byte-identical to Oracle for golden dataset")
+
+**Reusing Existing Test Suites as Parity Oracles:**
+
+When the legacy system already ships an automated behavioral, end-to-end, or acceptance test suite (Playwright, Cypress, Selenium, REST/contract suites, etc.), **reuse it as the parity oracle**:
+- Run the **SAME suite** against both the legacy baseline and the modernized target
+- The pass/fail delta is the quantifiable parity metric
+- Behavioral/E2E tests assert externally-observable behavior, making them largely **stack-agnostic** and resilient to framework or platform changes (UI reskins, database migrations, ETL rewrites, service modernizations)
+
+**Durable vs. Throwaway Test Split:**
+- **Durable (reuse):** End-to-end, behavioral, and contract tests form the parity safety net — these tests survive modernization and should be reused
+- **Throwaway (re-author):** Stack-specific unit tests (e.g., Angular component tests, Oracle PL/SQL unit tests) usually do NOT port 1:1 to the target stack and must be re-authored against the new implementation
+
+**Baseline-First Principle:**
+If no existing test suite exists, **capture a baseline** (characterize current behavior with new tests) before making any changes. This baseline becomes the parity reference.
+
+**Phase Integration:**
+
+1. **Assessment Phase:** Identify legacy system outputs to preserve (API responses, data formats, business logic results); inventory existing test suites (E2E, contract, unit)
+2. **Analysis Phase:** Define parity success criteria (e.g., "Fabric output byte-identical to Oracle for golden dataset"); determine which tests are durable (reuse) vs. throwaway (re-author)
 3. **Execution Phase:**
+   - **Reuse existing E2E/behavioral suites** as cross-stack parity oracle (run against legacy and modernized systems in parallel)
    - Author **API contract tests** comparing legacy vs. modernized responses on identical inputs
    - Maintain **golden datasets** (representative inputs + expected outputs from legacy system)
    - Run **parity tests** continuously (legacy system still operational during migration)
-4. **Verification Phase:** 100% parity on golden datasets; performance within tolerance; contract tests green
+   - Re-author stack-specific unit tests for the target platform
+4. **Verification Phase:** 100% parity on golden datasets; E2E/behavioral suite green on both systems; performance within tolerance; contract tests green
 
 ### Link to Confidence Rubric
 

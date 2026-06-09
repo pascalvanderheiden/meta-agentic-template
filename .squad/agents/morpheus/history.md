@@ -66,3 +66,15 @@ Existing-codebase prompts must route source understanding through the repo-wiki.
 
 **Learning:**
 Brown-field Discovery and modernization Discovery/Assessment now point to bundled `../skills/repo-wiki/SKILL.md` as the authoritative Ingest → Query → Lint workflow and `index.md`/`log.md` convention source, while preserving existing meta-agentic-method wiki template artifact references. Green-field remains unchanged because repo-wiki applies only to existing-source scenarios.
+
+## Learnings
+
+### 2026-06-09: Generic Parity Testing, Discovery→Analysis Handoff, and Stack-Agnostic Discovery Tooling
+
+**Deliverables:**
+- `.github/prompts/modernization.prompt.md` (Items #1b, #5, #6)
+- `.github/prompts/brown-field.prompt.md` (Item #5 only)
+- `.squad/decisions/inbox/morpheus-prompt-generic-edits.md`
+
+**Learning:**
+Phase 7 (Parity Testing Strategy) now frames behavioral/E2E test suite reuse as the cross-stack parity oracle for ANY modernization (UI reskin, DB/ETL migration, service rewrite), not just data-output matching. Phase 4 (Analysis) explicitly consumes repo-wiki produced in Discovery via direct read + citation step. Phase 2 Action 4 tool list de-biased from data/ETL to cover any software-development modernization: grep/glob for source inventory, bash for stack-appropriate metadata (manifests, configs, API specs, and when relevant, database schemas), web_fetch for vendor docs.
